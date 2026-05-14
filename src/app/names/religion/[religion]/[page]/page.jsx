@@ -17,6 +17,7 @@ const RELIGION_LABELS = {
 // ISR with 30-day cache - name lists rarely change
 export const revalidate = 2592000; // 30 days
 export const dynamicParams = true;
+export const dynamic = 'force-static';
 
 // Site URL (use public env var on client-safe code paths)
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://nameverse.vercel.app';

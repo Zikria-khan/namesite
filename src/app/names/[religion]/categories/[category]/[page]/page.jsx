@@ -13,6 +13,7 @@ const STATIC_CATEGORIES = ['modern', 'traditional', 'nature', 'religious', 'clas
 // ISR with 30-day cache - name categories rarely change
 export const revalidate = 2592000; // 30 days
 export const dynamicParams = true;
+export const dynamic = 'force-static';
 
 function normalizeReligion(religion) {
   if (!religion || typeof religion !== 'string') return null;

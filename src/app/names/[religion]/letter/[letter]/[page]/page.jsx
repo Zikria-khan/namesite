@@ -13,6 +13,7 @@ const NAMES_PER_PAGE = 50;
 // ISR with 30-day cache - name data by letter rarely changes
 export const revalidate = 2592000; // 30 days
 export const dynamicParams = true;
+export const dynamic = 'force-static';
 
 function normalizeReligion(religion) {
   if (!religion || typeof religion !== 'string') return null;

@@ -13,6 +13,7 @@ const STATIC_ORIGINS = ['arabic', 'persian', 'turkish', 'indian', 'english', 'ot
 // ISR with 30-day cache - name origins rarely change
 export const revalidate = 2592000; // 30 days
 export const dynamicParams = true;
+export const dynamic = 'force-static';
 
 function resolveOrigin(origin, availableOrigins) {
   if (!origin) return 'arabic';
