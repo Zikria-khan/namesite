@@ -18,6 +18,24 @@ const RELIGION_LABELS = {
 export const revalidate = 2592000; // 30 days
 export const dynamicParams = true;
 
+// Pre-generate religion pages at build time
+export async function generateStaticParams() {
+  const religions = ['islamic', 'christian', 'hindu'];
+  const params = [];
+
+  for (const religion of religions) {
+    // Pre-generate first 5 pages for each religion
+    for (let page = 1; page <= 5; page++) {
+      params.push({
+        religion,
+        page: String(page),
+      });
+    }
+  }
+
+  return params;
+}
+
 // Site URL (use public env var on client-safe code paths)
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://nameverse.vercel.app';
 

@@ -4,10 +4,6 @@ const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || 'https://name-meaning-site
 const nextConfig = {
   reactStrictMode: true,
 
-  // Use standard server output for Vercel and Windows builds
-  // Standalone output can cause file lock issues on Windows during next build.
-  // Removing this avoids .next/standalone copy errors.
-
   // Disable TypeScript checking during build
   typescript: {
     ignoreBuildErrors: true,
@@ -25,8 +21,7 @@ const nextConfig = {
   // Performance Optimizations
   compress: true,
 
-
-  // Image Optimization this will happen in thesis
+  // Image Optimization
   images: {
     remotePatterns: [
       {
@@ -38,53 +33,56 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000, // 1 year cache for optimized images
-dangerouslyAllowSVG: true,
+    dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
-   // Headers for Performance & Edge Caching
-    async headers() {
-      return [
-        {
-          source: '/api/:path*',
-          headers: [
-            {
-              key: 'Cache-Control',
-              value: 'no-store, max-age=0, must-revalidate',
-            },
-          ],
-        },
-        {
-          source: '/:path*',
-          headers: [
-            {
-              key: 'X-DNS-Prefetch-Control',
-              value: 'on'
-            },
-            {
-              key: 'X-Content-Type-Options',
-              value: 'nosniff'
-            },
-            {
-              key: 'X-Frame-Options',
-              value: 'SAMEORIGIN'
-            },
-            {
-              key: 'X-XSS-Protection',
-              value: '1; mode=block'
-            },
-            {
-              key: 'Content-Security-Policy',
-              value: "default-src 'self' https: data:; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://analytics.ahrefs.com https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://analytics.ahrefs.com https://name-meaning-site-backend.vercel.app https://ep1.adtrafficquality.google https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' data:; frame-ancestors 'self'; object-src 'none'; base-uri 'self';",
-            },
-            {
-              key: 'Referrer-Policy',
-              value: 'strict-origin-when-cross-origin'
-            },
-            // NOTE: No Cache-Control here! ISR manages caching via route-level revalidate exports
-            // Setting a global Cache-Control would conflict with ISR's native caching behavior
-          ],
-        },
+  // Headers for Performance & Edge Caching
+  async headers() {
+    return [
+      // API routes should not be cached (dynamic data)
+      {
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, max-age=0, must-revalidate',
+          },
+        ],
+      },
+      // Main pages - NO Cache-Control here!
+      // ISR manages caching via route-level revalidate exports
+      // Setting a global Cache-Control would conflict with ISR's native caching behavior
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN'
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block'
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self' https: data:; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://analytics.ahrefs.com https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://analytics.ahrefs.com https://name-meaning-site-backend.vercel.app https://ep1.adtrafficquality.google https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' data:; frame-ancestors 'self'; object-src 'none'; base-uri 'self';",
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin'
+          },
+        ],
+      },
+      // Next.js data should not be cached
       {
         source: '/_next/data/:path*',
         headers: [
@@ -94,6 +92,7 @@ dangerouslyAllowSVG: true,
           },
         ],
       },
+      // Static assets - long-term caching
       {
         source: '/images/:path*',
         headers: [
@@ -124,7 +123,7 @@ dangerouslyAllowSVG: true,
     ];
   },
 
-  // Rewrite missing article image requests to a known placeholder
+  // Rewrites for API proxy and image fallbacks
   async rewrites() {
     return [
       {
@@ -135,6 +134,7 @@ dangerouslyAllowSVG: true,
         source: '/images/articles/:path*',
         destination: '/logo.png',
       },
+      // Proxy API requests to backend
       {
         source: '/api/:path*',
         destination: `${API_BASE}/:path*`,
@@ -144,7 +144,6 @@ dangerouslyAllowSVG: true,
 
   // Experimental Features for Performance
   experimental: {
-    // optimizeCss: true, // Disabled - requires critters package
     optimizePackageImports: [
       '@radix-ui/react-dropdown-menu',
       '@radix-ui/react-scroll-area',
@@ -158,7 +157,7 @@ dangerouslyAllowSVG: true,
   // Turbopack configuration
   turbopack: {},
 
-  // Webpack Optimizations (simplified to avoid build issues)
+  // Webpack Optimizations
   webpack: (config) => {
     return config;
   },

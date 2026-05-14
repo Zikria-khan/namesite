@@ -1,9 +1,8 @@
-
-// src/app/names/origins/[origin]/[page]/page.jsx
 import Link from 'next/link';
-import { serverFetchNamesWithAdvancedFilters } from '@/lib/api/server-fetch';
-import { validateMetaTitle, validateMetaDescription, generateCanonicalUrl } from '@/lib/seo/meta-helpers';
 import { Sparkles, Moon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { validateMetaTitle, validateMetaDescription, generateCanonicalUrl } from '@/lib/seo/meta-helpers';
+import { serverFetchNamesWithAdvancedFilters } from '@/lib/api/server-fetch';
+
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://nameverse.vercel.app';
 
@@ -13,6 +12,28 @@ const STATIC_ORIGINS = ['arabic', 'persian', 'turkish', 'indian', 'english', 'ot
 // ISR with 30-day cache - name origins rarely change
 export const revalidate = 2592000; // 30 days
 export const dynamicParams = true;
+
+// Pre-generate origin pages at build time
+export async function generateStaticParams() {
+  const religions = ['islamic', 'christian', 'hindu'];
+  const origins = ['arabic', 'persian', 'turkish', 'indian', 'english', 'other'];
+  const params = [];
+
+  for (const religion of religions) {
+    for (const origin of origins) {
+      // Pre-generate first 3 pages for each origin/religion combo
+      for (let page = 1; page <= 3; page++) {
+        params.push({
+          religion,
+          origin,
+          page: String(page),
+        });
+      }
+    }
+  }
+
+  return params;
+}
 
 function resolveOrigin(origin, availableOrigins) {
   if (!origin) return 'arabic';
@@ -293,3 +314,4 @@ function generateSlug(name) {
   if (!name || typeof name !== 'string') return '';
   return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 }
+
