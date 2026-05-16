@@ -58,11 +58,11 @@ const HeroSection = () => {
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
-            Find the perfect Islamic, Hindu, or Christian baby name in minutes.
+            NameVerse – Find the perfect Islamic, Hindu, or Christian baby name in minutes.
           </h1>
 
           <p className="mx-auto max-w-2xl text-base sm:text-lg text-gray-600 leading-relaxed">
-            Search 65,000+ verified baby names with meanings, origins, and religious context. Fast results, accurate translations, and expert guidance for every family.
+            NameVerse helps 5M+ parents search 65,000+ verified baby names with meanings, origins, and religious context. Fast results, accurate translations, and expert guidance for every family.
           </p>
 
           <div className="flex flex-wrap justify-center gap-3">

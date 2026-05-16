@@ -124,6 +124,67 @@ export default function RootLayout({ children }) {
         {/* ✅ Enhanced crawl hints */}
         <GoogleBotMeta siteUrl={siteUrl} />
 
+        {/* ✅ Authoritative Site Name Signal (prevents "Vercel" appearing as site name in GSC) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": `${siteUrl}/#website`,
+              "name": "NameVerse",
+              "alternateName": ["NameVerse Baby Names", "NameVerse Names"],
+              "url": siteUrl,
+              "description": "65,000+ baby names with meanings, origins, and numerology across Islamic, Hindu & Christian traditions.",
+              "inLanguage": "en-US",
+              "publisher": {
+                "@type": "Organization",
+                "@id": `${siteUrl}/#organization`,
+                "name": "NameVerse",
+                "url": siteUrl,
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": `${siteUrl}/logo.png`,
+                  "width": 512,
+                  "height": 512
+                }
+              },
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                  "@type": "EntryPoint",
+                  "urlTemplate": `${siteUrl}/search?query={search_term_string}`
+                },
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
+
+        {/* ✅ Organization Schema for site name authority */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": `${siteUrl}/#organization`,
+              "name": "NameVerse",
+              "url": siteUrl,
+              "logo": {
+                "@type": "ImageObject",
+                "url": `${siteUrl}/logo.png`,
+                "width": 512,
+                "height": 512
+              },
+              "description": "NameVerse - 65,000+ baby names with meanings, origins, and numerology across Islamic, Hindu & Christian traditions.",
+              "sameAs": [
+                "https://twitter.com/NameVerseOfficial"
+              ]
+            })
+          }}
+        />
+
         {/* ✅ Enhanced Structured Data */}
         <StructuredData
           organization={true}

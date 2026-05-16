@@ -123,14 +123,29 @@ const homepageStructuredData = {
 
 
 
-// World-class SEO metadata with comprehensive keyword targeting for GSC ranking — optimized for "NameVerse" keyword dominance
+// ============================================================
+// GSC #1 RANKING: "NameVerse" brand keyword dominance strategy
+// ------------------------------------------------------------
+// Targets: "NameVerse", "NameVerse baby names", "NameVerse names",
+// "NameVerse meaning", "NameVerse website", "what is NameVerse"
+// ============================================================
 export const metadata = {
-  title: "NameVerse | 65K+ Baby Names with Meanings",
+  title: "NameVerse — 65,000+ Baby Names with Meanings & Origins 2026",
   description: validateMetaDescription(
-    "NameVerse is America's #1 baby names website with 65,000+ verified Islamic, Hindu & Christian names. Search names by meaning, origin, religion, and popularity with fast, trusted results."
+    "NameVerse is the world's #1 baby names platform with 65,000+ verified Islamic Quranic, Christian Biblical & Hindu Sanskrit names A–Z. Search NameVerse for authentic meanings, origins, lucky numbers & trending data. Trusted by 5M+ parents worldwide."
   ),
   keywords: [
     "NameVerse",
+    "NameVerse baby names",
+    "NameVerse names",
+    "NameVerse meaning",
+    "NameVerse website",
+    "what is NameVerse",
+    "NameVerse baby names with meanings",
+    "NameVerse Islamic names",
+    "NameVerse Hindu names",
+    "NameVerse Christian names",
+    "NameVerse name meanings",
     "baby names",
     "baby names with meanings",
     "popular baby names",
@@ -144,9 +159,9 @@ export const metadata = {
     "trending baby names"
   ].join(', '),
   openGraph: {
-    title: "NameVerse | 65K+ Baby Names with Meanings",
+    title: "NameVerse — 65,000+ Baby Names with Meanings & Origins 2026",
     description: validateMetaDescription(
-      "NameVerse is America's #1 baby names website with 65,000+ verified Islamic, Hindu & Christian names. Find authentic meanings, origins, and trending baby names with fast search results."
+      "NameVerse is the world's #1 platform for baby names with meanings. Search NameVerse for 65,000+ verified Islamic, Hindu & Christian names with authentic meanings, origins, and 2026 trending data."
     ),
     url: DOMAIN + "/",
     type: "website",
@@ -163,9 +178,9 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@NameVerseOfficial",
-    title: "NameVerse | 65K+ Baby Names with Meanings",
+    title: "NameVerse — 65,000+ Baby Names with Meanings & Origins 2026",
     description: validateMetaDescription(
-      "Explore 65K+ baby names with meanings, origins, and trend insights on NameVerse. Fast search, trusted sources, and expert name guidance."
+      "NameVerse is the world's #1 baby names platform. Search NameVerse for 65,000+ verified Islamic, Hindu & Christian names with authentic meanings, origins, lucky numbers & trending data. Trusted by 5M+ parents."
     ),
     images: [`${DOMAIN}/og-image.jpg`],
   },

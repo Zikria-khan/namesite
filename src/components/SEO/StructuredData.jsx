@@ -18,6 +18,7 @@ export default function StructuredData({
     schemas.push({
       "@context": "https://schema.org",
       "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
       "name": "NameVerse",
       "url": siteUrl,
       "logo": {
@@ -26,7 +27,10 @@ export default function StructuredData({
         "width": 192,
         "height": 192
       },
-      "description": "NameVerse - Discover thousands of baby names with meanings across religions and cultures."
+      "description": "NameVerse - Discover thousands of baby names with meanings across religions and cultures.",
+      "sameAs": [
+        "https://twitter.com/NameVerseOfficial"
+      ]
     });
   }
 
@@ -34,11 +38,22 @@ export default function StructuredData({
     schemas.push({
       "@context": "https://schema.org",
       "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
       "name": "NameVerse",
+      "alternateName": "NameVerse Baby Names",
       "url": siteUrl,
+      "description": "NameVerse - 65,000+ baby names with meanings, origins, and numerology. Islamic, Hindu & Christian names.",
+      "publisher": {
+        "@type": "Organization",
+        "@id": `${siteUrl}/#organization`
+      },
+      "inLanguage": "en-US",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": `${siteUrl}/search?query={search_term_string}`,
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${siteUrl}/search?query={search_term_string}`
+        },
         "query-input": "required name=search_term_string"
       }
     });
