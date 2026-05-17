@@ -15,7 +15,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SITE_URL = 'https://nameverse.vercel.app';
-const INDEXNOW_KEY = 'd8127789-72bd-4672-b48e-9c0b5aa7f220';
+const INDEXNOW_KEY = 'd8127789-72bd-4672-b48e-9c0b5aa7f220a';
 const BATCH_SIZE = 1000;
 const BATCH_DELAY_MS = 5000;
 
