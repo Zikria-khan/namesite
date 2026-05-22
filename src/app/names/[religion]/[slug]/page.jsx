@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getSiteUrl } from '@/lib/seo/site';
 import { generateNamePageMetadata, generateNamePageSchemas } from '@/lib/seo/name-page-seo';
 import { serverFetchNameDetail } from '@/lib/api/server-fetch';
+import { sanitizeNameData } from '@/lib/utils/sanitizeNameData';
 import NameDetail from '@/components/name/NameDetail';
 import Script from 'next/script';
 import fs from 'fs';
@@ -143,10 +144,13 @@ export default async function NameDetailPage({ params }) {
     return notFound();
   }
 
-  const nameData = await serverFetchNameDetail(religion, slug);
+  let nameData = await serverFetchNameDetail(religion, slug);
   if (!nameData) {
     return notFound();
   }
+
+  // Sanitize data to ensure all fields are React-renderable
+  nameData = sanitizeNameData(nameData);
 
   const pageUrl = `${getSiteUrl()}/names/${religion}/${slug}`;
   const schemas = generateNamePageSchemas(nameData, religion, slug);

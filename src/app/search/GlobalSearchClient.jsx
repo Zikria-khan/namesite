@@ -1,12 +1,24 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Search, Loader2, FileText, User, TrendingUp, X } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { globalSearch, getPopularSearches } from '@/lib/api/search';
 import toast from 'react-hot-toast';
-import debounce from 'lodash/debounce';
+
+// Native debounce implementation
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 export default function GlobalSearchClient() {
   const router = useRouter();
@@ -19,12 +31,13 @@ export default function GlobalSearchClient() {
   const [results, setResults] = useState({ names: [], total: 0 });
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const debouncedSearchRef = useRef(null);
 
   const popularSearches = getPopularSearches();
 
   // Debounced search function
-  const debouncedSearch = useCallback(
-    debounce(async (searchQuery, type) => {
+  useEffect(() => {
+    debouncedSearchRef.current = debounce(async (searchQuery, type) => {
       if (!searchQuery || searchQuery.length < 2) {
         setResults({ names: [], total: 0 });
         setHasSearched(false);
@@ -52,9 +65,14 @@ export default function GlobalSearchClient() {
       } finally {
         setLoading(false);
       }
-    }, 500),
-    []
-  );
+    }, 500);
+  }, []);
+
+  const debouncedSearch = useCallback((searchQuery, type) => {
+    if (debouncedSearchRef.current) {
+      debouncedSearchRef.current(searchQuery, type);
+    }
+  }, []);
 
   // Search when query or type changes
   useEffect(() => {
