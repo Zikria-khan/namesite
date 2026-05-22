@@ -21,7 +21,7 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
-    canonical: canonical,
+    alternates: { canonical },
     ...(meta.length > 0 && { meta })
   };
 }

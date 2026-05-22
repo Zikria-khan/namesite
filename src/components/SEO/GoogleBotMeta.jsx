@@ -1,8 +1,11 @@
+import { getSiteUrl } from '@/lib/seo/site';
+
 /**
  * GoogleBotMeta
  * Adds crawl directives and helpful hints for search engine bots.
  */
-export default function GoogleBotMeta({ siteUrl = typeof window !== "undefined" ? window.location.origin : 'https://nameverse.vercel.app' }) {
+export default function GoogleBotMeta({ siteUrl }) {
+  if (!siteUrl) siteUrl = getSiteUrl();
   const crawlDirectives =
     "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1";
 
@@ -24,4 +27,3 @@ export default function GoogleBotMeta({ siteUrl = typeof window !== "undefined" 
     </>
   );
 }
-

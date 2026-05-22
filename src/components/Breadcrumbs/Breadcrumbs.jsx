@@ -1,19 +1,16 @@
 'use client';
 
 import Link from 'next/link';
+import { useMemo } from 'react';
 import { ChevronRight, Home } from 'lucide-react';
+import { getSiteUrl } from '@/lib/seo/site';
 
-/**
- * Breadcrumbs Component - SEO Optimized
- * Implements structured navigation with schema.org markup
- * @param {Array} items - Breadcrumb items [{label, href}]
- * @param {string} className - Additional CSS classes
- */
+const SITE_URL = getSiteUrl();
+
 export default function Breadcrumbs({ items = [], className = '' }) {
   if (!items || items.length === 0) return null;
 
-  // Generate JSON-LD schema for breadcrumbs
-  const breadcrumbSchema = {
+  const breadcrumbSchema = useMemo(() => ({
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
@@ -21,16 +18,16 @@ export default function Breadcrumbs({ items = [], className = '' }) {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: (typeof window !== 'undefined' ? window.location.origin : 'https://nameverse.vercel.app')
+        item: SITE_URL,
       },
       ...items.map((item, index) => ({
         '@type': 'ListItem',
         position: index + 2,
         name: item.label,
-        ...(item.href && { item: (typeof window !== 'undefined' ? window.location.origin : 'https://nameverse.vercel.app') + item.href })
-      }))
-    ]
-  };
+        ...(item.href && { item: `${SITE_URL}${item.href}` }),
+      })),
+    ],
+  }), [items]);
 
   return (
     <>

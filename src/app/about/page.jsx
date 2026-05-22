@@ -1,22 +1,22 @@
 import PageLayout from '@/components/Layout/PageLayout';
 import StructuredData from '@/components/SEO/StructuredData';
-import { env } from '@/config/env';
+import { getSiteUrl } from '@/lib/seo/site';
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers';
 
-const siteUrl = env.site.url;
+const siteUrl = getSiteUrl();
 
 export const metadata = {
   title: validateMetaTitle("About Zakriya Khan - Name Meanings Expert & Cultural Consultant"),
   description: validateMetaDescription("Meet Zakriya Khan - Expert in name meanings, cultural heritage, and spiritual significance. Discover the stories behind names with personalized insights and professional consultation."),
   alternates: {
-    canonical: `${siteUrl}/about`,
-    languages: { en: `${siteUrl}/about`, 'x-default': `${siteUrl}/about` },
+    canonical: `${getSiteUrl()}/about`,
+    languages: { en: `${getSiteUrl()}/about`, 'x-default': `${getSiteUrl()}/about` },
   },
   keywords: ["Zakriya Khan", "name meanings", "cultural heritage", "spiritual names", "Islamic names", "baby names expert", "name consultant", "baby name consultant", "religious baby names", "Muslim name specialist", "Hindu name expert", "Christian name advisor", "meaningful baby names", "name origin research"],
   openGraph: {
     title: "About Zakriya Khan - Name Meanings Expert & Cultural Consultant",
     description: "Meet Zakriya Khan - Expert in name meanings, cultural heritage, and spiritual significance.",
-    url: `${siteUrl}/about`,
+    url: `${getSiteUrl()}/about`,
     type: 'website',
     images: [{
       url: `${siteUrl}/logo.png`,

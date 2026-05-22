@@ -139,68 +139,7 @@ export default function RootLayout({ children }) {
         {/* ✅ Enhanced crawl hints */}
         <GoogleBotMeta siteUrl={siteUrl} />
 
-        {/* ✅ Authoritative Site Name Signal (prevents "Vercel" appearing as site name in GSC) */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              "@id": `/#website`,
-              "name": "NameVerse",
-              "alternateName": ["NameVerse Baby Names", "NameVerse Names"],
-              "url": siteUrl,
-              "description": "65,000+ baby names with meanings, origins, and numerology across Islamic, Hindu & Christian traditions.",
-              "inLanguage": "en-US",
-              "publisher": {
-                "@type": "Organization",
-                "@id": `/#organization`,
-                "name": "NameVerse",
-                "url": siteUrl,
-                "logo": {
-                  "@type": "ImageObject",
-                  "url": `/logo.png`,
-                  "width": 512,
-                  "height": 512
-                }
-              },
-              "potentialAction": {
-                "@type": "SearchAction",
-                "target": {
-                  "@type": "EntryPoint",
-                  "urlTemplate": `/search?query={search_term_string}`
-                },
-                "query-input": "required name=search_term_string"
-              }
-            })
-          }}
-        />
-
-        {/* ✅ Organization Schema for site name authority */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "@id": `/#organization`,
-              "name": "NameVerse",
-              "url": siteUrl,
-              "logo": {
-                "@type": "ImageObject",
-                "url": `/logo.png`,
-                "width": 512,
-                "height": 512
-              },
-              "description": "NameVerse - 65,000+ baby names with meanings, origins, and numerology across Islamic, Hindu & Christian traditions.",
-              "sameAs": [
-                "https://twitter.com/NameVerseOfficial"
-              ]
-            })
-          }}
-        />
-
-        {/* ✅ Enhanced Structured Data */}
+        {/* ✅ Enhanced Structured Data — single source of truth for all JSON-LD schemas */}
         <StructuredData
           organization={true}
           website={true}
@@ -219,8 +158,14 @@ export default function RootLayout({ children }) {
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1510675468129183"
-          crossOrigin="anonymous"
-        />
+          crossOrigin="anonymous"></script>
+
+        {/* AMP Auto Ads — loads relevant amp-auto-ads libraries */}
+        <script
+          async
+          custom-element="amp-auto-ads"
+          src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+        </script>
 
         {/* Ahrefs analytics script */}
         <Script
@@ -231,6 +176,9 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className={`${bodyFont.variable} ${displayFont.variable} antialiased nv-body nv-page`}>
+        <amp-auto-ads type="adsense"
+          data-ad-client="ca-pub-1510675468129183">
+        </amp-auto-ads>
         <div id="temp-wrapper">
           <AppProvider>
             <PerformanceInit />

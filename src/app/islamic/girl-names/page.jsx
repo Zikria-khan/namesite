@@ -50,7 +50,7 @@ function generateStructuredData(names) {
     "@type": "ListItem",
     position: index + 1,
     name: n.name,
-    url: getSiteUrl() + '/islamic/girl-names#${n.name.toLowerCase()}',
+    url: `${getSiteUrl()}/islamic/girl-names#${n.name.toLowerCase()}`,
     description: `${n.name} means "${n.meaning}" - ${n.origin} origin`
   }));
 

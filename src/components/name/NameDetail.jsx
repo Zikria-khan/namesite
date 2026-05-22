@@ -10,7 +10,7 @@ export default function NameDetail({ data, faqData = [], pageUrl }) {
       breadcrumbs={[
         { label: 'Home', href: '/' },
         { label: 'Baby Names', href: '/names' },
-        { label: `${data.religion || 'Names'}`, href: `/names/religion/${(data.religion || 'islamic').toLowerCase()}/1` },
+        { label: `${data.religion || 'Names'}`, href: `/names/${(data.religion || 'islamic').toLowerCase()}` },
         { label: data.name },
       ]}
     >

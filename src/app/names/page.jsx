@@ -202,7 +202,6 @@ export const metadata = {
   title: "65,000+ Baby Names with Meanings — Islamic, Hindu & Christian Names A–Z",
   description: "Discover 65,000+ verified baby names — 18,000+ Islamic, 11,000+ Christian, 15,000+ Hindu, and 21,000+ global names — with authentic meanings and 2026 trending data.",
   keywords: ["baby names", "Islamic names", "Hindu names", "Christian names", "baby names with meanings", "Quranic names", "Sanskrit names", "Biblical names", "gender neutral names", "trending baby names 2026"],
-  canonical: `${getSiteUrl()}/names`,
   alternates: {
     canonical: `${getSiteUrl()}/names`,
   },

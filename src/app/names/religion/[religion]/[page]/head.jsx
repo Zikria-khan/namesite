@@ -7,8 +7,8 @@ export default function Head({ params }) {
   const page = parseInt(params?.page || '1', 10) || 1;
   const base = getSiteUrl();
 
-  // Canonical: prefer base collection URL for page 1
-  const canonicalPath = page === 1 ? `/names/religion/${religion}` : `/names/religion/${religion}/${page}`;
+  // Canonical: always include the actual page number
+  const canonicalPath = `/names/religion/${religion}/${page}`;
   const canonical = generateCanonicalUrl(canonicalPath, base);
 
   const prevHref = page > 1 ? generateCanonicalUrl(`/names/religion/${religion}/${page - 1}`, base) : null;
