@@ -1,9 +1,10 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { Globe, Award, Languages, ShieldCheck, Star, Sparkles, ArrowUpRight } from 'lucide-react';
 import SearchBar from './SearchSection';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import './styles/animations.css';
 
 const HeroSection = () => {
   const categories = [
@@ -94,127 +95,107 @@ const HeroSection = () => {
         ))}
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 pt-10 pb-12 sm:pt-16 sm:pb-16">
-        <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12 items-start">
-          <div className="text-left">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 rounded-full border border-[color:var(--nv-border)] bg-white/70 px-4 py-2 backdrop-blur"
-            >
-              <Star className="h-4 w-4 text-[color:var(--nv-accent-2)]" />
-              <span className="text-sm font-semibold text-[color:var(--nv-ink)]">
-                65,000+ baby names with verified meanings
-              </span>
-            </motion.div>
+       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 pt-10 pb-12 sm:pt-16 sm:pb-16">
+         <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:gap-12 items-start">
+           <div className="text-left">
+             <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--nv-border)] bg-white/70 px-4 py-2 backdrop-blur animate-fadeInUp">
+               <Star className="h-4 w-4 text-[color:var(--nv-accent-2)]" />
+               <span className="text-sm font-semibold text-[color:var(--nv-ink)]">
+                 65,000+ baby names with verified meanings
+               </span>
+             </div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.05 }}
-              className="nv-display mt-6 text-[2.15rem] leading-[1.04] text-[color:var(--nv-ink)] sm:text-[3rem] lg:text-[3.4rem]"
-            >
-              Find a name that sounds beautiful and carries meaning.
-            </motion.h1>
+             <h1 className="nv-display mt-6 text-[2.15rem] leading-[1.04] text-[color:var(--nv-ink)] sm:text-[3rem] lg:text-[3.4rem] animate-fadeInUp">
+               Find a name that sounds beautiful and carries meaning.
+             </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.12 }}
-              className="mt-5 max-w-xl text-base leading-relaxed text-[color:var(--nv-muted)] sm:text-lg"
-            >
-              Search by religion, gender, letter, and meaning. Compare favorites, read cultural context, and pick with confidence.
-            </motion.p>
+             <p className="mt-5 max-w-xl text-base leading-relaxed text-[color:var(--nv-muted)] sm:text-lg animate-fadeInUp">
+               Search by religion, gender, letter, and meaning. Compare favorites, read cultural context, and pick with confidence.
+             </p>
 
-            <div className="mt-7 flex flex-wrap gap-2.5">
-              {features.map((feature) => {
-                const Icon = feature.icon;
-                return (
-                  <div
-                    key={feature.text}
-                    className="inline-flex items-center gap-2 rounded-full border border-[color:var(--nv-border)] bg-white/60 px-4 py-2 text-sm font-medium text-[color:var(--nv-ink)] backdrop-blur"
-                  >
-                    <Icon className="h-4 w-4 text-[color:var(--nv-accent)]" />
-                    {feature.text}
-                  </div>
-                );
-              })}
-            </div>
+             <div className="mt-7 flex flex-wrap gap-2.5">
+               {features.map((feature) => {
+                 const Icon = feature.icon;
+                 return (
+                   <div
+                     key={feature.text}
+                     className="inline-flex items-center gap-2 rounded-full border border-[color:var(--nv-border)] bg-white/60 px-4 py-2 text-sm font-medium text-[color:var(--nv-ink)] backdrop-blur animate-fadeInUp"
+                   >
+                     <Icon className="h-4 w-4 text-[color:var(--nv-accent)]" />
+                     {feature.text}
+                   </div>
+                 );
+               })}
+             </div>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Link
-                href="/names"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[color:var(--nv-ink)] px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_45px_-30px_var(--nv-shadow)] transition hover:translate-y-[-1px] hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-[color:var(--nv-accent-2)]"
-              >
-                Browse all names
-                <ArrowUpRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/advanced-search"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[color:var(--nv-border)] bg-white/60 px-5 py-3 text-sm font-semibold text-[color:var(--nv-ink)] backdrop-blur transition hover:bg-white/80 focus:outline-none focus:ring-2 focus:ring-[color:var(--nv-accent-2)]"
-              >
-                Advanced filters
-                <ArrowUpRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
+             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+               <Link
+                 href="/names"
+                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[color:var(--nv-ink)] px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_45px_-30px_var(--nv-shadow)] transition hover:translate-y-[-1px] hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-[color:var(--nv-accent-2)] animate-fadeInUp"
+               >
+                 Browse all names
+                 <ArrowUpRight className="h-4 w-4" />
+               </Link>
+               <Link
+                 href="/advanced-search"
+                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[color:var(--nv-border)] bg-white/60 px-5 py-3 text-sm font-semibold text-[color:var(--nv-ink)] backdrop-blur transition hover:bg-white/80 focus:outline-none focus:ring-2 focus:ring-[color:var(--nv-accent-2)] animate-fadeInUp"
+               >
+                 Advanced filters
+                 <ArrowUpRight className="h-4 w-4" />
+               </Link>
+             </div>
+           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.08 }}
-            className="relative"
-          >
-            <div className="nv-surface rounded-[28px] p-4 sm:p-6">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-sm font-semibold text-[color:var(--nv-ink)]">Search instantly</p>
-                  <p className="text-xs text-[color:var(--nv-muted)]">Meaning, origin, lucky number, pronunciation</p>
-                </div>
-                <div className="hidden sm:flex items-center gap-1 rounded-full bg-black/5 px-3 py-1 text-xs font-semibold text-[color:var(--nv-ink)]">
-                  <ShieldCheck className="h-3.5 w-3.5 text-[color:var(--nv-accent)]" />
-                  Verified
-                </div>
-              </div>
+           <div className="relative animate-fadeInUp">
+             <div className="nv-surface rounded-[28px] p-4 sm:p-6">
+               <div className="flex items-center justify-between gap-3">
+                 <div>
+                   <p className="text-sm font-semibold text-[color:var(--nv-ink)]">Search instantly</p>
+                   <p className="text-xs text-[color:var(--nv-muted)]">Meaning, origin, lucky number, pronunciation</p>
+                 </div>
+                 <div className="hidden sm:flex items-center gap-1 rounded-full bg-black/5 px-3 py-1 text-xs font-semibold text-[color:var(--nv-ink)]">
+                   <ShieldCheck className="h-3.5 w-3.5 text-[color:var(--nv-accent)]" />
+                   Verified
+                 </div>
+               </div>
 
-              <div className="mt-4">
-                <SearchBar />
-              </div>
+               <div className="mt-4">
+                 <SearchBar />
+               </div>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                {categories.map((category) => {
-                  const Icon = category.icon;
-                  return (
-                    <Link
-                      key={category.id}
-                      href={category.url}
-                      className="group rounded-2xl border border-[color:var(--nv-border)] bg-white/55 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/75 focus:outline-none focus:ring-2 focus:ring-[color:var(--nv-accent-2)]"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className={`grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br ${category.gradient} text-white shadow-[0_18px_40px_-32px_var(--nv-shadow)]`}>
-                          <Icon className="h-5 w-5" />
-                        </div>
-                        <span className="text-xs font-semibold text-[color:var(--nv-muted)]">{category.count}</span>
-                      </div>
-                      <div className="mt-3">
-                        <p className="text-sm font-semibold text-[color:var(--nv-ink)]">
-                          {category.name}
-                        </p>
-                        <p className="text-xs text-[color:var(--nv-muted)]">{category.description}</p>
-                      </div>
-                      <div className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-[color:var(--nv-ink)] opacity-80 group-hover:opacity-100">
-                        Explore
-                        <ArrowUpRight className="h-3.5 w-3.5" />
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+               <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                 {categories.map((category) => {
+                   const Icon = category.icon;
+                   return (
+                     <Link
+                       key={category.id}
+                       href={category.url}
+                       className="group rounded-2xl border border-[color:var(--nv-border)] bg-white/55 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/75 focus:outline-none focus:ring-2 focus:ring-[color:var(--nv-accent-2)]"
+                     >
+                       <div className="flex items-start justify-between gap-3">
+                         <div className={`grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br ${category.gradient} text-white shadow-[0_18px_40px_-32px_var(--nv-shadow)]`}>
+                           <Icon className="h-5 w-5" />
+                         </div>
+                         <span className="text-xs font-semibold text-[color:var(--nv-muted)]">{category.count}</span>
+                       </div>
+                       <div className="mt-3">
+                         <p className="text-sm font-semibold text-[color:var(--nv-ink)]">
+                           {category.name}
+                         </p>
+                         <p className="text-xs text-[color:var(--nv-muted)]">{category.description}</p>
+                       </div>
+                       <div className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-[color:var(--nv-ink)] opacity-80 group-hover:opacity-100">
+                         Explore
+                         <ArrowUpRight className="h-3.5 w-3.5" />
+                       </div>
+                     </Link>
+                   );
+                 })}
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
     </section>
   );
 };

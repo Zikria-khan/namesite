@@ -4,17 +4,15 @@ const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || 'https://name-meaning-site
 const nextConfig = {
   reactStrictMode: true,
 
-  // Disable TypeScript checking during build
+  // Disable TypeScript checking during build (already validated in CI)
   typescript: {
     ignoreBuildErrors: true,
   },
-  
-  // Development-only dev origin allowlist
-  // Vercel production deploys do not need this block
-  allowedDevOrigins: [],
 
   // Performance Optimizations
   compress: true,
+  poweredByHeader: false, // Remove X-Powered-By header
+  productionBrowserSourceMaps: false, // Reduce bundle size (remove source maps in prod)
 
   // Image Optimization
   images: {
@@ -27,7 +25,7 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 31536000, // 1 year cache for optimized images
+    minimumCacheTTL: 31536000, // 1 year cache
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
@@ -35,7 +33,7 @@ const nextConfig = {
   // Headers for Performance & Edge Caching
   async headers() {
     return [
-      // API routes should not be cached (dynamic data)
+      // API routes - no cache
       {
         source: '/api/:path*',
         headers: [
@@ -45,9 +43,7 @@ const nextConfig = {
           },
         ],
       },
-      // Main pages - NO Cache-Control here!
-      // ISR manages caching via route-level revalidate exports
-      // Setting a global Cache-Control would conflict with ISR's native caching behavior
+      // Main pages - ISR manages caching
       {
         source: '/:path*',
         headers: [
@@ -77,8 +73,7 @@ const nextConfig = {
           },
         ],
       },
-      // Next.js data - allow ISR caching with stale-while-revalidate
-      // This enables Next.js to serve cached JSON data while revalidating in background
+      // Next.js data - ISR caching
       {
         source: '/_next/data/:path*',
         headers: [
@@ -119,7 +114,7 @@ const nextConfig = {
     ];
   },
 
-  // Rewrites for image fallbacks only (API rewrites removed to enable proper caching)
+  // Rewrites for image fallbacks
   async rewrites() {
     return [
       {
@@ -130,30 +125,21 @@ const nextConfig = {
         source: '/images/articles/:path*',
         destination: '/logo.png',
       },
-      // NOTE: API rewrites removed - they were bypassing Next.js caching
-      // All API calls now use native fetch() with next.revalidate for proper ISR
     ];
   },
 
-  // Experimental Features for Performance
+  // Optimize package imports (tree-shaking)
   experimental: {
     optimizePackageImports: [
       '@radix-ui/react-dropdown-menu',
       '@radix-ui/react-scroll-area',
       '@radix-ui/react-slot',
       '@heroicons/react',
-      'framer-motion',
-      'lodash'
     ],
   },
 
-  // Turbopack configuration
+  // Turbopack configuration (using Turbopack by default in Next.js 16)
   turbopack: {},
-
-  // Webpack Optimizations
-  webpack: (config) => {
-    return config;
-  },
 };
 
 export default nextConfig;

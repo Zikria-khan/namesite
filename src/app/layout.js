@@ -154,18 +154,19 @@ export default function RootLayout({ children }) {
             items: [],
           }}
         />
-        {/* Google AdSense - plain script tag inside <head> for verification */}
-        <script
-          async
+        {/* Google AdSense - using next/script for proper hydration handling */}
+        <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1510675468129183"
-          crossOrigin="anonymous"></script>
+          strategy="lazyOnload"
+          crossOrigin="anonymous"
+        />
 
         {/* AMP Auto Ads — loads relevant amp-auto-ads libraries */}
-        <script
-          async
-          custom-element="amp-auto-ads"
-          src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
-        </script>
+        <Script
+          src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"
+          strategy="lazyOnload"
+          data-custom-element="amp-auto-ads"
+        />
 
         {/* Ahrefs analytics script */}
         <Script

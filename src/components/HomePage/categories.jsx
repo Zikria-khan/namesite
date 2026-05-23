@@ -1,34 +1,8 @@
 import React from "react";
-import { motion } from "framer-motion";
 import { Sparkles, TrendingUp, BookOpen, Star, Globe } from "lucide-react";
+import '../styles/animations-categories.css';
 
 const QuickCategories = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.12,
-        delayChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-        type: "spring",
-        stiffness: 100
-      }
-    }
-  };
-
   const categories = [
     {
       title: "Islamic Names",
@@ -96,40 +70,17 @@ const QuickCategories = () => {
     <section className="relative py-16 lg:py-24 bg-gradient-to-b from-white via-slate-50/30 to-white overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 -z-10">
-        <motion.div 
-          className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-blue-200/20 to-purple-200/20 rounded-full blur-2xl"
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3]
-          }}
-          transition={{ duration: 6, repeat: Infinity }}
-        />
-        <motion.div 
-          className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-emerald-200/20 to-teal-200/20 rounded-full blur-2xl"
-          animate={{ 
-            scale: [1.2, 1, 1.2],
-            opacity: [0.4, 0.7, 0.4]
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
+        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-blue-200/20 to-purple-200/20 rounded-full blur-2xl animate-pulse-slow" />
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-emerald-200/20 to-teal-200/20 rounded-full blur-2xl animate-pulse-slow" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <motion.div 
-          className="text-center mb-12 lg:mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.div 
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full mb-6"
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
+        <div className="text-center mb-12 lg:mb-16 animate-fadeInUp">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full mb-6">
             <Sparkles className="w-5 h-5 text-indigo-600" />
             <span className="text-sm font-semibold text-indigo-700">Quick Categories</span>
-          </motion.div>
+          </div>
           
           <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-4">
             Explore by{" "}
@@ -141,24 +92,15 @@ const QuickCategories = () => {
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Jump straight to what you're looking for with our curated collections
           </p>
-        </motion.div>
+        </div>
 
         {/* Categories Grid */}
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8 max-w-7xl mx-auto"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8 max-w-7xl mx-auto animate-fadeInUp">
           {categories.map((category, index) => (
-            <motion.a
+            <a 
               key={category.title}
               href={category.href}
-              variants={itemVariants}
-              className="group relative block"
-              whileHover={{ y: -8, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="group relative block hover:y-[-8px] hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300"
             >
               {/* Card Container */}
               <div className={`
@@ -171,22 +113,11 @@ const QuickCategories = () => {
               `}>
                 {/* Animated Pattern Background */}
                 <div className="absolute inset-0 opacity-5">
-                  <motion.div 
-                    className="text-6xl flex flex-wrap gap-4 p-4 rotate-12"
-                    animate={{ 
-                      rotate: [12, 18, 12],
-                      scale: [1, 1.1, 1]
-                    }}
-                    transition={{ 
-                      duration: 8, 
-                      repeat: Infinity,
-                      delay: index * 0.5 
-                    }}
-                  >
+                  <div className="text-6xl flex flex-wrap gap-4 p-4 rotate-12 animate-spin-particles">
                     {category.pattern.split('').map((char, i) => (
-                      <span key={i}>{char}</span>
+                      <span key={i} className="animate-spin-slow">{char}</span>
                     ))}
-                  </motion.div>
+                  </div>
                 </div>
 
                 {/* Gradient Overlay */}
@@ -198,11 +129,7 @@ const QuickCategories = () => {
                 {/* Content */}
                 <div className="relative z-10 p-6 lg:p-8 text-center">
                   {/* Icon Container */}
-                  <motion.div 
-                    className="relative mb-6"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
+                  <div className="relative mb-6 hover:scale-[1.1] hover:rotate-[5deg] transition-transform duration-300">
                     <div className={`
                       w-20 h-20 lg:w-24 lg:h-24 mx-auto rounded-2xl 
                       bg-gradient-to-br ${category.gradient}
@@ -220,48 +147,26 @@ const QuickCategories = () => {
                       </div>
 
                       {/* Floating particles */}
-                      <motion.div
-                        className="absolute inset-0"
-                        animate={{ 
-                          opacity: [0, 1, 0],
-                        }}
-                        transition={{ 
-                          duration: 3, 
-                          repeat: Infinity,
-                          delay: index * 0.3 
-                        }}
-                      >
+                      <div className="absolute inset-0">
                         {[...Array(3)].map((_, i) => (
-                          <motion.div
+                          <div 
                             key={i}
                             className="absolute w-1 h-1 bg-white rounded-full"
                             style={{
                               left: `${20 + i * 25}%`,
                               top: `${15 + i * 20}%`
                             }}
-                            animate={{
-                              y: [-10, 10, -10],
-                              opacity: [0, 1, 0],
-                              scale: [0, 1, 0]
-                            }}
-                            transition={{
-                              duration: 2,
-                              repeat: Infinity,
-                              delay: i * 0.2
-                            }}
+                            className="animate-float"
                           />
                         ))}
-                      </motion.div>
+                      </div>
                     </div>
-                  </motion.div>
+                  </div>
 
                   {/* Title */}
-                  <motion.h3 
-                    className="text-xl lg:text-2xl font-bold text-gray-900 mb-3 group-hover:text-gray-800"
-                    whileHover={{ scale: 1.05 }}
-                  >
+                  <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3 group-hover:text-gray-800 transition-colors duration-200">
                     {category.title}
-                  </motion.h3>
+                  </h3>
 
                   {/* Description */}
                   <p className="text-sm lg:text-base text-gray-600 mb-4 group-hover:text-gray-700 transition-colors duration-200">
@@ -269,22 +174,14 @@ const QuickCategories = () => {
                   </p>
 
                   {/* Action indicator */}
-                  <motion.div 
-                    className="flex items-center justify-center gap-2 text-sm font-semibold"
-                    initial={{ opacity: 0, y: 10 }}
-                    whileHover={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
+                  <div className="flex items-center justify-center gap-2 text-sm font-semibold">
                     <span className={`bg-gradient-to-r ${category.gradient} bg-clip-text text-transparent`}>
                       Explore
                     </span>
-                    <motion.div
-                      animate={{ x: [0, 4, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
+                    <div className="animate-spin-slow">
                       {category.lucideIcon}
-                    </motion.div>
-                  </motion.div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Hover glow effect */}
@@ -293,46 +190,31 @@ const QuickCategories = () => {
                   rounded-3xl opacity-0 group-hover:opacity-20 
                   transition-opacity duration-300 blur-xl -z-10
                 `} />
-              </div>
 
-              {/* External glow on hover */}
-              <motion.div
-                className={`
+                {/* External glow on hover */}
+                <div className={`
                   absolute -inset-2 bg-gradient-to-r ${category.gradient} 
                   rounded-3xl opacity-0 blur-2xl -z-20
-                `}
-                whileHover={{ opacity: 0.15 }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.a>
+                `} 
+                className="group-hover:opacity-15 transition-opacity duration-300"
+                />
+              </a>
           ))}
-        </motion.div>
+        </div>
 
         {/* Bottom CTA */}
-        <motion.div 
-          className="text-center mt-12 lg:mt-16"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.8 }}
-        >
+        <div className="text-center mt-12 lg:mt-16 animate-fadeInUp">
           <p className="text-lg text-gray-600 flex items-center justify-center gap-2">
             <span>Can't find what you're looking for?</span>
-            <motion.a 
+            <a 
               href="/search"
-              className="text-indigo-600 hover:text-indigo-700 font-semibold underline decoration-2 underline-offset-2"
-              whileHover={{ scale: 1.05 }}
+              className="text-indigo-600 hover:text-indigo-700 font-semibold underline decoration-2 underline-offset-2 hover:scale-[1.05] transition-transform duration-200"
             >
               Try advanced search
-            </motion.a>
-            <motion.span
-              animate={{ rotate: [0, 20, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="text-xl"
-            >
-              🔍
-            </motion.span>
+            </a>
+            <span className="animate-spin-slow text-xl">🔍</span>
           </p>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

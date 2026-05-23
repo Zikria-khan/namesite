@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
 import { BookHeart, Globe2, PenTool, History } from 'lucide-react';
+import '../styles/animations-seo.css';
  
 
 const CulturalImportance = () => {
