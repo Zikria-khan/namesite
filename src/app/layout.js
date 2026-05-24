@@ -128,6 +128,7 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="ahrefs-site-verification" content="650afaf6635223ff618a281883a22b69b937a121e933b19907debeca67754cd4" />
+        <meta name="monetag" content="309417184f3796aca5a64d3f1c79c518" />
 
         {/* ✅ Performance: Resource Hints */}
         <ResourceHints />
