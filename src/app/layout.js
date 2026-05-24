@@ -175,6 +175,15 @@ export default function RootLayout({ children }) {
           data-key="Xu6eED27Kx1ZuJhBcJDJsA"
           strategy="lazyOnload"
         />
+
+        {/* Quge5 ad tag */}
+        <Script
+          src="https://quge5.com/88/tag.min.js"
+          data-zone="242489"
+          async
+          data-cfasync="false"
+          strategy="lazyOnload"
+        />
       </head>
 
       <body className={`${bodyFont.variable} ${displayFont.variable} antialiased nv-body nv-page`}>
