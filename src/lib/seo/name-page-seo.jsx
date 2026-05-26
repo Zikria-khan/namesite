@@ -47,42 +47,118 @@ function formatLanguages(data) {
 }
 
 /**
- * Extract clean core emotion from meaning
- * Server-side safe, handles long/poetic/multilingual meanings
+ * Extract clean core emotion from meaning - CTR focused
+ * Returns first meaningful part (before comma or '·') up to 5-7 words
  */
 function extractCoreEmotion(meaning) {
   if (!meaning || typeof meaning !== 'string') return 'Beautiful';
   
-  // Clean: remove extra spaces, take first meaningful part
   let cleaned = meaning.trim();
-  
-  // Split by comma, period, or line break - take first clause
   cleaned = cleaned.split(',')[0];
+  cleaned = cleaned.split('·')[0];
   cleaned = cleaned.split('.')[0];
   cleaned = cleaned.split('\n')[0];
   
-  // Take first 2-3 words up to 25 chars
+  // For CTR, we want 5-7 words max for title display
   const words = cleaned.split(' ').filter(w => w.length > 0);
-  const coreWords = words.slice(0, 2).join(' ');
+  const coreWords = words.slice(0, 5).join(' ');
   
-  // Fallback if too short or too long
   if (coreWords.length < 2) return words[0] || 'Meaningful';
-  if (coreWords.length > 30) return coreWords.substring(0, 27) + '...';
+  if (coreWords.length > 35) return coreWords.substring(0, 32) + '...';
   
   return coreWords;
 }
 
 /**
- * SEO Fingerprint Lock System
- * Same name + religion = same base structure
- * Only wording changes slightly within stable variant
+ * Generate CTR-optimized title for name pages
+ * Format: [Name] Meaning in [Religion]: [Short Meaning] | Lucky #[Number] | [Gender] Name
+ */
+export function generateOptimizedTitle(data, religion) {
+  const name = data.name;
+  const gender = typeof data.gender === 'string' ? data.gender.toLowerCase() : '';
+  const genderLabel = gender === 'male' ? 'Boy' : gender === 'female' ? 'Girl' : '';
+  const religionDisplay = religion === 'islamic' ? 'Islam' : 
+                          religion === 'christian' ? 'Christianity' : 
+                          religion === 'hindu' ? 'Hinduism' : religion;
+  const luckyNumber = data.lucky_number ? `Lucky #${data.lucky_number}` : '';
+  
+  // Extract first meaningful part of meaning
+  const shortMeaning = extractCoreEmotion(data.short_meaning || data.meaning || '');
+  
+  // CTR-optimized format: Name Meaning in Religion: meaning | Lucky #N | Gender Name
+  let title;
+  if (religion === 'islamic') {
+    title = `${name} Meaning in Islam: ${shortMeaning}${luckyNumber ? ` | ${luckyNumber}` : ''} | ${genderLabel} Name`;
+  } else if (religion === 'hindu') {
+    title = `${name} Meaning in Hindu: ${shortMeaning}${luckyNumber ? ` | ${luckyNumber}` : ''} | ${genderLabel} Name`;
+  } else if (religion === 'christian') {
+    const origin = data.origin || 'Biblical';
+    title = `${name} Meaning: ${shortMeaning} | ${genderLabel} Name of ${origin} Origin${luckyNumber ? ` | ${luckyNumber}` : ''}`;
+  } else {
+    title = `${name} Meaning: ${shortMeaning}${luckyNumber ? ` | ${luckyNumber}` : ''} | ${genderLabel} Name`;
+  }
+
+  return validateMetaTitle(title);
+}
+
+/**
+ * Generate CTR-optimized description for name pages
+ * Desktop: 155-160 chars with full details
+ * Mobile: Under 120 chars with essential info
+ */
+export function generateOptimizedDescription(data, religion) {
+  const name = data.name;
+  const shortMeaning = data.short_meaning || data.meaning || '';
+  const religionDisplay = religion === 'islamic' ? 'Islamic' : 
+                          religion === 'christian' ? 'Christian' : 
+                          religion === 'hindu' ? 'Hindu' : '';
+  const gender = typeof data.gender === 'string' ? data.gender.toLowerCase() : '';
+  const genderText = gender === 'male' ? 'boy' : gender === 'female' ? 'girl' : 'baby';
+  const script = data.arabic_script || data.script || '';
+  const pronunciation = data.pronunciation?.english || data.pronunciation || '';
+  const origin = data.origin || '';
+  const luckyNumber = data.lucky_number || '';
+  
+  // Extract core meaning for description
+  const coreMeaning = extractCoreEmotion(shortMeaning);
+  
+  // Desktop description (155-160 characters max)
+  // Format: Name (script) means meaning in Religion. Lucky number N, origin origin, pronounced pron.
+  let desktopDesc;
+  if (religion === 'islamic') {
+    desktopDesc = `${name}${script ? ` (${script})` : ''} means ${coreMeaning} in ${religionDisplay}. Lucky number ${luckyNumber}, ${origin} origin, pronounced ${pronunciation}.`;
+  } else if (religion === 'hindu') {
+    desktopDesc = `${name}${script ? ` (${script})` : ''} means ${coreMeaning} in ${religionDisplay}. Lucky number ${luckyNumber}, ${origin} origin, pronounced ${pronunciation}.`;
+  } else {
+    desktopDesc = `${name}${script ? ` (${script})` : ''} means ${coreMeaning}. Lucky number ${luckyNumber}, ${origin} origin, pronounced ${pronunciation}.`;
+  }
+  
+  // Mobile description (under 120 chars)
+  let mobileDesc = `${name} means ${coreMeaning}. Lucky #${luckyNumber}. ${religion} ${genderText} name, ${origin} origin.`;
+  
+  // Validate and truncate if needed
+  if (mobileDesc.length > 120) {
+    mobileDesc = `${name} means ${coreMeaning}. Lucky #${luckyNumber}. ${religion} ${genderText} name.`;
+  }
+  
+  // Ensure desktop desc fits within limits
+  if (desktopDesc.length > 160) {
+    desktopDesc = desktopDesc.substring(0, 157) + '...';
+  }
+  
+  return {
+    desktop: validateMetaDescription(desktopDesc),
+    mobile: validateMetaDescription(mobileDesc)
+  };
+}
+
+/**
+ * Get stable variant for consistent output
  */
 function getSEOStableVariant(name, religion) {
   const stableKey = `${name.toLowerCase()}-${religion}`;
   const hash = getStableHash(stableKey);
   
-  // 4 stable variants based on hash (0-3)
-  // Same name always gets same variant number
   const variantMap = {
     0: { type: 'question', style: 'direct' },
     1: { type: 'question', style: 'soft' },
@@ -94,74 +170,8 @@ function getSEOStableVariant(name, religion) {
 }
 
 /**
- * TITLE SYSTEM - 2 MODES ONLY, Deterministic rotation
- * No Math.random() - SEO stable
- * Neutral hooks - E-E-A-T safe
- */
-export function generateOptimizedTitle(data, religion) {
-  const name = data.name;
-  const gender = typeof data.gender === 'string' ? data.gender.toLowerCase() : '';
-  const genderLabel = gender === 'male' ? 'Boy' : gender === 'female' ? 'Girl' : '';
-  const religionDisplay = religion === 'islamic' ? 'Islamic' : 
-                          religion === 'christian' ? 'Christian' : 
-                          religion === 'hindu' ? 'Hindu' : religion;
-  const genderPhrase = genderLabel ? `${genderLabel} ` : '';
-  const luckyNumber = data.lucky_number ? ` | Lucky #${data.lucky_number}` : '';
-
-  // Include lucky number in title for CTR improvement
-  // "Muhammad Islamic Boy Name Meaning | Lucky #9" = 48 chars
-  const title = `${name} ${religionDisplay} ${genderPhrase}Name Meaning${luckyNumber}`;
-
-  return validateMetaTitle(title);
-}
-
-/**
- * DESCRIPTION SYSTEM - clear benefit copy for CTR
- * Deterministic per name
- */
-export function generateOptimizedDescription(data, religion) {
-  const name = data.name;
-  const shortMeaning = data.short_meaning || data.meaning || '';
-  const religionDisplay = religion === 'islamic' ? 'Islamic' : 
-                          religion === 'christian' ? 'Christian' : 
-                          religion === 'hindu' ? 'Hindu' : '';
-  const gender = typeof data.gender === 'string' ? data.gender.toLowerCase() : '';
-  const genderText = gender === 'male' ? 'boy name' : gender === 'female' ? 'girl name' : 'name';
-  const coreEmotion = extractCoreEmotion(shortMeaning);
-  const sourceType = religion === 'islamic' ? 'Quranic' : religion === 'hindu' ? 'Vedic' : 'Biblical';
-
-  // Build description with verified source emphasis
-  const intro = `${name}: "${coreEmotion}" ${religionDisplay} ${genderText}`;
-  const attributes = [];
-  
-  if (data.lucky_number) attributes.push(`lucky number ${data.lucky_number}`);
-  if (data.origin) attributes.push(`${data.origin} origin`);
-  
-  let description;
-  if (attributes.length > 0) {
-    description = `${intro}. Meaning, ${attributes.join(' & ')}, origin & pronunciation. Verified from ${sourceType} sources — NameVerse.`;
-  } else {
-    description = `${intro}. Meaning, origin & pronunciation. Verified from ${sourceType} sources — NameVerse.`;
-  }
-
-  description = description
-    .replace(/\s+/g, ' ')
-    .replace(/\.\./g, '.')
-    .trim();
-
-  if (description.length > 158) {
-    description = `${intro}. Meaning, origin & pronunciation. Verified from ${sourceType} sources — NameVerse.`;
-  }
-  if (description.length > 158) {
-    description = description.substring(0, 155) + '...';
-  }
-
-  return validateMetaDescription(description);
-}
-
-/**
  * Keywords - minimal, focused, stable (12 max)
- */
+*/
 export function generateOptimizedKeywords(data, religion) {
   const name = data.name;
   const keywords = new Set();
@@ -398,11 +408,12 @@ export async function generateNamePageMetadata(data, religion, slug) {
   const safeMeaning = extractCoreEmotion(shortMeaning);
 
   const title = generateOptimizedTitle(data, religion);
-  const description = generateOptimizedDescription(data, religion);
+  const descriptionObj = generateOptimizedDescription(data, religion);
+  const description = descriptionObj.desktop; // Use desktop description for default
   const keywords = generateOptimizedKeywords(data, religion);
 
   // Stable OG title (deterministic, not random)
-  const ogTitle = `${name} Name Meaning in ${religion.charAt(0).toUpperCase() + religion.slice(1)}`;
+  const ogTitle = `${name} Meaning in ${religion.charAt(0).toUpperCase() + religion.slice(1)}`;
 
   return {
     title,
