@@ -115,6 +115,7 @@ export default function Footer() {
 
       {/* Bottom Ad Unit */}
       <AdSenseUnit slotId="9605048966" />
+      </div>
     </footer>
   );
 }
