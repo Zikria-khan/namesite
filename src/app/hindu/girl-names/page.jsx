@@ -47,11 +47,21 @@ export const metadata = {
 // STRUCTURED DATA
 // ==========================================
 function generateStructuredData(names) {
-  const nameItems = names.slice(0, 30).map((n, index) => ({
-    "@type": "ListItem",
-    position: index + 1,
-    name: n.name,
-    url: `${getSiteUrl()}/hindu/girl-names#${createSafeSlug(n.name)}`,
+  const nameItems = names.slice(0, 30).map((n, index) => {
+    const safeSlug = createSafeSlug(n.name);
+    if (!safeSlug) return null;
+    
+    return ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: n.name,
+      url: `${getSiteUrl()}/hindu/girl-names#${safeSlug}`,
+      description: `${n.name} means "${n.meaning}" - ${n.origin} origin`
+    });
+  }).filter(Boolean);
+
+  const publishedDateForFaq = new Date().toISOString().split('T')[0];
+  return {
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -86,13 +96,14 @@ function generateStructuredData(names) {
           {
             "@type": "Question",
             "name": "What are the most popular Hindu girl names?",
-            "datePublished": "2026-05-19",
-            "author": { "@type": "Organization", "name": "NameVerse" },
             "answerCount": 1,
+            "datePublished": publishedDateForFaq,
+            "upvoteCount": 0,
+            "author": { "@type": "Organization", "name": "NameVerse" },
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "The most popular Hindu girl names include Aadhya, Aahana, Aanya, Aaradhya, Aarohi, Aarushi, Aashi, Aastha, Aditi, Advika, Ananya, Anika, Anvi, Aria, Avani, Diya, Gauri, Ishani, Jiya, Kavya, Kiara, Myra, Nisha, Pari, Prisha, Riya, Saanvi, Sara, Shanvi, Siya, Tara, and Vanya. These names have deep roots in Sanskrit and Hindu tradition.",
-              "datePublished": "2026-05-19",
+              "datePublished": publishedDateForFaq,
               "upvoteCount": 0,
               "author": { "@type": "Organization", "name": "NameVerse" }
             }
@@ -100,13 +111,14 @@ function generateStructuredData(names) {
           {
             "@type": "Question",
             "name": "How do I choose a Hindu name for my baby girl?",
-            "datePublished": "2026-05-19",
-            "author": { "@type": "Organization", "name": "NameVerse" },
             "answerCount": 1,
+            "datePublished": publishedDateForFaq,
+            "upvoteCount": 0,
+            "author": { "@type": "Organization", "name": "NameVerse" },
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "When choosing a Hindu name for your baby girl, consider the Sanskrit meaning, origin, and whether it has a connection to Hindu goddesses or Vedas. Names with positive meanings like 'Goddess Lakshmi', 'Dawn', 'Grace', or 'Worshipped' are highly recommended in Hindu tradition.",
-              "datePublished": "2026-05-19",
+              "datePublished": publishedDateForFaq,
               "upvoteCount": 0,
               "author": { "@type": "Organization", "name": "NameVerse" }
             }
@@ -114,13 +126,14 @@ function generateStructuredData(names) {
           {
             "@type": "Question",
             "name": "What Hindu girl names mean 'Goddess Lakshmi'?",
-            "datePublished": "2026-05-19",
-            "author": { "@type": "Organization", "name": "NameVerse" },
             "answerCount": 1,
+            "datePublished": publishedDateForFaq,
+            "upvoteCount": 0,
+            "author": { "@type": "Organization", "name": "NameVerse" },
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "Several Hindu girl names carry the meaning 'Goddess Lakshmi', including Aaditri, Lakshmi, Padma, Kamala, and Shri. These names express prosperity and divine blessings in Hindu tradition and are beloved choices among Indian families.",
-              "datePublished": "2026-05-19",
+              "datePublished": publishedDateForFaq,
               "upvoteCount": 0,
               "author": { "@type": "Organization", "name": "NameVerse" }
             }

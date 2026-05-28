@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Heart, Shield, Brain, Sparkles, Moon, ChevronRight } from 'lucide-react';
+import { Heart, Shield, Brain, Sparkles, Moon, ChevronRight, Leaf, Star } from 'lucide-react';
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
 import SitePage from '@/components/Layout/SitePage';

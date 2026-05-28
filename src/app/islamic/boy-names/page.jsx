@@ -249,24 +249,59 @@ export default function IslamicBoyNamesPage() {
           </div>
         </section>
 
-        {/* Names Grid */}
+{/* Names Grid */}
         <section className="max-w-7xl mx-auto px-4 pb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
             Complete List of Islamic Boy Names
           </h2>
           
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-             {namesData.map((nameItem, index) => {
-               const safeSlug = createSafeSlug(nameItem.name);
-               // Fallback to a safe index-based ID if slug generation fails
-               const elementId = safeSlug || `name-${index}`;
-               
-               return (
-                 <div 
-                   key={elementId}
-                   id={elementId}
-                   className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-emerald-100 hover:border-emerald-300 group hover:-translate-y-1"
-                 >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {namesData.map((nameItem, index) => {
+              const safeSlug = createSafeSlug(nameItem.name);
+              if (!safeSlug) return null;
+
+              return (
+                <Link
+                  key={safeSlug}
+                  href={`/names/islamic/${safeSlug}`}
+                  id={safeSlug}
+                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-emerald-100 hover:border-emerald-300 group hover:-translate-y-1 block"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
+                        {nameItem.name}
+                      </h3>
+                      <span className="inline-block mt-2 bg-emerald-100 text-emerald-700 text-xs px-3 py-1 rounded-full font-medium">
+                        Arabic
+                      </span>
+                    </div>
+                    <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                      <Moon className="w-6 h-6 text-emerald-600" />
+                    </div>
+                  </div>
+                  
+                  <p className="text-emerald-600 font-semibold text-lg mb-4">
+                    "{nameItem.meaning}"
+                  </p>
+                  
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">Origin:</span>
+                      <span>{nameItem.origin}</span>
+                    </div>
+                    {nameItem.luckyNumber && (
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">Lucky Number:</span>
+                        <span className="inline-flex items-center justify-center w-8 h-8 bg-amber-100 text-amber-700 rounded-full font-bold">
+                          {nameItem.luckyNumber}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
 

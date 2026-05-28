@@ -47,11 +47,21 @@ export const metadata = {
 // STRUCTURED DATA
 // ==========================================
 function generateStructuredData(names) {
-  const nameItems = names.slice(0, 30).map((n, index) => ({
-    "@type": "ListItem",
-    position: index + 1,
-    name: n.name,
-    url: `${getSiteUrl()}/hindu/boy-names#${createSafeSlug(n.name)}`,
+  const nameItems = names.slice(0, 30).map((n, index) => {
+    const safeSlug = createSafeSlug(n.name);
+    if (!safeSlug) return null;
+    
+    return ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: n.name,
+      url: `${getSiteUrl()}/hindu/boy-names#${safeSlug}`,
+      description: `${n.name} means "${n.meaning}" - ${n.origin} origin`
+    });
+  }).filter(Boolean);
+
+  const publishedDateForFaq = new Date().toISOString().split('T')[0];
+  return {
     "@context": "https://schema.org",
     "@graph": [
       {
@@ -86,13 +96,14 @@ function generateStructuredData(names) {
           {
             "@type": "Question",
             "name": "What are the most popular Hindu boy names?",
-            "datePublished": "2026-05-19",
-            "author": { "@type": "Organization", "name": "NameVerse" },
             "answerCount": 1,
+            "datePublished": publishedDateForFaq,
+            "upvoteCount": 0,
+            "author": { "@type": "Organization", "name": "NameVerse" },
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "The most popular Hindu boy names include Aarav, Aarush, Aayush, Abhay, Abhinav, Aditya, Akash, Aryan, Dhruv, Ishan, Kabir, Krish, Laksh, Mohan, Neel, Om, Pranav, Reyansh, Rudra, Shaurya, Shiv, Vihaan, and Yuvan. These names have deep roots in Sanskrit and Hindu tradition.",
-              "datePublished": "2026-05-19",
+              "datePublished": publishedDateForFaq,
               "upvoteCount": 0,
               "author": { "@type": "Organization", "name": "NameVerse" }
             }
@@ -100,13 +111,14 @@ function generateStructuredData(names) {
           {
             "@type": "Question",
             "name": "How do I choose a Hindu name for my baby boy?",
-            "datePublished": "2026-05-19",
-            "author": { "@type": "Organization", "name": "NameVerse" },
             "answerCount": 1,
+            "datePublished": publishedDateForFaq,
+            "upvoteCount": 0,
+            "author": { "@type": "Organization", "name": "NameVerse" },
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "When choosing a Hindu name for your baby boy, consider the Sanskrit meaning, origin, and whether it has a connection to Hindu mythology or Vedas. Names with positive meanings like 'Peaceful', 'Sun', 'Sky', or 'Fearless' are highly recommended in Hindu tradition.",
-              "datePublished": "2026-05-19",
+              "datePublished": publishedDateForFaq,
               "upvoteCount": 0,
               "author": { "@type": "Organization", "name": "NameVerse" }
             }
@@ -114,13 +126,14 @@ function generateStructuredData(names) {
           {
             "@type": "Question",
             "name": "What Hindu boy names mean 'Sun'?",
-            "datePublished": "2026-05-19",
-            "author": { "@type": "Organization", "name": "NameVerse" },
             "answerCount": 1,
+            "datePublished": publishedDateForFaq,
+            "upvoteCount": 0,
+            "author": { "@type": "Organization", "name": "NameVerse" },
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "Several Hindu boy names carry the meaning 'Sun', including Aadavan, Aadhav, Aadhavan, Aadith, Aarav, Aarush, and Aaru. These names express brightness and vitality in Hindu tradition.",
-              "datePublished": "2026-05-19",
+              "datePublished": publishedDateForFaq,
               "upvoteCount": 0,
               "author": { "@type": "Organization", "name": "NameVerse" }
             }

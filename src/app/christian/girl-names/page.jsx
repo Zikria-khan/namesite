@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getSiteUrl } from '@/lib/seo/site';
 import { Heart, Star, BookOpen, Sparkles, Flower2 } from 'lucide-react';
 import namesData from '../../../../public/data/christian-girl-names.json';
+import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 
 // ==========================================
 // METADATA - World Class SEO
@@ -46,13 +47,18 @@ export const metadata = {
 // STRUCTURED DATA
 // ==========================================
 function generateStructuredData(names) {
-  const nameItems = names.slice(0, 30).map((n, index) => ({
-    "@type": "ListItem",
-    position: index + 1,
-    name: n.name,
-    url: `${getSiteUrl()}/christian/girl-names#${n.name.toLowerCase()}`,
-    description: `${n.name} means "${n.meaning}" - ${n.origin} origin`
-  }));
+  const nameItems = names.slice(0, 30).map((n, index) => {
+    const safeSlug = createSafeSlug(n.name);
+    if (!safeSlug) return null;
+    
+    return ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: n.name,
+      url: `${getSiteUrl()}/christian/girl-names#${safeSlug}`,
+      description: `${n.name} means "${n.meaning}" - ${n.origin} origin`
+    });
+  }).filter(Boolean);
 
   return {
     "@context": "https://schema.org",
@@ -249,47 +255,54 @@ export default function ChristianGirlNamesPage() {
           </h2>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {namesData.map((nameItem, index) => (
-              <Link
-                key={index}
-                href={`/names/religion/christian/1#${nameItem.name.toLowerCase()}`}
-                id={nameItem.name.toLowerCase()}
-                className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-pink-100 hover:border-pink-300 group hover:-translate-y-1 block"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900 group-hover:text-pink-600 transition-colors">
-                      {nameItem.name}
-                    </h3>
-                    {nameItem.biblical && (
-                      <span className="inline-block mt-2 bg-pink-100 text-pink-700 text-xs px-3 py-1 rounded-full font-medium">
-                        Biblical
-                      </span>
+            {namesData.map((nameItem, index) => {
+              const safeSlug = createSafeSlug(nameItem.name);
+              if (!safeSlug) return null;
+
+              return (
+<Link
+                  key={safeSlug}
+                  href={`/names/religion/christian/1#${safeSlug}`}
+                  id={safeSlug}
+                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-pink-100 hover:border-pink-300 group hover:-translate-y-1 block"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-900 group-hover:text-pink-600 transition-colors">
+                        {nameItem.name}
+                      </h3>
+                      {nameItem.biblical && (
+                        <span className="inline-block mt-2 bg-pink-100 text-pink-700 text-xs px-3 py-1 rounded-full font-medium">
+                          Biblical
+                        </span>
+                      )}
+                    </div>
+                    <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
+                      <Flower2 className="w-6 h-6 text-pink-600" />
+                    </div>
+                  </div>
+                  
+                  <p className="text-pink-600 font-semibold text-lg mb-4">
+                    "{nameItem.meaning}"
+                  </p>
+                  
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium">Origin:</span>
+                      <span>{nameItem.origin}</span>
+                    </div>
+                    {nameItem.luckyNumber && (
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">Lucky Number:</span>
+                        <span className="inline-flex items-center justify-center w-8 h-8 bg-amber-100 text-amber-700 rounded-full font-bold">
+                          {nameItem.luckyNumber}
+                        </span>
+                      </div>
                     )}
                   </div>
-                  <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
-                    <Flower2 className="w-6 h-6 text-pink-600" />
-                  </div>
-                </div>
-                
-                <p className="text-pink-600 font-semibold text-lg mb-4">
-                  "{nameItem.meaning}"
-                </p>
-                
-                <div className="space-y-2 text-sm text-gray-600">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">Origin:</span>
-                    <span>{nameItem.origin}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">Lucky Number:</span>
-                    <span className="inline-flex items-center justify-center w-8 h-8 bg-amber-100 text-amber-700 rounded-full font-bold">
-                      {nameItem.luckyNumber}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </section>
 
