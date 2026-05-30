@@ -43,7 +43,7 @@ const nextConfig = {
           },
         ],
       },
-      // Main pages - ISR manages caching
+      // Main pages with comprehensive CSP
       {
         source: '/:path*',
         headers: [
@@ -65,7 +65,34 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self' https: data:; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://analytics.ahrefs.com https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://analytics.ahrefs.com https://name-meaning-site-backend.vercel.app https://ep1.adtrafficquality.google https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' data:; frame-ancestors 'self'; object-src 'none'; base-uri 'self';",
+            value: [
+              // Default: only self
+              "default-src 'self'",
+              // Scripts: self, inline (for Next.js), Ahrefs, Monetag
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.ahrefs.com https://nap5k.com https://*.mgid.com https://*.monetag.com",
+              // Styles: self, inline (for Next.js), Google Fonts
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              // Images: self, data URIs, any https (for Monetag ad images)
+              "img-src 'self' data: https: http:",
+              // Connections: API, Ahrefs, Monetag tracking
+              "connect-src 'self' https://analytics.ahrefs.com https://name-meaning-site-backend.vercel.app https://nap5k.com https://*.mgid.com https://*.monetag.com https://*.monetagcdn.com wss://*.mgid.com wss://*.monetag.com",
+              // Fonts: self, data URIs, Google Fonts
+              "font-src 'self' data: https://fonts.gstatic.com",
+              // Frames: self, Monetag ad iframes
+              "frame-src 'self' https://*.mgid.com https://*.monetag.com https://nap5k.com",
+              // Workers: Monetag service workers
+              "worker-src 'self' blob:",
+              // Prevent framing of our site
+              "frame-ancestors 'self'",
+              // Block plugins
+              "object-src 'none'",
+              // Base URI
+              "base-uri 'self'",
+              // Manifest
+              "manifest-src 'self'",
+              // Media sources for video ads
+              "media-src 'self' https: http:"
+            ].join('; ')
           },
           {
             key: 'Referrer-Policy',

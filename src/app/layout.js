@@ -14,6 +14,7 @@ import { AppProvider } from "@/contexts/AppContext";
 import LoadingWrapper from "@/components/LoadingAnimation/LoadingWrapper";
 import { Suspense } from 'react';
 import RouteChrome from "@/components/Layout/RouteChrome";
+import MonetagAd from "@/components/ads/MonetagAd";
 
 import { getSiteUrl } from '@/lib/seo/site';
 // Use environment variable or default - will be overridden client-side if needed
@@ -154,22 +155,6 @@ export default function RootLayout({ children }) {
             items: [],
           }}
         />
-
-        {/* Monetag Ad Script — Only Ad Network */}
-        <Script
-          id="nap5k-ads"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `(function(s){s.dataset.zone='11058633',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`
-          }}
-        />
-
-        {/* Ahrefs analytics script */}
-        <Script
-          src="https://analytics.ahrefs.com/analytics.js"
-          data-key="Xu6eED27Kx1ZuJhBcJDJsA"
-          strategy="lazyOnload"
-        />
       </head>
 
       <body className={`${bodyFont.variable} ${displayFont.variable} antialiased nv-body nv-page`}>
@@ -184,6 +169,10 @@ export default function RootLayout({ children }) {
             <AppInstallPopup />
           </AppProvider>
         </div>
+
+        {/* Monetag In-Page Push Ad — loaded at bottom, after all content */}
+        {/* This ensures ads don't block rendering and don't affect LCP/CLS */}
+        <MonetagAd />
       </body>
     </html>
   );
