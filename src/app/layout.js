@@ -128,7 +128,6 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="ahrefs-site-verification" content="650afaf6635223ff618a281883a22b69b937a121e933b19907debeca67754cd4" />
-        <meta name="monetag" content="309417184f3796aca5a64d3f1c79c518" />
 
         {/* ✅ Performance: Resource Hints */}
         <ResourceHints />
@@ -155,7 +154,8 @@ export default function RootLayout({ children }) {
             items: [],
           }}
         />
-        {/* New Ad Script */}
+
+        {/* Monetag Ad Script — Only Ad Network */}
         <Script
           id="nap5k-ads"
           strategy="afterInteractive"
@@ -170,21 +170,9 @@ export default function RootLayout({ children }) {
           data-key="Xu6eED27Kx1ZuJhBcJDJsA"
           strategy="lazyOnload"
         />
-
-        {/* Quge5 ad tag */}
-        <Script
-          src="https://quge5.com/88/tag.min.js"
-          data-zone="242489"
-          async
-          data-cfasync="false"
-          strategy="lazyOnload"
-        />
       </head>
 
       <body className={`${bodyFont.variable} ${displayFont.variable} antialiased nv-body nv-page`}>
-        <amp-auto-ads type="adsense"
-          data-ad-client="ca-pub-1510675468129183">
-        </amp-auto-ads>
         <div id="temp-wrapper">
           <AppProvider>
             <PerformanceInit />
