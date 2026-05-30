@@ -68,18 +68,15 @@ const nextConfig = {
             value: [
               // Default: only self
               "default-src 'self'",
-              // Scripts: self, inline (for Next.js), Ahrefs, Monetag
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.ahrefs.com https://nap5k.com https://*.mgid.com https://*.monetag.com",
+"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.ahrefs.com https://nap5k.com https://quge5.com https://*.mgid.com https://*.monetag.com https://*.monetagcdn.com https://pagead2.googlesyndication.com https://www.google-analytics.com https://www.googletagmanager.com https://*.profitablecpmratenetwork.com",
               // Styles: self, inline (for Next.js), Google Fonts
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               // Images: self, data URIs, any https (for Monetag ad images)
               "img-src 'self' data: https: http:",
-              // Connections: API, Ahrefs, Monetag tracking
-              "connect-src 'self' https://analytics.ahrefs.com https://name-meaning-site-backend.vercel.app https://nap5k.com https://*.mgid.com https://*.monetag.com https://*.monetagcdn.com wss://*.mgid.com wss://*.monetag.com",
+"connect-src 'self' https://analytics.ahrefs.com https://name-meaning-site-backend.vercel.app https://nap5k.com https://quge5.com https://*.mgid.com https://*.monetag.com https://*.monetagcdn.com wss://*.mgid.com wss://*.monetag.com",
               // Fonts: self, data URIs, Google Fonts
               "font-src 'self' data: https://fonts.gstatic.com",
-              // Frames: self, Monetag ad iframes
-              "frame-src 'self' https://*.mgid.com https://*.monetag.com https://nap5k.com",
+"frame-src 'self' https://*.mgid.com https://*.monetag.com https://nap5k.com https://quge5.com",
               // Workers: Monetag service workers
               "worker-src 'self' blob:",
               // Prevent framing of our site
