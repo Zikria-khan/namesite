@@ -3,7 +3,7 @@ import FAQAccordion from '@/components/names/FAQAccordion'
 import { getSiteUrl } from '@/lib/seo/site'
 
 // ISR: match listing page cadence to avoid excessive revalidations
-export const revalidate = 86400; // 1 day — homepage re-renders far too often at 60s default
+export const revalidate = 2592000; // 30 days — drastically reduced to cut ISR writes and Origin Transfer
 
 const categories = [
   {

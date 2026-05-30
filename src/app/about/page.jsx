@@ -5,6 +5,9 @@ import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpe
 
 const siteUrl = getSiteUrl();
 
+// ISR: 30-day cache — static content, no need for frequent updates
+export const revalidate = 2592000; // 30 days
+
 export const metadata = {
   title: validateMetaTitle("About NameVerse & Zakriya Khan — Baby Name Research Expert"),
   description: validateMetaDescription("Learn about NameVerse and baby names expert Zakriya Khan. Discover how NameVerse researches Islamic, Hindu, and Christian baby names with verified meanings and authentic origin details."),

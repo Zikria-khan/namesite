@@ -2,6 +2,9 @@ import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpe
 import { getSiteUrl } from '@/lib/seo/site';
 import SitePage from '@/components/Layout/SitePage';
 
+// ISR: 30-day cache — static content
+export const revalidate = 2592000; // 30 days
+
 export const metadata = {
   title: validateMetaTitle('Privacy Policy | NameVerse — Protecting Your Personal Information'),
   description: validateMetaDescription('Read the NameVerse Privacy Policy. We are committed to protecting your privacy and explaining how we handle your data when you use our baby names database service.'),

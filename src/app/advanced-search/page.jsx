@@ -3,6 +3,9 @@ import AdvancedSearchClient from './AdvancedSearchClient';
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
 
+// ISR: 30-day cache — static content
+export const revalidate = 2592000; // 30 days
+
 export const metadata = {
   title: validateMetaTitle('Advanced Baby Name Search — 18+ Filters | NameVerse'),
   description: validateMetaDescription(

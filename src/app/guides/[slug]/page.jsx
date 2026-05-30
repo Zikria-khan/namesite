@@ -4,6 +4,9 @@ import { BookOpen, Heart, Clock, ArrowLeft, Share2, Calendar, User, Tag, CheckCi
 import { getSiteUrl } from '@/lib/seo/site';
 import blogPostsData from '../../../../public/data/blog-posts.json';
 
+// ISR: 30-day cache — static blog content
+export const revalidate = 2592000; // 30 days
+
 // Generate metadata for SEO
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;

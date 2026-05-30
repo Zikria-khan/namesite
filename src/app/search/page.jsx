@@ -6,6 +6,9 @@ import { getSiteUrl } from '@/lib/seo/site';
 const publishedDate = new Date().toISOString().split('T')[0];
 const DOMAIN = getSiteUrl();
 
+// ISR: 30-day cache — static content
+export const revalidate = 2592000; // 30 days
+
 export const metadata = {
   title: validateMetaTitle('Search Baby Names by Meaning, Origin & Religion | NameVerse'),
   description: validateMetaDescription(

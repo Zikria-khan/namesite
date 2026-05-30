@@ -2,6 +2,9 @@ import Link from 'next/link';
 import { getSiteUrl } from '@/lib/seo/site';
 import { BookOpen, Heart, Star, ArrowRight, Sparkles, Award, CheckCircle, Users, Globe } from 'lucide-react';
 
+// ISR: 30-day cache — static content
+export const revalidate = 2592000; // 30 days
+
 export const metadata = {
   title: 'Expert Baby Naming Guide | How to Choose the Perfect Name | NameVerse',
   description: 'Complete expert guide to choosing the perfect baby name. Learn naming traditions across Islamic, Christian, and Hindu cultures with tips from naming specialists.',

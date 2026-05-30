@@ -4,6 +4,9 @@ import { getSiteUrl } from '@/lib/seo/site';
 import ClientComponent from './ClientComponent';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 
+// ISR: 30-day cache — search results are relatively static
+export const revalidate = 2592000; // 30 days
+
 export async function generateMetadata({ params }) {
   const { term } = await params;
   const searchResults = await serverSearchNames(term, { limit: 20 });
