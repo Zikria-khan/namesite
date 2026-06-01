@@ -1,5 +1,3 @@
-'use client';
-
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
@@ -17,8 +15,7 @@ import LoadingWrapper from "@/components/LoadingAnimation/LoadingWrapper";
 import { Suspense } from 'react';
 import RouteChrome from "@/components/Layout/RouteChrome";
 import MonetagAd from "@/components/Ads/MonetagAd";
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import AdRefreshHandler from "@/components/Ads/AdRefreshHandler";
 
 import { getSiteUrl } from '@/lib/seo/site';
 // Use environment variable or default - will be overridden client-side if needed
