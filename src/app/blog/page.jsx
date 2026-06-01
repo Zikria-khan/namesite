@@ -312,8 +312,7 @@ export default function BlogPage() {
               <div key={index} className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">{item.question}</h3>
                 <p className="text-gray-600 leading-relaxed">{item.answer}</p>
-              </div>
-            ))}
+             </div>
            </div>
          </div>
        </section>

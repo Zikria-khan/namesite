@@ -294,7 +294,7 @@ export default async function CategoryNamesPage({ params }) {
                  </Link>
                )}
              </div>
-           </section>
+           </section>>
          )}
        </section>
        

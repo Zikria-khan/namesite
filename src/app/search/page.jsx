@@ -206,9 +206,8 @@ const searchPageStructuredData = {
            }
          }
        ]
-}
-};
-   };
+      }
+    };
 
    export default function SearchPage() {
      return (
