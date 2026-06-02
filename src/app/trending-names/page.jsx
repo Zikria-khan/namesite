@@ -8,7 +8,7 @@ import SitePage from '@/components/Layout/SitePage';
 // ISR: 30-day cache — static content
 export const revalidate = 2592000; // 30 days
 
-export const metadat a= {
+export const metadata= {
   title: validateMetaTitle('Trending Baby Names 2026 — What\'s Hot Now | NameVerse'),
   description: validateMetaDescription(
     'Discover the hottest trending baby names of 2026. See fast-rising names, viral social media names, celebrity baby names, and predicted popular names for next year.'
