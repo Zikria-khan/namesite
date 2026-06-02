@@ -14,7 +14,6 @@ import { AppProvider } from "@/contexts/AppContext";
 import LoadingWrapper from "@/components/LoadingAnimation/LoadingWrapper";
 import { Suspense } from 'react';
 import RouteChrome from "@/components/Layout/RouteChrome";
-import AdRefreshHandler from "@/components/Ads/AdRefreshHandler";
 
 import { getSiteUrl } from '@/lib/seo/site';
 // Use environment variable or default - will be overridden client-side if needed
@@ -175,15 +174,14 @@ export default function RootLayout({ children }) {
             <RouteChrome>{children}</RouteChrome>
             <Footer />
             <AppInstallPopup />
-          <AdRefreshHandler />
           </AppProvider>
         </div>
 
         {/* ✅ Google AdSense script placed after page content for safer load ordering */}
-        <Script
+        <script
+          async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1510675468129183"
-          strategy="afterInteractive"
-          crossorigin="anonymous"
+          crossOrigin="anonymous"
         />
       </body>
     </html>
