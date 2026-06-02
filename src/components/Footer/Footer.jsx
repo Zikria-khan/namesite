@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
-import AdSenseUnit from '@/components/Ads/AdSenseUnit';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -88,6 +87,7 @@ export default function Footer() {
             </ul>
           </div>
           </div>
+        </div>
 
         {/* Divider */}
         <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-[rgba(15,23,42,0.10)] pt-6 text-sm text-slate-500 md:flex-row md:items-center">
@@ -97,24 +97,7 @@ export default function Footer() {
             <Link href="/terms" className="transition hover:text-slate-900">Terms of Service</Link>
             <a href="/sitemap.xml" className="transition hover:text-slate-900">Sitemap</a>
           </div>
-          {/* Social links - Only show if you have actual social media accounts
-          <div className="flex space-x-4">
-            <Link href="https://facebook.com/nameverse" aria-label="Facebook" className="hover:text-indigo-700" target="_blank" rel="noopener">
-              <Facebook size={18} />
-            </Link>
-            <Link href="https://twitter.com/nameverse" aria-label="Twitter" className="hover:text-indigo-700" target="_blank" rel="noopener">
-              <Twitter size={18} />
-            </Link>
-            <Link href="https://instagram.com/nameverse" aria-label="Instagram" className="hover:text-indigo-700" target="_blank" rel="noopener">
-              <Instagram size={18} />
-            </Link>
-          </div>
-          */}
         </div>
-      </div>
-
-      {/* Bottom Ad Unit */}
-      <AdSenseUnit slotId="9605048966" />
       </div>
     </footer>
   );

@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
+import AdSenseUnit from '@/components/Ads/AdSenseUnit';
 import AppInstallPopup from "./install";
 import Script from 'next/script';
 import { Fraunces, Instrument_Sans } from 'next/font/google';
@@ -165,7 +166,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className={`${bodyFont.variable} ${displayFont.variable} antialiased nv-body nv-page`}>
-        <div id="temp-wrapper">
+        <div id="temp-wrapper" className="pb-[140px]">
           <AppProvider>
             <PerformanceInit />
             <Suspense fallback={<div>Loading Navbar...</div>}>
@@ -175,6 +176,12 @@ export default function RootLayout({ children }) {
             <Footer />
             <AppInstallPopup />
           </AppProvider>
+        </div>
+
+        <div className="fixed inset-x-0 bottom-0 z-50 bg-white/90 border-t border-slate-200 shadow-[0_-10px_30px_rgba(15,23,42,0.14)] backdrop-blur-sm">
+          <div className="mx-auto flex max-w-7xl justify-center px-4 py-4">
+            <AdSenseUnit slotId="9605048966" className="my-0 w-full max-w-full" minHeight="90px" aria-label="Sticky bottom advertisement" />
+          </div>
         </div>
 
         {/* ✅ Google AdSense script placed after page content for safer load ordering */}
