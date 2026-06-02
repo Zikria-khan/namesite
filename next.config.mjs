@@ -68,13 +68,12 @@ const nextConfig = {
             value: [
               // Default: only self
 "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.ahrefs.com https://nap5k.com https://quge5.com https://*.mgid.com https://*.monetag.com https://*.monetagcdn.com https://pagead2.googlesyndication.com https://www.google-analytics.com https://www.googletagmanager.com https://*.profitablecpmratenetwork.com https://profitablecpmratenetwork.com https://*.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googletagmanager.com https://my.rtmark.net https://jhnwr.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://analytics.ahrefs.com https://pagead2.googlesyndication.com https://www.google-analytics.com https://www.googletagmanager.com https://*.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.googletagmanager.com https://my.rtmark.net https://jhnwr.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: https: http:",
-              "connect-src 'self' https://analytics.ahrefs.com https://name-meaning-site-backend.vercel.app https://nap5k.com https://quge5.com https://*.mgid.com https://*.monetag.com https://*.monetagcdn.com https://*.profitablecpmratenetwork.com https://profitablecpmratenetwork.com https://*.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://ep1.adtrafficquality.google https://*.googletagmanager.com https://my.rtmark.net https://jhnwr.com wss://*.mgid.com wss://*.monetag.com wss://*.monetagcdn.com wss://*.profitablecpmratenetwork.com data:",
+              "connect-src 'self' https://analytics.ahrefs.com https://name-meaning-site-backend.vercel.app https://*.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://ep1.adtrafficquality.google https://*.googletagmanager.com https://my.rtmark.net https://jhnwr.com data:",
               "font-src 'self' data: https://fonts.gstatic.com",
-              "frame-src 'self' https://*.mgid.com https://*.monetag.com https://nap5k.com https://quge5.com https://*.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
-              // Workers: Monetag service workers
+              "frame-src 'self' https://*.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com",
               "worker-src 'self' blob:",
               // Prevent framing of our site
               "frame-ancestors 'self'",

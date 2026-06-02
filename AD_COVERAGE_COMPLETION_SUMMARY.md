@@ -1,5 +1,7 @@
 Ad coverage and revenue optimization audit completed. Critical issues identified and fixed:
 
+**Note:** Legacy Monetag references in this summary are historical; the current codebase now relies on Google AdSense only.
+
 ## Key Findings
 - Ads only appeared in footer (AdSense) and as in-page push (Monetag)
 - **90%+ of eligible page inventory lacked primary ad units**

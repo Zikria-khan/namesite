@@ -3,6 +3,8 @@
 **Date:** 2026-06-01
 **Priority:** HIGH
 
+**Note:** This report contains historical audit findings. Monetag / NAP5K / Quge5 references are legacy and have since been removed from the production codebase; current implementation uses only Google AdSense.
+
 ---
 
 ## EXECUTIVE SUMMARY
@@ -16,7 +18,7 @@ Critical issue identified: Ad coverage is severely limited across the NameVerse 
 ### Current State
 - **AdSense Script:** Loaded globally in `src/app/layout.js` (line 149)
 - **AdSense Unit Component:** `src/components/Ads/AdSenseUnit.jsx` - used ONLY in Footer
-- **Monetag Component:** `src/components/Ads/MonetagAd.jsx` - used globally in layout.js
+- **Monetag Component (legacy):** `src/components/Ads/MonetagAd.jsx` - removed from production and retained only for historical audit context
 
 ### Coverage by Page Type
 

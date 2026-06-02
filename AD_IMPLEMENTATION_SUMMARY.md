@@ -3,6 +3,8 @@
 **Date:** 2026-06-01
 **Status:** Implementation Complete
 
+**Note:** This implementation summary preserves historical Monetag references for audit context. Monetag / Quge5 / NAP5K integrations have been removed from the live codebase.
+
 ---
 
 ## IMPLEMENTATION OVERVIEW

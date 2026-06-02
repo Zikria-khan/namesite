@@ -139,6 +139,8 @@ NameVerse is experiencing severe CTR underperformance due to a combination of we
 
 ### 4.1 Ad Placement Impact
 
+**Note:** Quge5 and NAP5K references in this section are historical legacy ad providers. Only live AdSense and Ahrefs scripts remain in production.
+
 **Current Ad Scripts:**
 1. Ahrefs Analytics (`analytics.ahrefs.com/analytics.js`)
 2. Quge5 Ad Tag (`quge5.com/88/tag.min.js`)
