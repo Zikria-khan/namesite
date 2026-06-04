@@ -181,8 +181,8 @@ export default function RootLayout({ children }) {
                   slotId="9781955008"
                   adFormat="autorelaxed"
                   eager={true}
-                  className="mb-4 hidden md:block"
-                  minHeight="90px"
+                  className="mb-4 mx-auto w-full max-w-[320px] md:max-w-full"
+                  minHeight="65px"
                   aria-label="Top display advertisement"
                 />
               </div>
