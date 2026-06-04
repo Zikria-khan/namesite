@@ -1,15 +1,16 @@
 import Link from 'next/link'
 import FAQAccordion from '@/components/names/FAQAccordion'
 import { getSiteUrl } from '@/lib/seo/site'
+import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers'
 
-// ISR: match listing page cadence to avoid excessive revalidations
-export const revalidate = 2592000; // 30 days — drastically reduced to cut ISR writes and Origin Transfer
+// ISR: 30-day cache
+export const revalidate = 2592000; // 30 days
 
 const categories = [
   {
-    title: "📖 Islamic Names",
-    desc: "Quranic, Arabic, Persian & Urdu origins with transliteration and spiritual significance. Each name includes references to Quranic verses or Hadith when available.",
-    longDesc: "Explore 18,000+ authentic Muslim baby names with scholarly meaning verification, including popular 2026 names like RAYAN, AYAN, and ZAYN.",
+    title: "📖 Islamic Names — Arabic & Semitic Linguistic Analysis",
+    desc: "Names of Arabic, Persian, and Urdu linguistic origin with etymological analysis, Quranic context, and cultural semantic interpretation across Islamic civilizations.",
+    longDesc: "Explore 18,000+ personal names from Islamic linguistic tradition with scholarly verification of root etymology, phonetic structure, and cross-cultural usage patterns including names popular in 2026.",
     bgClass: "bg-emerald-50 dark:bg-emerald-950/30",
     borderAccent: "border-emerald-200 dark:border-emerald-800",
     accentText: "text-emerald-700 dark:text-emerald-400",
@@ -18,15 +19,15 @@ const categories = [
     icon: "🕌",
     stats: "18,000+ names | 98% verified",
     links: [
-      { label: "♂ Boy Names", href: "/islamic/boy-names" },
-      { label: "♀ Girl Names", href: "/islamic/girl-names" },
+      { label: "♂ Masculine Names", href: "/islamic/boy-names" },
+      { label: "♀ Feminine Names", href: "/islamic/girl-names" },
       { label: "All Islamic Names →", href: "/names/religion/islamic/1", primary: true },
     ]
   },
   {
-    title: "✝️ Christian Names",
-    desc: "Biblical Hebrew, Greek & Latin origins including saints, apostles, and modern Christian favorites with strong theological meanings.",
-    longDesc: "Discover 11,000+ Christian baby names from Old and New Testament origins, including rare biblical names, virtue names like Grace and Faith, and modern apostolic names for 2026.",
+    title: "✝️ Christian Names — Hebrew, Aramaic & Greek Etymologies",
+    desc: "Names of Biblical Hebrew, Aramaic, Greek, and Latin linguistic origin with etymological context from Old and New Testament sources and early Christian traditions.",
+    longDesc: "Discover 11,000+ personal names from Christian linguistic tradition — including Biblical names, virtue names, and apostolic names — with root etymology and historical evolution analysis.",
     bgClass: "bg-blue-50 dark:bg-blue-950/30",
     borderAccent: "border-blue-200 dark:border-blue-800",
     accentText: "text-blue-700 dark:text-blue-400",
@@ -35,15 +36,15 @@ const categories = [
     icon: "⛪",
     stats: "11,000+ names | Biblical sources",
     links: [
-      { label: "♂ Boy Names", href: "/christian/boy-names" },
-      { label: "♀ Girl Names", href: "/christian/girl-names" },
+      { label: "♂ Masculine Names", href: "/christian/boy-names" },
+      { label: "♀ Feminine Names", href: "/christian/girl-names" },
       { label: "All Christian Names →", href: "/names/religion/christian/1", primary: true },
     ]
   },
   {
-    title: "🕉️ Hindu Names",
-    desc: "Sanskrit, Vedic & mythological origins including gods, goddesses, and modern Indian names with astrological significance.",
-    longDesc: "Browse 15,000+ Hindu baby names from ancient Vedas and Puranas. Each name includes deity association, nakshatra compatibility, and modern variations popular in 2026.",
+    title: "🕉️ Hindu Names — Sanskrit & Dravidian Linguistic Origins",
+    desc: "Names of Sanskrit, Vedic, and Dravidian linguistic origin with etymological analysis, cultural context from Hindu traditions, and phonetic structure documentation.",
+    longDesc: "Browse 15,000+ personal names from Hindu linguistic tradition — including Vedic names, deity-associated names, and nature-derived names — with root etymology and regional variations.",
     bgClass: "bg-orange-50 dark:bg-orange-950/30",
     borderAccent: "border-orange-200 dark:border-orange-800",
     accentText: "text-orange-700 dark:text-orange-400",
@@ -52,8 +53,8 @@ const categories = [
     icon: "🔱",
     stats: "15,000+ names | Vedic sources",
     links: [
-      { label: "♂ Boy Names", href: "/hindu/boy-names" },
-      { label: "♀ Girl Names", href: "/hindu/girl-names" },
+      { label: "♂ Masculine Names", href: "/hindu/boy-names" },
+      { label: "♀ Feminine Names", href: "/hindu/girl-names" },
       { label: "All Hindu Names →", href: "/names/religion/hindu/1", primary: true },
     ]
   },
@@ -61,28 +62,28 @@ const categories = [
 
 const faqs = [
   {
-    q: "How do I find the perfect Islamic baby name with meaning?",
-    a: "Browse our Islamic names collection filtered by boy or girl, then explore by letter A–Z. Each name includes its Quranic reference, Arabic meaning, and 2026 trending status so you can choose an authentic and modern name confidently."
+    q: "What is the linguistic origin of Islamic names?",
+    a: "Islamic personal names primarily originate from Arabic and Semitic linguistic traditions, with significant influences from Persian, Turkish, and Urdu. Each name is verified against classical Arabic dictionaries, Quranic references, and historical usage patterns across Islamic civilizations."
   },
   {
-    q: "What are the most popular Muslim boy names in 2026?",
-    a: "The top trending Islamic boy names in 2026 are Muhammad, Rayan, Ayan, Zayn, and Yusuf. These names combine Quranic authenticity with modern appeal and are rising globally across Pakistan, UAE, UK, and the US."
+    q: "What are the etymological roots of Christian personal names?",
+    a: "Christian personal names derive from Biblical Hebrew, Aramaic, Greek, and Latin linguistic traditions. Sources include the Old Testament (Hebrew Bible), New Testament Greek texts, early Christian saints, and medieval European naming traditions."
   },
   {
-    q: "Which Christian baby names are trending in 2026?",
-    a: "Top Christian boy names in 2026 include Liam, Noah, Elijah, Ezra, and Theodore. For girls, Olivia, Isla, Grace, and Aurora lead the charts. All carry strong Biblical or theological roots with timeless appeal."
+    q: "What linguistic families do Hindu names come from?",
+    a: "Hindu personal names primarily originate from Sanskrit (Indo-Aryan branch) and Dravidian language families. Many derive from Vedic literature, Puranic texts, and classical Sanskrit etymological roots with regional variations across the Indian subcontinent."
   },
   {
-    q: "What are the best Hindu baby names from the Vedas?",
-    a: "Popular Vedic-origin Hindu names in 2026 include Vihaan, Arjun, Ishaan for boys and Ananya, Diya, and Kavya for girls. Each carries Sanskrit meaning tied to deities, virtues, or natural elements from the Puranas."
+    q: "How are name meanings verified for accuracy?",
+    a: "Each name undergoes scholarly verification: Islamic names against Quranic Arabic and classical dictionaries, Christian names against Biblical Hebrew/Greek concordances, and Hindu names against Sanskrit etymological references. Our verification rate exceeds 98% across all traditions."
   },
   {
-    q: "Can I find gender-neutral names that work across religions?",
-    a: "Yes — names like Noor (Islamic/Arabic), Arya (Hindu/Sanskrit), and Eden (Biblical/Hebrew) work beautifully across traditions. Our collections cross-tag unisex names so you can filter by religion and gender-neutral preference together."
+    q: "Can I find gender-neutral names across different traditions?",
+    a: "Yes — names like Noor (Arabic/Semitic), Arya (Sanskrit), and Eden (Hebrew) represent cross-cultural personal names found in multiple linguistic traditions. Our database cross-references names appearing in multiple cultural contexts."
   },
   {
-    q: "Are all the name meanings verified and accurate?",
-    a: "We verify Islamic names against Quranic text and classical Arabic dictionaries, Christian names against Biblical concordances, and Hindu names against Sanskrit etymological references. Our 98% verification rate reflects scholarly review of primary sources."
+    q: "What is the historical evolution of personal names across cultures?",
+    a: "Personal names evolve through linguistic migration, cultural exchange, and historical events. For example, Arabic names spread through Islamic expansion into Persian, Turkish, Urdu, and Malay linguistic communities. Biblical names migrated from Hebrew to Greek to Latin to modern European languages."
   },
 ]
 
@@ -125,55 +126,10 @@ const religionLetters = [
 ]
 
 const popularStats = [
-  { label: 'Islamic Names', count: '18,000+', color: 'bg-emerald-500' },
-  { label: 'Christian Names', count: '11,000+', color: 'bg-blue-500' },
-  { label: 'Hindu Names', count: '15,000+', color: 'bg-orange-500' },
-  { label: 'Other Names', count: '21,000+', color: 'bg-purple-500' },
-]
-
-const latestBlogPosts = [
-  {
-    id: 'holy-quran-names-with-tafseer',
-    title: 'Quran-Inspired Names with Tafseer',
-    excerpt: '40+ Quranic names with detailed Tafseer — perfect for parents seeking deep spiritual meaning.',
-    category: 'Islamic Names',
-    emoji: '📖'
-  },
-  {
-    id: 'why-islamic-names-popular-2026',
-    title: 'Why Islamic Names Are the Most Popular Choice',
-    excerpt: 'Discover the global rise of Islamic baby names in 2026 and why parents worldwide love them.',
-    category: 'Islamic Names',
-    emoji: '🌍'
-  },
-  {
-    id: 'trends-predictions-2026-2030',
-    title: 'Baby Name Trends & Predictions 2026–2030',
-    excerpt: 'Expert predictions on baby name trends for the next 5 years across all religions and cultures.',
-    category: 'Trends',
-    emoji: '📈'
-  },
-  {
-    id: 'unique-rare-names-2026',
-    title: 'Unique & Rare Baby Names for 2026',
-    excerpt: 'Stand out with these rare and unique baby names from Islamic, Christian, and Hindu traditions.',
-    category: 'Unique',
-    emoji: '✨'
-  },
-  {
-    id: 'vishnu-lakshmi-ganesha',
-    title: 'Vishnu, Lakshmi & Ganesha Names',
-    excerpt: 'Divine Hindu baby names inspired by Vishnu, Lakshmi, and Ganesha for 2026.',
-    category: 'Baby Names',
-    emoji: '🔱'
-  },
-  {
-    id: 'christian-girl-names-bible',
-    title: 'Christian Girl Names from the Bible',
-    excerpt: 'Beautiful Christian girl names from the Bible with meanings, origins, and 2026 trending insights.',
-    category: 'Christian Names',
-    emoji: '✝️'
-  },
+  { label: 'Islamic Onomastics', count: '18,000+', color: 'bg-emerald-500' },
+  { label: 'Christian Onomastics', count: '11,000+', color: 'bg-blue-500' },
+  { label: 'Hindu Onomastics', count: '15,000+', color: 'bg-orange-500' },
+  { label: 'Cross-Cultural', count: '21,000+', color: 'bg-purple-500' },
 ]
 
 const faqSchema = {
@@ -199,17 +155,20 @@ const faqSchema = {
 }
 
 export const metadata = {
-  title: "65,000+ Baby Names with Meanings — Islamic, Hindu & Christian Names A–Z",
-  description: "Discover 65,000+ verified baby names — 18,000+ Islamic, 11,000+ Christian, 15,000+ Hindu, and 21,000+ global names — with authentic meanings and 2026 trending data.",
-  keywords: ["baby names", "Islamic names", "Hindu names", "Christian names", "baby names with meanings", "Quranic names", "Sanskrit names", "Biblical names", "gender neutral names", "trending baby names 2026"],
+  title: validateMetaTitle("Cultural Name Knowledge Base — Linguistic Origin Analysis | NameVerse"),
+  description: validateMetaDescription(
+    "Explore 65,000+ personal names with linguistic origin analysis across Islamic, Christian, and Hindu traditions. Cross-cultural onomastics research with etymological roots, semantic meanings, and historical evolution data."
+  ),
+  keywords: ["cultural name knowledge base", "linguistic origin analysis", "Islamic onomastics", "Christian onomastics", "Hindu onomastics", "name etymology research", "cross-cultural name analysis", "onomastics database"],
   alternates: {
     canonical: `${getSiteUrl()}/names`,
   },
   openGraph: {
-    title: "65,000+ Baby Names | Islamic, Hindu & Christian — NameVerse",
-    description: "Explore 65,000+ verified baby names from Islamic, Hindu, and Christian traditions — with meanings, origins, and 2026 trending data.",
+    title: validateMetaTitle("NameVerse — Linguistic Name Research Across Civilizations"),
+    description: validateMetaDescription("65,000+ personal names with linguistic origin analysis and cultural semantic interpretation across Islamic, Christian, and Hindu traditions."),
     url: `${getSiteUrl()}/names`,
     type: "website",
+    siteName: "NameVerse — Cultural Name Knowledge Base",
   },
 }
 
@@ -231,21 +190,18 @@ export default function Page() {
                 </Link>
               </li>
               <li className="text-gray-300">/</li>
-              <li className="text-gray-700 font-semibold" aria-current="page">Baby Names</li>
+              <li className="text-gray-700 font-semibold" aria-current="page">Cultural Name Knowledge Base</li>
             </ol>
           </nav>
 
-          {/* ── H1 Title ── */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white mb-4 leading-tight tracking-tight">
-            65,000+ Baby Names with Meanings —{' '}
+            Cultural Name Knowledge Base —{' '}
             <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-orange-600 bg-clip-text text-transparent">
-              Islamic, Hindu &amp; Christian Names A–Z
+              Linguistic Origin Analysis Across Civilizations
             </span>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mb-8 leading-relaxed">
-            Discover 65,000+ verified baby names across Islamic Quranic, Christian Biblical, and
-            Hindu Sanskrit traditions — plus 21,000+ rare &amp; unique global names. Each name includes
-            its authentic meaning, linguistic origin, gender, and cultural significance.
+            65,000+ personal names with linguistic origin analysis across Islamic (Arabic/Semitic), Christian (Hebrew/Aramaic/Greek), and Hindu (Sanskrit/Dravidian) traditions — plus 21,000+ cross-cultural names. Each entry includes root etymology, phonetic structure, and cultural semantic interpretation.
           </p>
 
           {/* ── Quick Stats ── */}
@@ -307,7 +263,7 @@ export default function Page() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`block w-full text-center bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold py-3 px-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:${cat.accentLight} hover:border-purple-300 transition-all group-hover:shadow-md text-sm`}
+                  className="block w-full text-center bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold py-3 px-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-purple-300 transition-all group-hover:shadow-md text-sm"
                 >
                   {link.label}
                 </Link>
@@ -317,63 +273,40 @@ export default function Page() {
         </div>
       </div>
 
-{/* ── SEO Content Section ── */}
-       <section className="max-w-5xl mx-auto px-4 mb-16">
-         <div className="bg-gradient-to-r from-emerald-50 via-white to-blue-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 rounded-3xl p-8 md:p-10 shadow-sm border border-gray-100 dark:border-gray-700">
-           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-             Find the Perfect Baby Name in 2026 — 65,000+ Names to Explore
-           </h2>
-           <div className="space-y-4 text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-             <p>
-               Choosing a baby name is one of the most meaningful decisions a parent can make. Whether you are looking for an authentic <Link href="/islamic/boy-names" className="text-emerald-600 hover:underline font-medium">Islamic boy name</Link> with Quranic roots, a <Link href="/christian/girl-names" className="text-blue-600 hover:underline font-medium">Christian girl name</Link> from the New Testament, or a <Link href="/hindu/boy-names" className="text-orange-600 hover:underline font-medium">Hindu boy name</Link> rooted in Sanskrit tradition — our verified collection of 65,000+ names covers every faith, culture, and style preference for 2026.
-             </p>
-             <p>
-               Every name in our database includes its linguistic origin, scholarly meaning, religious significance, gender classification, lucky number, and real-time 2026 trending data so you can make a confident, informed choice. Our team of nameologists and religious scholars has verified each name against primary sources including the Quran, Biblical concordances, and Sanskrit etymological references, giving you a 98% verification accuracy rate.
-             </p>
-             <p>
-               Start by exploring <Link href="/names/religion/islamic/1" className="text-emerald-600 hover:underline font-medium">all Islamic names</Link>,{' '}
-               <Link href="/names/religion/christian/1" className="text-blue-600 hover:underline font-medium">all Christian names</Link>, or{' '}
-               <Link href="/names/religion/hindu/1" className="text-orange-600 hover:underline font-medium">all Hindu names</Link>.{' '}
-               You can also browse by your favorite starting letter below — we have curated A–Z collections for each religion.
-             </p>
-             <p>
-               Our platform stands apart through rigorous verification processes: Islamic names are cross-referenced with classical Arabic dictionaries and Quranic sources, Christian names are validated against Biblical concordances and historical usage, and Hindu names are verified through Vedic references and Sanskrit etymology. This scholarly approach ensures that every name meaning you discover is authentic, culturally appropriate, and rich with heritage value.
-             </p>
-           </div>
-         </div>
-       </section>
-
-       {/* ── How to Choose Guide ── */}
-       <section className="max-w-5xl mx-auto px-4 mb-16">
-         <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 md:p-10 shadow-sm border border-gray-100 dark:border-gray-700">
-           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6">
-             How to Choose the Perfect Baby Name — Expert Guide for 2026
-           </h2>
-           <div className="space-y-4 text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-             <p>
-               When selecting a baby name, start by considering the meaning and origin. Names carry powerful energy and can influence identity throughout life. For <Link href="/islamic/boy-names" className="text-emerald-600 hover:underline font-medium">Islamic names</Link>, look for meanings that reflect desirable qualities like strength, wisdom, or compassion. <Link href="/christian/girl-names" className="text-blue-600 hover:underline font-medium">Christian names</Link> often draw from Biblical figures known for their faith and virtue, while <Link href="/hindu/boy-names" className="text-orange-600 hover:underline font-medium">Hindu names</Link> may incorporate elements from nature, deities, or sacred texts.
-             </p>
-             <p>
-               Consider pronunciation across different languages and cultures, especially in our increasingly connected world. Test how the name sounds with your surname, and ask family members to practice saying it aloud. Pay attention to initials and potential nicknames — both formal and informal versions should feel comfortable.
-             </p>
-             <p>
-               At NameVerse, we recommend exploring our curated collections by letter (A–Z), gender (boy or girl), or by specific traits like nature-inspired names, prophet names, or virtue names. Each name in our database includes verified meaning, cultural context, and trending data to help you make the most informed choice for your child's future.
-             </p>
-           </div>
-         </div>
-       </section>
+      {/* ── SEO Content Section ── */}
+      <section className="max-w-5xl mx-auto px-4 mb-16">
+        <div className="bg-gradient-to-r from-emerald-50 via-white to-blue-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 rounded-3xl p-8 md:p-10 shadow-sm border border-gray-100 dark:border-gray-700">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+            Cross-Cultural Onomastics Research — 65,000+ Personal Names
+          </h2>
+          <div className="space-y-4 text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+            <p>
+              NameVerse is a Cultural Name Knowledge Base providing linguistic origin analysis for personal names across civilizations. Whether researching <Link href="/islamic/boy-names" className="text-emerald-600 hover:underline font-medium">Islamic masculine names</Link> with Arabic/Semitic roots, <Link href="/christian/girl-names" className="text-blue-600 hover:underline font-medium">Christian feminine names</Link> of Biblical Hebrew origin, or <Link href="/hindu/boy-names" className="text-orange-600 hover:underline font-medium">Hindu masculine names</Link> with Sanskrit etymology — our database of 65,000+ entries covers every major linguistic tradition.
+            </p>
+            <p>
+              Each entry includes linguistic origin, root etymology, cultural semantic interpretation, gender classification, phonetic structure, and cross-cultural usage data. Our scholarly verification process references: Quranic Arabic and classical dictionaries for Islamic names, Biblical Hebrew/Greek concordances for Christian names, and Sanskrit etymological references for Hindu names.
+            </p>
+            <p>
+              Start your research by exploring <Link href="/names/religion/islamic/1" className="text-emerald-600 hover:underline font-medium">Islamic onomastics</Link>,{' '}
+              <Link href="/names/religion/christian/1" className="text-blue-600 hover:underline font-medium">Christian onomastics</Link>, or{' '}
+              <Link href="/names/religion/hindu/1" className="text-orange-600 hover:underline font-medium">Hindu onomastics</Link>.{' '}
+              Browse by phonetic index (A–Z) for each linguistic tradition below.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* ── Gender Quick Links ── */}
       <section className="max-w-5xl mx-auto px-4 mb-16">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">Browse by Religion &amp; Gender</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">Browse by Cultural Tradition & Gender</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {[
-            { label: "🕌 Islamic Boys", href: "/islamic/boy-names", color: "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/40" },
-            { label: "🕌 Islamic Girls", href: "/islamic/girl-names", color: "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/40" },
-            { label: "✝️ Christian Boys", href: "/christian/boy-names", color: "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/40" },
-            { label: "✝️ Christian Girls", href: "/christian/girl-names", color: "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/40" },
-            { label: "🔱 Hindu Boys", href: "/hindu/boy-names", color: "bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-900/40" },
-            { label: "🔱 Hindu Girls", href: "/hindu/girl-names", color: "bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-900/40" },
+            { label: "🕌 Islamic Masculine", href: "/islamic/boy-names", color: "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/40" },
+            { label: "🕌 Islamic Feminine", href: "/islamic/girl-names", color: "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/40" },
+            { label: "✝️ Christian Masculine", href: "/christian/boy-names", color: "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/40" },
+            { label: "✝️ Christian Feminine", href: "/christian/girl-names", color: "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/40" },
+            { label: "🔱 Hindu Masculine", href: "/hindu/boy-names", color: "bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-900/40" },
+            { label: "🔱 Hindu Feminine", href: "/hindu/girl-names", color: "bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800 hover:bg-orange-100 dark:hover:bg-orange-900/40" },
           ].map(item => (
             <Link
               key={item.href}
@@ -390,10 +323,10 @@ export default function Page() {
       <section className="max-w-6xl mx-auto px-4 mb-16">
         <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-gray-700">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 text-center">
-            Browse Baby Names by Letter A to Z
+            Phonetic Index — Browse Names by Letter A to Z
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-8 max-w-2xl mx-auto">
-            Instantly jump to any letter in our Islamic, Christian, or Hindu name collections. Click a letter to see every baby name starting with that letter — complete with meanings, origins, and lucky numbers.
+            Navigate the phonetic index for Islamic, Christian, or Hindu name collections. Click any letter to access names with that initial phoneme — complete with etymological analysis and cultural context.
           </p>
           {religionLetters.map((rl) => (
             <div key={rl.religion} className={`mb-6 last:mb-0 ${rl.bgLight} dark:bg-gray-700/30 rounded-2xl p-4 md:p-5`}>
@@ -402,7 +335,7 @@ export default function Page() {
                   {rl.emoji}
                 </span>
                 <h3 className={`text-base font-bold ${rl.textColor}`}>
-                  {rl.label} Baby Names by Letter
+                  {rl.label} Names by Letter
                 </h3>
                 <Link
                   href={`/names/religion/${rl.religion}/1`}
@@ -417,8 +350,8 @@ export default function Page() {
                     key={letter}
                     href={`/names/${rl.religion}/letter/${letter}/1`}
                     className={`w-9 h-9 flex items-center justify-center rounded-lg text-sm font-bold transition-all duration-200 bg-white border ${rl.borderColor} ${rl.textColor} ${rl.hoverBg} hover:shadow-sm hover:scale-110 dark:bg-gray-800 dark:border-gray-600`}
-                    aria-label={`${rl.label} baby names starting with ${letter}`}
-                    title={`Browse ${rl.label} baby names beginning with ${letter}`}
+                    aria-label={`${rl.label} names starting with ${letter}`}
+                    title={`Browse ${rl.label} personal names beginning with ${letter}`}
                   >
                     {letter}
                   </Link>
@@ -428,58 +361,9 @@ export default function Page() {
           ))}
           <div className="text-center mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
             <p className="text-xs text-gray-400 dark:text-gray-500">
-              Each letter page shows up to 50 names per page with meanings, origins, gender, and lucky numbers. Browse all A–Z letters or jump directly to your favourite starting letter above.
+              Each letter page shows up to 50 names with etymological analysis, origins, gender classification, and cultural context.
             </p>
           </div>
-        </div>
-      </section>
-
-      {/* ── Latest Blog Posts ── */}
-      <section className="max-w-6xl mx-auto px-4 mb-16">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Latest Baby Name Guides</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Expert articles and naming insights for 2026</p>
-          </div>
-          <Link
-            href="/blog"
-            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
-          >
-            View All Articles <span className="text-lg leading-none">→</span>
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {latestBlogPosts.map((post) => (
-            <Link
-              key={post.id}
-              href={`/blog/${post.id}`}
-              className="group bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-emerald-200 dark:hover:border-emerald-700 hover:-translate-y-1"
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-2xl">{post.emoji}</span>
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                  {post.category}
-                </span>
-              </div>
-              <h3 className="text-base font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-2 line-clamp-2">
-                {post.title}
-              </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">
-                {post.excerpt}
-              </p>
-              <div className="mt-3 flex items-center gap-1 text-xs font-medium text-emerald-600 dark:text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                Read Guide <span className="text-sm">→</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <div className="text-center mt-6 sm:hidden">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
-          >
-            View All Articles <span className="text-lg leading-none">→</span>
-          </Link>
         </div>
       </section>
 
@@ -487,10 +371,10 @@ export default function Page() {
       <section className="max-w-3xl mx-auto px-4 mb-20">
         <div className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-gray-700">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 text-center">
-            Baby Names FAQ: Everything Parents Need to Know
+            Onomastics FAQ: Linguistic Analysis of Personal Names
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-8">
-            Expert answers to the most common questions about choosing the perfect name for your baby
+            Scholarly answers to common questions about cultural name research and linguistic origin analysis
           </p>
 
           <FAQAccordion faqs={faqs} />

@@ -7,12 +7,12 @@ import AdSlot from '@/components/Ads/AdSlot';
 const publishedDate = new Date().toISOString().split('T')[0];
 const DOMAIN = getSiteUrl();
 
-// Structured data for search page (Site SearchAction)
+// Structured data for search page
 const searchPageStructuredData = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "url": `${DOMAIN}/search`,
-  "name": "NameVerse Search",
+  "name": "NameVerse Cultural Name Research",
   "potentialAction": {
     "@type": "SearchAction",
     "target": `${DOMAIN}/search?q={search_term_string}`,
@@ -20,44 +20,40 @@ const searchPageStructuredData = {
   }
 };
 
-// ISR: 30-day cache — static content
+// ISR: 30-day cache
 export const revalidate = 2592000; // 30 days
 
 export const metadata = {
-  title: validateMetaTitle('Search Baby Names by Meaning, Origin & Religion | NameVerse'),
+  title: validateMetaTitle('Search Personal Names — Linguistic Origin Analysis | NameVerse'),
   description: validateMetaDescription(
-    'Search 65,000+ verified Islamic, Hindu & Christian baby names instantly. Filter by religion, gender, meaning, origin, and trending names for 2026. Fast, accurate, free name search.'
+    'Search 65,000+ personal names with linguistic origin analysis across Islamic, Christian, and Hindu traditions. Find names by linguistic root, cultural context, and semantic meaning. Free cultural onomastics research tool.'
   ),
   keywords: [
-    'search baby names',
-    'baby name search engine',
-    'find baby names by meaning',
-    'search names by origin',
-    'search baby names by religion',
-    'Islamic baby name search',
-    'Hindu baby name search',
-    'Christian baby name search',
-    'trending baby names 2026',
-    'NameVerse search',
-    'baby name finder',
-    'name search with meanings',
-    'find perfect baby name',
-    'baby name generator search'
+    'linguistic origin analysis search',
+    'cultural onomastics search',
+    'personal name research',
+    'name etymology search',
+    'Islamic cultural name research',
+    'Hindu name linguistic analysis',
+    'Christian name etymology',
+    'cross-cultural name search',
+    'onomastics research tool',
+    'NameVerse knowledge base'
   ].join(', '),
   openGraph: {
-    title: validateMetaTitle('Search Baby Names by Meaning, Origin & Religion | NameVerse'),
+    title: validateMetaTitle('Search Personal Names — Linguistic Origin Analysis | NameVerse'),
     description: validateMetaDescription(
-      'Discover 65,000+ verified baby names across Islamic, Hindu & Christian traditions. Search by meaning, origin, gender, and find trending names with authentic information.'
+      'Search 65,000+ personal names with linguistic origin analysis across Islamic, Christian, and Hindu cultural traditions. Free onomastics research system.'
     ),
     url: `${DOMAIN}/search`,
     type: 'website',
-    siteName: 'NameVerse',
+    siteName: 'NameVerse — Cultural Name Knowledge Base',
     image: `${DOMAIN}/og-search.png`
   },
   twitter: {
     card: 'summary_large_image',
-    title: validateMetaTitle('Search Baby Names - NameVerse'),
-    description: 'Search 65,000+ Islamic, Hindu & Christian baby names with meanings and origins',
+    title: validateMetaTitle('Search Cultural Names — NameVerse'),
+    description: 'Search 65,000+ personal names with linguistic origin analysis and cultural semantic interpretation.',
     image: `${DOMAIN}/og-search.png`
   },
   alternates: {
@@ -81,64 +77,51 @@ export default function SearchPage() {
           <GlobalSearchClient />
         </Suspense>
         
-        {/* Content Section with FAQs and Information */}
+        {/* Content Section with research context */}
         <section className="bg-white py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
-            {/* Main Content */}
             <article className="prose prose-lg max-w-none">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Find the Perfect Baby Name with NameVerse Search
+                Cultural Name Research with NameVerse Search
               </h2>
               
               <p className="text-gray-700 mb-6 text-base leading-relaxed">
-                NameVerse Search is your comprehensive baby name discovery tool with access to 65,000+ verified names from Islamic, Hindu, and Christian traditions. Our powerful search engine helps you find the perfect name by meaning, origin, religion, and gender in real-time.
+                NameVerse is a Cultural Name Knowledge Base providing linguistic origin analysis for 65,000+ personal names across Islamic, Christian, and Hindu traditions. Our search engine enables cross-cultural onomastics research by meaning, linguistic root, cultural context, and gender classification.
               </p>
 
               <h3 className="text-2xl font-bold text-gray-900 mt-10 mb-4">
-                How to Search Baby Names
+                How to Research Personal Names
               </h3>
               <ul className="list-disc pl-6 text-gray-700 mb-6 space-y-2">
-                <li>Enter any baby name in the search box to find instant results</li>
-                <li>Search by name meaning (e.g., "light", "strong", "peaceful")</li>
-                <li>Filter by religion: Islamic, Hindu, Christian, or browse all</li>
-                <li>View detailed information including gender, origin, and cultural significance</li>
-                <li>Click any result to see the complete name profile with extended meanings</li>
+                <li>Enter any personal name to find its linguistic origin analysis</li>
+                <li>Search by semantic meaning (e.g., "light", "strength", "peace")</li>
+                <li>Filter by cultural tradition: Islamic, Hindu, Christian</li>
+                <li>View linguistic root etymology, phonetic structure, and cultural context</li>
+                <li>Access complete name profiles with historical evolution data</li>
               </ul>
 
               <h3 className="text-2xl font-bold text-gray-900 mt-10 mb-4">
-                Our Baby Name Database
+                Linguistic Name Database
               </h3>
               <p className="text-gray-700 mb-4 text-base leading-relaxed">
-                NameVerse maintains a comprehensive database of baby names across three major traditions:
+                NameVerse maintains a comprehensive onomastics database across three major cultural traditions:
               </p>
               <ul className="list-disc pl-6 text-gray-700 mb-6 space-y-2">
-                <li><strong>Islamic Names:</strong> 25,000+ Quranic and Arabic names with verified meanings</li>
-                <li><strong>Hindu Names:</strong> 20,000+ Sanskrit and Vedic names with cultural context</li>
-                <li><strong>Christian Names:</strong> 15,000+ Biblical and modern Christian names</li>
+                <li><strong>Islamic Onomastics:</strong> 25,000+ names of Arabic and Semitic linguistic origin</li>
+                <li><strong>Hindu Onomastics:</strong> 20,000+ names of Sanskrit and Dravidian linguistic origin</li>
+                <li><strong>Christian Onomastics:</strong> 15,000+ names of Hebrew, Aramaic, and Greek linguistic origin</li>
               </ul>
 
               <h3 className="text-2xl font-bold text-gray-900 mt-10 mb-4">
-                Search Features
+                Research Features
               </h3>
               <ul className="list-disc pl-6 text-gray-700 mb-6 space-y-2">
-                <li>⚡ <strong>Instant Search:</strong> Real-time filtering as you type</li>
-                <li>🌍 <strong>Multi-Religion Support:</strong> Search across or within specific traditions</li>
-                <li>✓ <strong>Verified Meanings:</strong> 98% accuracy in name meanings and origins</li>
-                <li>👶 <strong>Gender Information:</strong> Boy, Girl, and Unisex name categories</li>
-                <li>📚 <strong>Detailed Profiles:</strong> Extended meanings, origins, and cultural significance</li>
-                <li>🔥 <strong>Trending Names:</strong> Discover popular baby names for 2026</li>
-              </ul>
-
-              <h3 className="text-2xl font-bold text-gray-900 mt-10 mb-4">
-                Why Choose NameVerse Search?
-              </h3>
-              <ul className="list-disc pl-6 text-gray-700 mb-6 space-y-2">
-                <li>Comprehensive database with 65,000+ verified names</li>
-                <li>Fast, user-friendly search interface</li>
-                <li>Accurate meanings verified against authentic sources</li>
-                <li>Completely free access to all baby names</li>
-                <li>No registration or account required</li>
-                <li>Mobile-friendly search experience</li>
+                <li>⚡ <strong>Instant Search:</strong> Real-time filtering across the knowledge base</li>
+                <li>🌍 <strong>Multi-Tradition Support:</strong> Research across or within specific cultural traditions</li>
+                <li>✓ <strong>Verified Linguistic Data:</strong> 98% accuracy in etymological analysis</li>
+                <li>👤 <strong>Gender Classification:</strong> Masculine, Feminine, and Personal name categories</li>
+                <li>📚 <strong>Detailed Profiles:</strong> Root etymology, phonetic structure, cultural context, and historical evolution</li>
+                <li>📈 <strong>Trending Research:</strong> Discover names gaining scholarly interest in 2026</li>
               </ul>
 
               <h3 className="text-2xl font-bold text-gray-900 mt-10 mb-4">
@@ -147,19 +130,19 @@ export default function SearchPage() {
               
               <div className="bg-gray-50 rounded-lg p-6 my-6">
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                  What if I search for a meaning instead of a name?
+                  Can I search names by semantic meaning?
                 </h4>
                 <p className="text-gray-700 text-base">
-                  Our search engine scans through name meanings, so you can search for names by their meaning. For example, search "light" to find all names with that meaning across different religions.
+                  Yes. Our search engine scans through semantic meanings, so you can find names by their cultural interpretation. For example, search "light" to find all names with that semantic meaning across different cultural traditions.
                 </p>
               </div>
 
               <div className="bg-gray-50 rounded-lg p-6 my-6">
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                  Can I find names by letter?
+                  Can I find names by phonetic structure?
                 </h4>
                 <p className="text-gray-700 text-base">
-                  Yes! Browse names by starting letter in our main name categories, or use our search to quickly find all names starting with a specific letter.
+                  Yes. Browse names by starting letter in our main research categories, or use our search to quickly find all names starting with a specific letter for phonetic analysis.
                 </p>
               </div>
 
@@ -168,16 +151,7 @@ export default function SearchPage() {
                   How often is the name database updated?
                 </h4>
                 <p className="text-gray-700 text-base">
-                  Our database is regularly updated with new names, trending information for 2026, and verified meaning corrections to ensure accuracy.
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-6 my-6">
-                <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                  Can I save or compare names?
-                </h4>
-                <p className="text-gray-700 text-base">
-                  Click on any name result to view its complete profile. You can browse multiple names across different traditions to compare meanings and origins.
+                  Our linguistic database is regularly updated with new etymological research, cross-cultural data for 2026, and verified linguistic corrections to ensure scholarly accuracy.
                 </p>
               </div>
             </article>
@@ -185,16 +159,16 @@ export default function SearchPage() {
             {/* CTA Section */}
             <div className="mt-12 p-8 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border-2 border-purple-200">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Start Searching for the Perfect Baby Name Today
+                Begin Your Linguistic Name Research Today
               </h3>
               <p className="text-gray-700 mb-6 text-base">
-                With 65,000+ verified names across Islamic, Hindu, and Christian traditions, NameVerse helps you find a meaningful name with authentic cultural significance.
+                With 65,000+ personal names across Islamic, Christian, and Hindu traditions, NameVerse provides linguistic origin analysis and cultural semantic interpretation for scholars and researchers.
               </p>
               <a
                 href="#search"
                 className="inline-block bg-purple-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition"
               >
-                Search Baby Names Now
+                Search Cultural Names
               </a>
             </div>
           </div>

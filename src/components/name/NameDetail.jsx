@@ -1,16 +1,16 @@
 import NameHero from './NameHero';
-import Meaning from './Meaning';
+import LinguisticOriginPanel from './Meaning';
 import FAQ from './FAQ';
 import RelatedNames from './RelatedNames';
 import SitePage from '@/components/Layout/SitePage';
 import AdSlot from '@/components/Ads/AdSlot';
 
-export default function NameDetail({ data, faqData = [], pageUrl }) {
+export default function CulturalNameAnalysisCard({ data, faqData = [], pageUrl }) {
   return (
     <SitePage
       breadcrumbs={[
         { label: 'Home', href: '/' },
-        { label: 'Baby Names', href: '/names' },
+        { label: 'Cultural Name Research', href: '/names' },
         { label: `${data.religion || 'Names'}`, href: `/names/${(data.religion || 'islamic').toLowerCase()}` },
         { label: data.name },
       ]}
@@ -19,7 +19,7 @@ export default function NameDetail({ data, faqData = [], pageUrl }) {
         <NameHero data={data} pageUrl={pageUrl} />
         <AdSlot slotId="9605048967" collapseOnEmpty={true} className="mb-6" minHeight="90px" aria-label="Header advertisement" />
         <div className="nv-stack">
-          <Meaning data={data} />
+          <LinguisticOriginPanel data={data} />
           <AdSlot slotId="9605048968" collapseOnEmpty={true} className="mb-6" minHeight="250px" aria-label="Middle advertisement" />
           <RelatedNames data={data} />
           <AdSlot slotId="9605048969" collapseOnEmpty={true} className="mb-6" minHeight="90px" aria-label="Related content advertisement" />

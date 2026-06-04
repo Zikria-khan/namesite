@@ -4,7 +4,7 @@ import { generateNamePageMetadata, generateNamePageSchemas } from '@/lib/seo/nam
 import { serverFetchNameDetail } from '@/lib/api/server-fetch';
 import { sanitizeNameData } from '@/lib/utils/sanitizeNameData';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
-import NameDetail from '@/components/name/NameDetail';
+import CulturalNameAnalysisCard from '@/components/name/NameDetail';
 import Script from 'next/script';
 import fs from 'fs';
 import path from 'path';
@@ -25,7 +25,6 @@ export async function generateStaticParams() {
   const staticNames = [];
 
   try {
-    // islamic-boy-names.json — all entries are islamic/boy
     const islamicBoysRaw = fs.readFileSync(path.join(namesDataDir, 'islamic-boy-names.json'), 'utf8');
     JSON.parse(islamicBoysRaw).forEach((n) => {
       if (n.name) {
@@ -34,7 +33,6 @@ export async function generateStaticParams() {
       }
     });
 
-    // islamic-girl-names.json — all entries are islamic/girl
     const islamicGirlsRaw = fs.readFileSync(path.join(namesDataDir, 'islamic-girl-names.json'), 'utf8');
     JSON.parse(islamicGirlsRaw).forEach((n) => {
       if (n.name) {
@@ -43,7 +41,6 @@ export async function generateStaticParams() {
       }
     });
 
-    // islamic_names.json — may contain mixed genders
     try {
       const islamicMixedRaw = fs.readFileSync(path.join(namesDataDir, 'islamic_names.json'), 'utf8');
       JSON.parse(islamicMixedRaw).forEach((n) => {
@@ -52,9 +49,8 @@ export async function generateStaticParams() {
           if (slug) staticNames.push({ religion: 'islamic', slug });
         }
       });
-    } catch { /* file absent or malformed — skip */ }
+    } catch { /* skip */ }
 
-    // christian-boy-names.json
     try {
       const christianBoysRaw = fs.readFileSync(path.join(namesDataDir, 'christian-boy-names.json'), 'utf8');
       JSON.parse(christianBoysRaw).forEach((n) => {
@@ -65,7 +61,6 @@ export async function generateStaticParams() {
       });
     } catch { /* skip */ }
 
-    // christian-girl-names.json
     try {
       const christianGirlsRaw = fs.readFileSync(path.join(namesDataDir, 'christian-girl-names.json'), 'utf8');
       JSON.parse(christianGirlsRaw).forEach((n) => {
@@ -76,7 +71,6 @@ export async function generateStaticParams() {
       });
     } catch { /* skip */ }
 
-    // hindu-boy-names.json
     try {
       const hinduBoysRaw = fs.readFileSync(path.join(namesDataDir, 'hindu-boy-names.json'), 'utf8');
       JSON.parse(hinduBoysRaw).forEach((n) => {
@@ -87,7 +81,6 @@ export async function generateStaticParams() {
       });
     } catch { /* skip */ }
 
-    // hindu-girl-names.json
     try {
       const hinduGirlsRaw = fs.readFileSync(path.join(namesDataDir, 'hindu-girl-names.json'), 'utf8');
       JSON.parse(hinduGirlsRaw).forEach((n) => {
@@ -97,10 +90,8 @@ export async function generateStaticParams() {
         }
       });
     } catch { /* skip */ }
+  } catch { /* skip */ }
 
-  } catch { /* namesDataDir not found — return empty so ISR handles everything */ }
-
-  // Deduplicate (a name may appear in multiple source files)
   const seen = new Set();
   const deduped = [];
   for (const entry of staticNames) {
@@ -111,11 +102,8 @@ export async function generateStaticParams() {
     }
   }
 
-  // Limit to ~28 popular names per religion (~84 total) to keep build under 100 pages
-  // Remaining names will be generated on-demand via ISR
   const limited = {};
   const perReligionLimit = 28;
-  
   for (const entry of deduped) {
     if (!limited[entry.religion]) limited[entry.religion] = [];
     if (limited[entry.religion].length < perReligionLimit) {
@@ -128,7 +116,6 @@ export async function generateStaticParams() {
 
 function normalizeSlug(slug) {
   if (!slug || typeof slug !== 'string') return null;
-  // Reject any slug containing non-ASCII characters (IPA, macrons, Arabic script, etc.)
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug.trim().toLowerCase())) return null;
   return slug.trim().toLowerCase();
 }
@@ -141,8 +128,7 @@ export async function generateMetadata({ params }) {
   if (!religion || !slug) {
     return {
       title: 'Name Not Found | NameVerse',
-      description: 'The requested baby name page could not be found on NameVerse.',
-      keywords: ['NameVerse', 'baby names', 'name meaning site'],
+      description: 'The requested linguistic analysis page could not be found on NameVerse.',
     };
   }
 
@@ -150,8 +136,7 @@ export async function generateMetadata({ params }) {
   if (!nameData) {
     return {
       title: 'Name Not Found | NameVerse',
-      description: 'The requested baby name page could not be found on NameVerse.',
-      keywords: ['NameVerse', 'name not found', 'baby name meanings'],
+      description: 'The requested linguistic analysis page could not be found on NameVerse.',
     };
   }
 
@@ -161,11 +146,9 @@ export async function generateMetadata({ params }) {
 function normalizeReligion(religion) {
   if (!religion || typeof religion !== 'string') return null;
   const normalized = religion.toLowerCase();
-
   if (normalized === 'islam' || normalized === 'muslim') return 'islamic';
   if (normalized === 'hinduism') return 'hindu';
   if (normalized === 'christianity') return 'christian';
-
   return VALID_RELIGIONS.includes(normalized) ? normalized : null;
 }
 
@@ -183,7 +166,6 @@ export default async function NameDetailPage({ params }) {
     return notFound();
   }
 
-  // Sanitize data to ensure all fields are React-renderable
   nameData = sanitizeNameData(nameData);
 
   const pageUrl = `${getSiteUrl()}/names/${religion}/${slug}`;
@@ -192,19 +174,27 @@ export default async function NameDetailPage({ params }) {
 
   return (
     <>
+      {schemas.dataset && (
+        <Script
+          id="dataset-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas.dataset) }}
+        />
+      )}
+
+      {schemas.scholarlyArticle && (
+        <Script
+          id="scholarly-article-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas.scholarlyArticle) }}
+        />
+      )}
+
       {schemas.faq && (
         <Script
           id="faq-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas.faq) }}
-        />
-      )}
-
-      {schemas.article && (
-        <Script
-          id="article-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas.article) }}
         />
       )}
 
@@ -216,7 +206,7 @@ export default async function NameDetailPage({ params }) {
         />
       )}
 
-      <NameDetail data={nameData} faqData={faqData} pageUrl={pageUrl} />
+      <CulturalNameAnalysisCard data={nameData} faqData={faqData} pageUrl={pageUrl} />
     </>
   );
 }

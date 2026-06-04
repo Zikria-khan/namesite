@@ -17,7 +17,6 @@ import { Suspense } from 'react';
 import RouteChrome from "@/components/Layout/RouteChrome";
 
 import { getSiteUrl } from '@/lib/seo/site';
-// Use environment variable or default - will be overridden client-side if needed
 const siteUrl = getSiteUrl();
 
 const displayFont = Fraunces({
@@ -32,37 +31,37 @@ const bodyFont = Instrument_Sans({
   weight: ['400', '500', '600', '700'],
 });
 
-// ✅ Global SEO Metadata
+// ✅ Global SEO Metadata — Cultural Name Knowledge Base
 export const metadata = {
   title: {
-    default: validateMetaTitle("NameVerse — 65,000+ Verified Baby Names with Meanings"),
+    default: validateMetaTitle("NameVerse — Cultural Name Knowledge Base | Linguistic Origin Analysis"),
     template: "%s | NameVerse"
   },
   description: validateMetaDescription(
-    "Discover 65,000+ baby names across Islamic, Hindu & Christian traditions. Verified meanings, lucky numbers, origins & 2026 trending data. Trusted by 500,000+ parents."
+    "NameVerse is a Cultural Name Knowledge Base and Multilingual Onomastics System. Explore linguistic origin analysis, cultural semantic interpretation, and historical naming evolution of personal names across civilizations."
   ),
   keywords:
-    "baby names, baby names 2026, islamic baby names, hindu baby names, christian baby names, quranic names, biblical names, sanskrit names, muslim baby names, baby name meanings, lucky numbers, baby name generator, name suggestions, trending baby names 2026",
+    "cultural name knowledge base, linguistic origin analysis, multilingual onomastics system, cultural semantic interpretation, historical naming evolution, cross-cultural onomastic study, linguistic intelligence database, cultural naming research platform",
   robots: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
-  authors: [{ name: "NameVerse", url: siteUrl }],
-  creator: "NameVerse",
-  publisher: "NameVerse",
+  authors: [{ name: "NameVerse — Cultural Name Knowledge Base", url: siteUrl }],
+  creator: "NameVerse — Cultural Name Knowledge Base",
+  publisher: "NameVerse — Cultural Name Knowledge Base",
   metadataBase: new URL(siteUrl),
   alternates: { canonical: siteUrl, languages: { en: siteUrl, 'x-default': siteUrl } },
   openGraph: {
-    title: validateMetaTitle("NameVerse — 65,000+ Verified Baby Names | Islamic, Hindu, Christian"),
+    title: validateMetaTitle("NameVerse — Cultural Name Knowledge Base | Multilingual Onomastics"),
     description: validateMetaDescription(
-      "65,000+ baby names with verified meanings, lucky numbers & origins. Islamic Quranic, Hindu Vedic, Christian Biblical. 98% verified accuracy. Trusted by parents worldwide."
+      "NameVerse is a structured cultural and linguistic knowledge base for personal names across civilizations. Linguistic origin analysis, cultural semantic interpretation, and historical naming evolution data."
     ),
     url: siteUrl,
-    siteName: "NameVerse",
+    siteName: "NameVerse — Cultural Name Knowledge Base",
     images: [
       { 
         url: `/logo.png`, 
         width: 512, 
         height: 512, 
         type: "image/png", 
-        alt: "NameVerse — 65,000+ Baby Names with Meanings" 
+        alt: "NameVerse — Cultural Name Knowledge Base | Linguistic Origin Analysis" 
       },
     ],
     locale: "en_US",
@@ -70,9 +69,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: validateMetaTitle("Baby Names 2026 — 65,000+ Islamic, Hindu, Christian Names"),
+    title: validateMetaTitle("NameVerse — Cultural Name Knowledge Base | Onomastics Research"),
     description: validateMetaDescription(
-      "65,000+ verified baby names with meanings, lucky numbers & numerology. Islamic, Hindu, Christian. 98% accuracy. Start exploring now!"
+      "A structured cultural and linguistic knowledge graph for human names. Multilingual onomastics system for cross-cultural name research, linguistic origin analysis, and cultural semantic interpretation."
     ),
     images: [`/logo.png`],
     creator: "@NameVerseOfficial",
@@ -97,11 +96,11 @@ export const metadata = {
       },
     ],
   },
-  manifest: `/manifest.json`, // Use relative path to avoid CORS issues
-  category: "Baby Names, Culture, Religion",
+  manifest: `/manifest.json`,
+  category: "Cultural Onomastics, Linguistics, Anthropology",
 };
 
-// Viewport configuration (Next.js App Router)
+// Viewport configuration
 export const viewport = {
   width: "device-width",
   initialScale: 1,
@@ -115,8 +114,8 @@ export default function RootLayout({ children }) {
     <html lang="en" dir="ltr">
       <head>
         <meta name="color-scheme" content="light dark" />
-        <meta name="application-name" content="NameVerse" />
-        <meta property="og:site_name" content="NameVerse" />
+        <meta name="application-name" content="NameVerse — Cultural Name Knowledge Base" />
+        <meta property="og:site_name" content="NameVerse — Cultural Name Knowledge Base" />
         <meta name="content-language" content="en" />
         <meta name="theme-color" content="#4F46E5" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -130,14 +129,14 @@ export default function RootLayout({ children }) {
         <link rel="manifest" href="/manifest.json" />
         <meta name="ahrefs-site-verification" content="650afaf6635223ff618a281883a22b69b937a121e933b19907debeca67754cd4" />
 
-        {/* ✅ Performance: Resource Hints */}
+        {/* Performance: Resource Hints */}
         <ResourceHints />
 
-        {/* ✅ Icons - use relative paths */}
+        {/* Icons - use relative paths */}
         <link rel="icon" type="image/png" href="/logo.png" />
         <link rel="shortcut icon" type="image/png" href="/logo.png" />
 
-        {/* ✅ Ahrefs Analytics Script */}
+        {/* Ahrefs Analytics Script */}
         <Script
           src="https://analytics.ahrefs.com/analytics.js"
           data-key="Xu6eED27Kx1ZuJhBcJDJsA"
@@ -145,27 +144,27 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
         />
 
-        {/* ✅ Enhanced crawl hints */}
+        {/* Enhanced crawl hints */}
         <GoogleBotMeta siteUrl={siteUrl} />
 
-        {/* ✅ Enhanced Structured Data — single source of truth for all JSON-LD schemas */}
+        {/* ✅ Enhanced Structured Data — Cultural & Linguistic Knowledge Graph */}
         <StructuredData
           organization={true}
           website={true}
           breadcrumbs={[
             { name: "Home", url: siteUrl },
-            { name: "Baby Names", url: `/names` },
+            { name: "Cultural Name Research", url: `/names` },
           ]}
           collectionPage={{
-            name: "Popular Baby Names by Religion",
-            description: "Browse top baby names from different faiths — Muslim, Hindu, and Christian — with meanings and translations.",
+            name: "Cross-Cultural Onomastics Research Collection",
+            description: "Structured linguistic origin analysis and cultural semantic interpretation of personal names across civilizations — Islamic, Christian, and Hindu naming traditions.",
             url: `/names`,
             items: [],
           }}
         />
       </head>
 
-<body className={`${bodyFont.variable} ${displayFont.variable} antialiased nv-body nv-page`}>
+      <body className={`${bodyFont.variable} ${displayFont.variable} antialiased nv-body nv-page`}>
         <AppProvider>
           <PerformanceInit />
           <Suspense fallback={<div>Loading Navbar...</div>}>
@@ -188,23 +187,24 @@ export default function RootLayout({ children }) {
           <Footer />
           <AppInstallPopup />
 
-          {/* Bottom ad - in normal document flow after footer, reduced height */}
-          <div className="w-full bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-700 py-1.5">
-            <div className="mx-auto max-w-7xl px-4">
-              <AdSlot
-                slotId="9605048978"
-                adFormat="autorelaxed"
-                eager={false}
-                collapseOnEmpty={true}
-                className="w-full"
-                minHeight="50px"
-                aria-label="Bottom display advertisement"
-              />
+          {/* Bottom display ad — fixed sticky, fast loading, works on all screens */}
+          <div className="sticky bottom-0 left-0 right-0 z-40 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-t border-slate-200 dark:border-slate-700">
+            <div className="mx-auto flex items-center justify-center">
+              <div className="w-full max-w-[728px] min-h-[50px] md:min-h-[90px] flex items-center justify-center">
+                <AdSlot
+                  slotId="9605048978"
+                  adFormat="show"
+                  eager={true}
+                  collapseOnEmpty={true}
+                  className="w-full flex items-center justify-center"
+                  aria-label="Bottom display advertisement"
+                />
+              </div>
             </div>
           </div>
         </AppProvider>
 
-        {/* ✅ Google AdSense script placed after page content for safer load ordering */}
+        {/* Google AdSense script */}
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1510675468129183"
           crossOrigin="anonymous"

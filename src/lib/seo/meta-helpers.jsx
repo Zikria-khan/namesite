@@ -1,5 +1,6 @@
 /**
  * Meta description validation and generation utilities
+ * Updated for Cultural Onomastics — NameVerse = Cultural Name Knowledge Base
  */
 import { getSiteUrl } from '@/lib/seo/site';
 
@@ -9,7 +10,7 @@ import { getSiteUrl } from '@/lib/seo/site';
  * @returns {string} Validated title
  */
 export function validateMetaTitle(title) {
-  if (!title) return 'NameVerse — Baby Names & Meanings';
+  if (!title) return 'NameVerse — Cultural Name Knowledge Base';
 
   const cleaned = title.trim();
   if (cleaned.length <= 60) return cleaned;
@@ -21,22 +22,16 @@ export function validateMetaTitle(title) {
 
 /**
  * Validate meta description length (160-300 characters)
- * @param {string} description - Meta description to validate
- * @returns {string} Validated meta description
  */
 export function validateMetaDescription(description) {
-  if (!description) return 'Find unique baby names with meanings, origins, and numerology at NameVerse - Your trusted source for meaningful names.';
+  if (!description) return 'NameVerse is a structured cultural and linguistic knowledge base for personal names across civilizations. Explore linguistic origin analysis, cultural semantic interpretation, and historical naming evolution.';
 
-  // Trim whitespace
   description = description.trim();
 
-  // Ensure length is between 160-300 characters
   if (description.length < 160) {
-    // If too short, append additional content
-    const suffix = ' Discover beautiful names with meanings, origins, lucky numbers, and personality traits for your baby.';
+    const suffix = ' Part of the NameVerse multilingual onomastics system — a cultural naming research platform for linguistic intelligence and cross-cultural analysis.';
     description = (description + suffix).slice(0, 300);
   } else if (description.length > 300) {
-    // If too long, truncate to 300 characters
     description = description.slice(0, 300);
   }
 
@@ -45,9 +40,6 @@ export function validateMetaDescription(description) {
 
 /**
  * Generate canonical URL ensuring no trailing slashes
- * @param {string} path - The page path
- * @param {string} baseUrl - Base URL (optional)
- * @returns {string} Canonical URL
  */
 export function generateCanonicalUrl(path, baseUrl) {
   const cleanPath = path.replace(/\/+$|^\s+|\s+$/g, '');
@@ -56,17 +48,14 @@ export function generateCanonicalUrl(path, baseUrl) {
 }
 
 /**
- * Generate meta description for name pages
- * @param {object} data - Name data object
- * @returns {string} Generated meta description
+ * Generate meta description for name pages — academic onomastics style
  */
 export function generateNameMetaDescription(data) {
   const name = data.name || 'this name';
-  const religion = data.religion || 'various religions';
-  const gender = data.gender || 'baby';
-  const meaning = data.short_meaning || 'beautiful meaning';
-  const origin = data.origin || 'various origins';
-  const luckyNumber = data.lucky_number || 'lucky number';
+  const religion = data.religion || 'multicultural';
+  const gender = data.gender || 'personal';
+  const meaning = data.short_meaning || 'meaningful cultural context';
+  const origin = data.origin || 'multiple linguistic traditions';
 
-  return `${name} is a ${gender} name of ${origin} origin with ${meaning}. Perfect for ${religion} families. Learn about its lucky number ${luckyNumber}, personality traits, and cultural significance.`;
+  return `Linguistic origin analysis of ${name}: a ${gender} personal name of ${origin} origin within ${religion} cultural context. Semantic interpretation: "${meaning}". Part of the NameVerse Cultural Name Knowledge Base — cross-cultural onomastics research.`;
 }

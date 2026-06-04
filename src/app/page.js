@@ -10,10 +10,9 @@ import ReligiousNamesSection from '@/components/HomePage/ReligiousNamesSection';
 import dynamic from 'next/dynamic';
 import { getSiteUrl } from '@/lib/seo/site';
 
-// ISR with 30-day cache for the homepage — reduce writes
+// ISR with 30-day cache
 export const revalidate = 2592000; // 30 days
 
-// ✅ Read domain from .env
 const DOMAIN = process.env.NEXT_PUBLIC_SITE_URL || getSiteUrl();
 
 // Read blog posts data server-side
@@ -22,7 +21,6 @@ let latestArticles = [];
 try {
   const fileContents = fs.readFileSync(blogPostsPath, 'utf8');
   const allPosts = JSON.parse(fileContents);
-  // Sort by publishDate descending and take top 6 for homepage
   const sortedPosts = allPosts
     .filter(post => post.publishDate)
     .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
@@ -33,40 +31,40 @@ try {
 const publishedDate = new Date().toISOString().split('T')[0];
 
 export const metadata = {
-  title: validateMetaTitle('NameVerse — 65,000+ Verified Baby Names Search Engine'),
+  title: validateMetaTitle('NameVerse — Cultural Name Knowledge Base | Linguistic Origin Analysis'),
   description: validateMetaDescription(
-    'NameVerse is the leading baby name search platform for Islamic, Hindu, and Christian names. Discover meanings, origins, popularity, and lucky numbers across 65,000+ verified baby names.'
+    'NameVerse is a Cultural Name Knowledge Base and Multilingual Onomastics System for structured cultural and linguistic analysis of personal names across civilizations. Explore linguistic origin analysis, cultural semantic interpretation, and historical naming evolution.'
   ),
   keywords: [
-    'NameVerse',
-    'NameVerse baby names',
-    'baby names search engine',
-    'search baby names',
-    'baby name meanings',
-    'Islamic baby names',
-    'Hindu baby names',
-    'Christian baby names',
-    'name origin',
-    'baby names 2026',
-    'trending baby names',
-    'name finder'
+    'cultural name knowledge base',
+    'linguistic origin analysis',
+    'multilingual onomastics system',
+    'cultural semantic interpretation',
+    'historical naming evolution',
+    'cross-cultural onomastic study',
+    'linguistic intelligence database',
+    'cultural naming research platform',
+    'Islamic onomastics',
+    'Christian onomastics',
+    'Hindu onomastics',
+    'name etymology research'
   ].join(', '),
   openGraph: {
-    title: validateMetaTitle('NameVerse — 65,000+ Verified Baby Names Search Engine'),
+    title: validateMetaTitle('NameVerse — Cultural Name Knowledge Base | Multilingual Onomastics'),
     description: validateMetaDescription(
-      'Search 65,000+ Islamic, Hindu & Christian baby names by meaning, origin, gender, and popularity with NameVerse.'
+      'A structured cultural and linguistic knowledge graph for human names. Multilingual onomastics system for cross-cultural name research, linguistic origin analysis, and cultural semantic interpretation.'
     ),
     url: `${DOMAIN}/`,
     type: 'website',
-    siteName: 'NameVerse',
+    siteName: 'NameVerse — Cultural Name Knowledge Base',
     images: [
-      { url: `${DOMAIN}/logo.png`, width: 512, height: 512, alt: 'NameVerse — Baby Names Search Engine' }
+      { url: `${DOMAIN}/logo.png`, width: 512, height: 512, alt: 'NameVerse — Cultural Name Knowledge Base' }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: validateMetaTitle('NameVerse — Baby Names Search Engine'),
-    description: 'Find 65,000+ verified baby names with meanings, origin, and trend data on NameVerse.'
+    title: validateMetaTitle('NameVerse — Cultural Name Knowledge Base'),
+    description: 'A structured cultural and linguistic knowledge graph for human names. Multilingual onomastics system for cross-cultural name research and analysis.'
   },
   alternates: {
     canonical: `${DOMAIN}/`,
@@ -81,8 +79,8 @@ const homepageStructuredData = {
       "@type": "WebSite",
       "@id": `${DOMAIN}/#website`,
       "url": DOMAIN,
-      "name": "NameVerse — 65,000+ Baby Names with Meanings 2026",
-      "description": "Discover 65,000+ verified Islamic Quranic, Christian Biblical & Hindu Sanskrit baby names A–Z with authentic meanings, origins, lucky numbers, and 2026 trending data. Fast search by religion, gender, letter & meaning.",
+      "name": "NameVerse — Cultural Name Knowledge Base",
+      "description": "A structured cultural and linguistic knowledge graph for human names. Multilingual onomastics system for cross-cultural name research, linguistic origin analysis, cultural semantic interpretation, and historical naming evolution across civilizations.",
       "inLanguage": "en-US",
       "publisher": {
         "@id": `${DOMAIN}/#organization`
@@ -97,22 +95,24 @@ const homepageStructuredData = {
       },
       "about": {
         "@type": "Thing",
-        "name": "Baby Names by Religion"
+        "name": "Cultural Onomastics — Linguistic and Cultural Name Analysis",
+        "description": "Structured cultural and linguistic analysis of personal names across civilizations."
       }
     },
     {
       "@type": "Organization",
       "@id": `${DOMAIN}/#organization`,
       "name": "NameVerse",
+      "alternateName": "NameVerse — Cultural Name Knowledge Base",
       "url": DOMAIN,
       "logo": {
         "@type": "ImageObject",
         "url": `${DOMAIN}/logo.png`,
         "width": 512,
         "height": 512,
-        "caption": "NameVerse — 65,000+ Baby Names with Meanings 2026"
+        "caption": "NameVerse — Cultural Name Knowledge Base"
       },
-      "description": "NameVerse is the leading baby names platform with 65,000+ verified Islamic, Christian & Hindu baby names with authentic meanings, origins, and 2026 trending data.",
+      "description": "NameVerse is a Cultural Name Knowledge Base and Multilingual Onomastics System for structured cultural and linguistic analysis of personal names across civilizations.",
       "foundingDate": "2025",
       "founders": [{ "@type": "Person", "name": "Zakriya Khan" }]
     },
@@ -122,14 +122,14 @@ const homepageStructuredData = {
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "What is NameVerse and how does it help find baby names?",
+          "name": "What is NameVerse?",
           "answerCount": 1,
           "datePublished": publishedDate,
           "upvoteCount": 0,
           "author": { "@type": "Organization", "name": "NameVerse" },
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "NameVerse is the world's most comprehensive baby name platform with 65,000+ verified names from Islamic, Christian, and Hindu traditions. You can search by religion, gender, starting letter, origin, and meaning to find the perfect name with authentic meanings and 2026 trending data.",
+            "text": "NameVerse is a Cultural Name Knowledge Base and Multilingual Onomastics System. It provides structured cultural and linguistic analysis of personal names across civilizations — including Islamic, Christian, and Hindu naming traditions — with linguistic origin analysis, cultural semantic interpretation, and historical naming evolution data.",
             "datePublished": publishedDate,
             "upvoteCount": 0,
             "author": { "@type": "Organization", "name": "NameVerse" }
@@ -137,14 +137,14 @@ const homepageStructuredData = {
         },
         {
           "@type": "Question",
-          "name": "What are the best baby names in 2026?",
+          "name": "What types of linguistic analysis does NameVerse provide?",
           "answerCount": 1,
           "datePublished": publishedDate,
           "upvoteCount": 0,
           "author": { "@type": "Organization", "name": "NameVerse" },
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Top trending baby names in 2026 include Muhammad, Rayan, Ayan, and Zayn (Islamic), Liam, Noah, Elijah, and Ezra (Christian), and Vihaan, Arjun, Ananya, and Diya (Hindu). NameVerse tracks real-time popularity across all traditions.",
+            "text": "NameVerse provides comprehensive linguistic origin analysis including root language etymology, phonetic structure analysis, cultural semantic interpretation, historical naming evolution tracking, and cross-cultural onomastic patterns for personal names across multiple linguistic traditions.",
             "datePublished": publishedDate,
             "upvoteCount": 0,
             "author": { "@type": "Organization", "name": "NameVerse" }
@@ -152,14 +152,14 @@ const homepageStructuredData = {
         },
         {
           "@type": "Question",
-          "name": "Are NameVerse name meanings verified and accurate?",
+          "name": "Are NameVerse linguistic analyses verified?",
           "answerCount": 1,
           "datePublished": publishedDate,
           "upvoteCount": 0,
           "author": { "@type": "Organization", "name": "NameVerse" },
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes, NameVerse verifies Islamic names against Quranic text and classical Arabic dictionaries, Christian names against Biblical concordances, and Hindu names against Sanskrit etymological references with a 98% verification accuracy rate.",
+            "text": "Yes, NameVerse verifies linguistic analyses against authoritative sources: Islamic names against Quranic Arabic and classical dictionaries, Christian names against Biblical Hebrew and Greek concordances, and Hindu names against Sanskrit etymological references.",
             "datePublished": publishedDate,
             "upvoteCount": 0,
             "author": { "@type": "Organization", "name": "NameVerse" }
@@ -167,14 +167,14 @@ const homepageStructuredData = {
         },
         {
           "@type": "Question",
-          "name": "How do I search baby names by religion on NameVerse?",
+          "name": "How do I research names by cultural tradition on NameVerse?",
           "answerCount": 1,
           "datePublished": publishedDate,
           "upvoteCount": 0,
           "author": { "@type": "Organization", "name": "NameVerse" },
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "You can browse 18,000+ Islamic Quranic names, 11,000+ Christian Biblical names, and 15,000+ Hindu Sanskrit names A–Z. Each section allows filtering by boy/girl, starting letter, origin, and meaning with lucky numbers and trending data.",
+            "text": "You can browse names by cultural tradition — Islamic (Arabic/Semitic linguistic roots), Christian (Biblical Hebrew/Aramaic/Greek roots), and Hindu (Sanskrit/Dravidian linguistic roots). Each section provides linguistic origin analysis, cultural semantic interpretation, and phonetic structure data.",
             "datePublished": publishedDate,
             "upvoteCount": 0,
             "author": { "@type": "Organization", "name": "NameVerse" }
@@ -187,10 +187,9 @@ const homepageStructuredData = {
       "@id": `${DOMAIN}/#breadcrumb`,
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": DOMAIN },
-        { "@type": "ListItem", "position": 2, "name": "Baby Names", "item": `${DOMAIN}/names` },
-        { "@type": "ListItem", "position": 3, "name": "Islamic Names", "item": `${DOMAIN}/names/religion/islamic/1` },
-        { "@type": "ListItem", "position": 4, "name": "Christian Names", "item": `${DOMAIN}/names/religion/christian/1` },
-        { "@type": "ListItem", "position": 5, "name": "Hindu Names", "item": `${DOMAIN}/names/religion/hindu/1` }
+        { "@type": "ListItem", "position": 2, "name": "Islamic Onomastics", "item": `${DOMAIN}/names/religion/islamic/1` },
+        { "@type": "ListItem", "position": 3, "name": "Christian Onomastics", "item": `${DOMAIN}/names/religion/christian/1` },
+        { "@type": "ListItem", "position": 4, "name": "Hindu Onomastics", "item": `${DOMAIN}/names/religion/hindu/1` }
       ]
     }
   ]

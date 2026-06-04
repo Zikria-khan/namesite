@@ -122,7 +122,7 @@ const SearchWithSuggestions = () => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={handleFocus}
-            placeholder="Search baby names..."
+            placeholder="Search personal names..."
             className="w-full pl-12 pr-12 py-4 text-base font-medium text-gray-900 placeholder-gray-500 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl focus:outline-none focus:ring-3 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-sm hover:shadow-md transition-all duration-200"
             aria-label="Search for baby names"
             name="search"

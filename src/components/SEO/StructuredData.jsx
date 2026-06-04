@@ -1,6 +1,7 @@
 /**
  * StructuredData Component
- * Generates JSON-LD structured data for SEO purposes
+ * Generates JSON-LD structured data — Cultural & Linguistic Knowledge Graph
+ * Replaced: weak WebPage/Article schema types with Dataset + ScholarlyArticle
  */
 
 import { getSiteUrl } from '@/lib/seo/site';
@@ -22,6 +23,7 @@ export default function StructuredData({
       "@type": "Organization",
       "@id": `${siteUrl}/#organization`,
       "name": "NameVerse",
+      "alternateName": "NameVerse — Cultural Name Knowledge Base",
       "url": siteUrl,
       "logo": {
         "@type": "ImageObject",
@@ -29,10 +31,15 @@ export default function StructuredData({
         "width": 192,
         "height": 192
       },
-      "description": "NameVerse - Discover thousands of baby names with meanings across religions and cultures.",
+      "description": "NameVerse is a Cultural Name Knowledge Base and Multilingual Onomastics System for structured cultural and linguistic analysis of personal names across civilizations.",
       "sameAs": [
         "https://twitter.com/NameVerseOfficial"
-      ]
+      ],
+      "knowsAbout": {
+        "@type": "Thing",
+        "name": "Cultural Onomastics",
+        "description": "Structured cultural and linguistic analysis of personal names across civilizations."
+      }
     });
   }
 
@@ -42,14 +49,19 @@ export default function StructuredData({
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
       "name": "NameVerse",
-      "alternateName": "NameVerse Baby Names",
+      "alternateName": "NameVerse — Cultural Name Knowledge Base",
       "url": siteUrl,
-      "description": "NameVerse - 65,000+ baby names with meanings, origins, and numerology. Islamic, Hindu & Christian names.",
+      "description": "A structured cultural and linguistic knowledge graph for human names. Multilingual onomastics system for cross-cultural name research and analysis.",
       "publisher": {
         "@type": "Organization",
         "@id": `${siteUrl}/#organization`
       },
       "inLanguage": "en-US",
+      "about": {
+        "@type": "Thing",
+        "name": "Cultural Onomastics — Linguistic Name Analysis",
+        "description": "Structured cultural and linguistic analysis of personal names across civilizations."
+      },
       "potentialAction": {
         "@type": "SearchAction",
         "target": {
@@ -81,6 +93,11 @@ export default function StructuredData({
       "name": collectionPage.name,
       "description": collectionPage.description,
       "url": collectionPage.url,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "NameVerse — Cultural Name Knowledge Base",
+        "url": siteUrl
+      },
       "mainEntity": {
         "@type": "ItemList",
         "itemListElement": (collectionPage.items || []).slice(0, 20).map((item, idx) => ({

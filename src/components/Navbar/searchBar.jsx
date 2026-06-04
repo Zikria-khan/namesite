@@ -1,650 +1,155 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, X, LoaderCircle, User, MapPin, Heart, Sparkles, ChevronRight, TrendingUp, ExternalLink, BookOpen, FileText, Star } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { Search, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { searchNames } from '@/lib/api/names';
-import { searchArticles } from '@/lib/api/articles';
-import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 
 const NAME_FILES = [
-  { filename: 'islamic_names.json', religion: 'islamic' },
-  { filename: 'hindu_names.json', religion: 'hindu' },
-  { filename: 'christians_names.json', religion: 'christian' },
+  { filename: '/islamic_names.json', religion: 'islamic' },
+  { filename: '/hindu_names.json', religion: 'hindu' },
+  { filename: '/christians_names.json', religion: 'christian' },
 ];
 
-function generateSlug(name) {
-  return createSafeSlug(name);
-}
+import createSafeSlug from '@/lib/utils/createSafeSlug';
 
-async function loadLocalNames() {
-  const allNames = [];
-
-  await Promise.all(
-    NAME_FILES.map(async ({ filename, religion }) => {
-      const response = await fetch(`/${filename}`);
-      if (!response.ok) return;
-      const json = await response.json();
-      if (!Array.isArray(json)) return;
-
-      allNames.push(
-        ...json.map((name) => ({
-          _id: `${religion}:${name}`,
-          name: String(name || ''),
-          religion,
-          slug: generateSlug(String(name || '')),
-          gender: 'Unisex',
-          short_meaning: '',
-          meaning: '',
-        }))
-      );
-    })
-  );
-
-  return allNames;
-}
-
-function filterLocalNames(localNames, query) {
-  const term = query.trim().toLowerCase();
-  if (!term) return [];
-  return localNames
-    .filter((item) => item.name.toLowerCase().includes(term))
-    .slice(0, 8);
-}
-
-const UniversalSearch = () => {
+export default function SearchBar() {
   const [query, setQuery] = useState('');
-  const [nameResults, setNameResults] = useState([]);
-  const [articleResults, setArticleResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [error, setError] = useState(null);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [recentSearches, setRecentSearches] = useState([]);
-  const [localNames, setLocalNames] = useState([]);
-  const searchRef = useRef(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [names, setNames] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
-  const debounceRef = useRef(null);
+  const suggestionsRef = useRef(null);
   const router = useRouter();
 
-  // Load recent searches from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('recentSearches');
-    if (saved) {
-      try {
-        setRecentSearches(JSON.parse(saved).slice(0, 5));
-      } catch (e) {
-        // Corrupted localStorage — silently reset
-        localStorage.removeItem('recentSearches');
-      }
-    }
-  }, []);
-
-  // Load local suggestion data once
-  useEffect(() => {
-    loadLocalNames()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setLocalNames(data);
-        }
-      })
-      .catch((err) => {
-        // Silently ignore local name file load failure — remote API is the primary source
-        if (process.env.NODE_ENV === 'development') {
-          console.warn('[UniversalSearch] local names load failed:', err.message);
-        }
-      });
-  }, []);
-
-  // Save recent search
-  const saveRecentSearch = useCallback((searchTerm) => {
-    if (!searchTerm || searchTerm.trim().length < 2) return;
-    
-    setRecentSearches(prev => {
-      const filtered = prev.filter(s => s !== searchTerm);
-      const newSearches = [searchTerm, ...filtered].slice(0, 5);
-      localStorage.setItem('recentSearches', JSON.stringify(newSearches));
-      return newSearches;
-    });
-  }, []);
-
-  // Religion color mapping
-  const religionColors = {
-    islamic: { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', gradient: 'from-emerald-500 to-teal-600' },
-    hindu: { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', gradient: 'from-orange-500 to-red-600' },
-    christian: { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', gradient: 'from-blue-500 to-indigo-600' },
-    sikh: { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200', gradient: 'from-yellow-500 to-orange-600' },
-    buddhist: { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', gradient: 'from-amber-500 to-orange-600' },
-    jewish: { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200', gradient: 'from-purple-500 to-fuchsia-600' },
-    default: { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200', gradient: 'from-gray-500 to-slate-600' }
-  };
-
-  // Gender icon mapping
-  const getGenderIcon = (gender) => {
-    const genderLower = gender?.toLowerCase();
-    if (genderLower === 'male') return { icon: User, color: 'text-blue-600', bg: 'bg-blue-100' };
-    if (genderLower === 'female') return { icon: Heart, color: 'text-pink-600', bg: 'bg-pink-100' };
-    return { icon: Sparkles, color: 'text-purple-600', bg: 'bg-purple-100' };
-  };
-
-  // Fetch names and articles
-  const fetchResults = useCallback(async (searchQuery) => {
-    if (!searchQuery || searchQuery.trim().length < 2) {
-      setNameResults([]);
-      setArticleResults([]);
-      setIsOpen(false);
-      setHasSearched(false);
-      setIsLoading(false);
-      return;
-    }
-
-    setHasSearched(true);
-    setError(null);
-    setIsLoading(true);
-
+  const loadNames = useCallback(async () => {
+    if (names.length > 0) return;
+    setLoading(true);
     try {
-      const [namesResult, articlesResult] = await Promise.all([
-        searchNames(searchQuery.trim(), { limit: 8 }),
-        searchArticles(searchQuery.trim(), { limit: 5 })
-      ]);
-
-      let names = Array.isArray(namesResult?.data) ? namesResult.data : [];
-      const articles = Array.isArray(articlesResult)
-        ? articlesResult
-        : Array.isArray(articlesResult?.data)
-          ? articlesResult.data
-          : [];
-
-      if (names.length === 0 && localNames.length > 0) {
-        names = filterLocalNames(localNames, searchQuery.trim());
-      }
-
-      setNameResults(names);
-      setArticleResults(articles);
-
-      if (names.length > 0 || articles.length > 0) {
-        setIsOpen(true);
-      } else {
-        setError('No results found. Try different keywords.');
-      }
-    } catch (err) {
-      const fallbackNames = localNames.length > 0 ? filterLocalNames(localNames, searchQuery.trim()) : [];
-      setNameResults(fallbackNames);
-      setArticleResults([]);
-      if (fallbackNames.length > 0) {
-        setIsOpen(true);
-      } else {
-        setError('Connection error. Please check your internet.');
-      }
+      const allNames = [];
+      await Promise.all(
+        NAME_FILES.map(async ({ filename, religion }) => {
+          const res = await fetch(filename);
+          if (!res.ok) return;
+          const json = await res.json();
+          if (!Array.isArray(json)) return;
+          json.forEach((n) => {
+            const nameStr = typeof n === 'string' ? n : n.name || n.Name || '';
+            if (nameStr) {
+              allNames.push({
+                name: nameStr,
+                religion,
+                slug: createSafeSlug(nameStr),
+              });
+            }
+          });
+        })
+      );
+      const unique = Array.from(
+        new Map(allNames.map((item) => [`${item.religion}:${item.slug}`, item])).values()
+      );
+      setNames(unique);
+    } catch (e) {
+      console.error('Failed to load names:', e);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
-  }, []);
+  }, [names]);
 
-  // Debounced search
   useEffect(() => {
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-
-    if (query.trim().length >= 2) {
-      debounceRef.current = setTimeout(() => {
-        fetchResults(query);
-      }, 300);
+    if (query.length >= 2 && names.length > 0) {
+      const lower = query.toLowerCase();
+      const filtered = names
+        .filter((n) => n.name.toLowerCase().includes(lower))
+        .slice(0, 10);
+      setSuggestions(filtered);
+      setShowSuggestions(filtered.length > 0);
     } else {
-      setNameResults([]);
-      setArticleResults([]);
-      setIsOpen(false);
-      setHasSearched(false);
-      setIsLoading(false);
-      setError(null);
+      setSuggestions([]);
+      setShowSuggestions(false);
     }
+  }, [query, names]);
 
-    return () => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
-    };
-  }, [query, fetchResults]);
-
-  // Click outside handler
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setIsOpen(false);
-        setSelectedIndex(-1);
+    function handleClickOutside(e) {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(e.target) && !inputRef.current.contains(e.target)) {
+        setShowSuggestions(false);
       }
-    };
-
+    }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const hasResults = nameResults.length > 0 || articleResults.length > 0;
-  const totalResults = nameResults.length + articleResults.length;
-
-  // Keyboard navigation
-  const handleKeyDown = (e) => {
-    if (!isOpen && !recentSearches.length) {
-      if (e.key === 'Enter' && query.trim()) {
-        handleSearchSubmit(e);
-      }
-      return;
-    }
-
-    const allResults = [...nameResults, ...articleResults];
-
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setSelectedIndex(prev =>
-          prev < allResults.length - 1 ? prev + 1 : 0
-        );
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setSelectedIndex(prev =>
-          prev > 0 ? prev - 1 : allResults.length - 1
-        );
-        break;
-      case 'Enter':
-        e.preventDefault();
-        if (selectedIndex >= 0 && allResults[selectedIndex]) {
-          const isName = selectedIndex < nameResults.length;
-          handleResultClick(allResults[selectedIndex], isName ? 'name' : 'article');
-        } else if (query.trim()) {
-          handleSearchSubmit(e);
-        }
-        break;
-      case 'Escape':
-        setIsOpen(false);
-        setSelectedIndex(-1);
-        inputRef.current?.blur();
-        break;
-      default:
-        break;
-    }
-  };
-
-  // Handle form submit
-  const handleSearchSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (query.trim()) {
-      saveRecentSearch(query.trim());
-      setIsOpen(false);
-      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
-    }
-  };
+    const trimmed = query.trim();
+    if (!trimmed) return;
 
-  // Handle result selection
-  const handleResultClick = (result, type = 'name') => {
-    setIsOpen(false);
-    setSelectedIndex(-1);
-    saveRecentSearch(result.name || result.title);
-
-    if (type === 'article') {
-      router.push(`/blog/${result.slug}`);
+    const match = names.find((n) => n.name.toLowerCase() === trimmed.toLowerCase());
+    if (match) {
+      router.push(`/names/${match.religion}/${match.slug}`);
     } else {
-      const religion = result.religion?.toLowerCase() || 'global';
-      const slug = result.slug || createSafeSlug(result.name);
-      router.push(`/names/${religion}/${slug}`);
+      router.push(`/search/${encodeURIComponent(trimmed)}`);
     }
+    setShowSuggestions(false);
   };
 
-  // Handle recent search click
-  const handleRecentSearchClick = (term) => {
-    setQuery(term);
-    saveRecentSearch(term);
-    setIsOpen(false);
-    router.push(`/search?q=${encodeURIComponent(term)}`);
-  };
-
-  // Clear search
-  const clearSearch = () => {
-    setQuery('');
-    setNameResults([]);
-    setArticleResults([]);
-    setIsOpen(false);
-    setSelectedIndex(-1);
-    setError(null);
-    setHasSearched(false);
-    setIsLoading(false);
-    inputRef.current?.focus();
-  };
-
-  // Clear all recent searches
-  const clearRecentSearches = () => {
-    setRecentSearches([]);
-    localStorage.removeItem('recentSearches');
-  };
-
-  // Get religion styling
-  const getReligionStyle = (religion) => {
-    const religionKey = religion?.toLowerCase();
-    return religionColors[religionKey] || religionColors.default;
-  };
-
-  // Highlight matching text
-  const highlightText = (text, query) => {
-    if (!text || !query) return text;
-    
-    const regex = new RegExp(`(${query.trim()})`, 'gi');
-    const parts = text.split(regex);
-    
-    return parts.map((part, index) =>
-      regex.test(part) ? (
-        <mark key={index} className="bg-yellow-200 text-gray-900 font-semibold px-0.5 rounded">
-          {part}
-        </mark>
-      ) : (
-        part
-      )
-    );
+  const handleSelect = (item) => {
+    setQuery(item.name);
+    setShowSuggestions(false);
+    router.push(`/names/${item.religion}/${item.slug}`);
   };
 
   return (
-    <div ref={searchRef} className="relative w-full">
-      {/* Search Form */}
-      <form onSubmit={handleSearchSubmit} className="relative" role="search" aria-label="Site search">
-        <div className="relative group">
-          <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-focus-within:text-indigo-600 transition-colors duration-200" aria-hidden="true" />
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              // Show dropdown immediately when typing with 2+ chars
-              if (e.target.value.trim().length >= 2) {
-                setIsOpen(true);
-              }
-            }}
-            onKeyDown={handleKeyDown}
-            onFocus={() => {
-              if (query.trim().length >= 2 && (hasResults || isLoading)) {
-                setIsOpen(true);
-              } else if (recentSearches.length > 0 && !query) {
-                setIsOpen(true);
-              } else if (query.trim().length >= 2) {
-                setIsOpen(true);
-              }
-            }}
-            placeholder="Search baby names, meanings, articles..."
-            className="w-full pl-9 pr-9 sm:pl-12 sm:pr-12 py-2 sm:py-2.5 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-500 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl sm:rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 shadow-sm hover:shadow-md focus:shadow-lg transition-all duration-200"
-            aria-label="Search for baby names"
-            aria-autocomplete="list"
-            aria-controls="search-results"
-            aria-expanded={isOpen}
-            autoComplete="off"
-            name="search"
-            id="universal-search-input"
-          />
-
-          {/* Right side icons */}
-          <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-            <AnimatePresence mode="wait">
-              {isLoading && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  className="p-1"
-                  aria-label="Searching"
-                >
-                  <LoaderCircle className="w-3 h-3 sm:w-4 sm:h-4 text-indigo-600 animate-spin" aria-hidden="true" />
-                </motion.div>
-              )}
-              {query && !isLoading && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  onClick={clearSearch}
-                  type="button"
-                  className="p-1 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-                  aria-label="Clear search"
-                >
-                  <X className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 hover:text-gray-600" aria-hidden="true" />
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-      </form>
-
-      {/* Results Dropdown */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.98 }}
-            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            id="search-results"
-            role="listbox"
-            aria-label="Search results"
-            className="absolute top-full left-0 right-0 mt-2 sm:mt-3 bg-white/95 backdrop-blur-xl border border-gray-200 rounded-xl sm:rounded-2xl shadow-2xl shadow-gray-400/20 overflow-hidden z-50 max-h-[80vh] overflow-y-auto"
+    <form onSubmit={handleSubmit} className="relative w-full" role="search" aria-label="Name search">
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+        <input
+          ref={inputRef}
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => { loadNames(); if (suggestions.length > 0) setShowSuggestions(true); }}
+          placeholder="Search personal names, linguistic origins, meanings..."
+          className="w-full pl-9 pr-9 sm:pl-12 sm:pr-12 py-2 sm:py-2.5 text-sm sm:text-base font-medium text-gray-900 placeholder-gray-500 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl sm:rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 shadow-sm hover:shadow-md focus:shadow-lg transition-all duration-200"
+          aria-label="Search for personal names"
+          aria-autocomplete="list"
+          autoComplete="off"
+        />
+        {query && (
+          <button
+            type="button"
+            onClick={() => { setQuery(''); setSuggestions([]); setShowSuggestions(false); }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-gray-100"
+            aria-label="Clear search"
           >
-            {/* Show recent searches when no query */}
-            {!query && recentSearches.length > 0 && (
-              <div>
-                <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Recent Searches</span>
-                  <button
-                    onClick={clearRecentSearches}
-                    className="text-xs text-gray-400 hover:text-red-500 transition-colors"
-                  >
-                    Clear all
-                  </button>
-                </div>
-                <div className="py-2">
-                  {recentSearches.map((term, index) => (
-                    <button
-                      key={term || index}
-                      onClick={() => handleRecentSearchClick(term)}
-                      className="w-full px-4 py-2.5 flex items-center gap-3 hover:bg-gray-50 transition-colors group"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-indigo-100 flex items-center justify-center transition-colors">
-                        <TrendingUp className="w-4 h-4 text-gray-500 group-hover:text-indigo-600" />
-                      </div>
-                      <span className="text-sm text-gray-700 group-hover:text-indigo-600">{term}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Search results */}
-            {query.trim().length >= 2 && (
-              <>
-                {error && !hasResults && !isLoading ? (
-                  <div className="p-8 text-center" role="status" aria-live="polite">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                      <Search className="w-6 h-6 text-gray-400" aria-hidden="true" />
-                    </div>
-                    <p className="text-sm text-gray-600 font-medium mb-1">{error}</p>
-                    <p className="text-xs text-gray-500">Try different keywords or check your spelling</p>
-                  </div>
-                ) : !hasResults && !isLoading ? (
-                  <div className="p-8 text-center" role="status" aria-live="polite">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                      <Search className="w-6 h-6 text-gray-400" aria-hidden="true" />
-                    </div>
-                    <p className="text-sm text-gray-600 font-medium mb-1">No results found for "{query}"</p>
-                    <p className="text-xs text-gray-500">Try adjusting your search terms</p>
-                  </div>
-                ) : (
-                  <div>
-                    {/* Header */}
-                    <div className="sticky top-0 bg-white/95 backdrop-blur-xl border-b border-gray-200 px-4 py-3 flex items-center justify-between z-10">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-gray-900">
-                          {totalResults} Result{totalResults !== 1 ? 's' : ''}
-                        </span>
-                        {nameResults.length > 0 && (
-                          <span className="text-xs text-gray-500">
-                            {nameResults.length} Name{nameResults.length !== 1 ? 's' : ''}
-                          </span>
-                        )}
-                        {articleResults.length > 0 && (
-                          <span className="text-xs text-gray-500">
-                            {articleResults.length} Article{articleResults.length !== 1 ? 's' : ''}
-                          </span>
-                        )}
-                        {isLoading && <LoaderCircle className="w-3 h-3 animate-spin text-indigo-600" />}
-                      </div>
-                      <p className="text-xs text-gray-500 hidden sm:block">
-                        <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-xs border border-gray-300">↑↓</kbd> Navigate
-                        <span className="mx-1">•</span>
-                        <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-xs border border-gray-300">↵</kbd> Select
-                      </p>
-                    </div>
-
-                    {/* Results List */}
-                    <div className="py-2" role="list">
-                      {nameResults.map((result, index) => {
-                        const religionStyle = getReligionStyle(result.religion);
-                        const genderInfo = getGenderIcon(result.gender);
-                        const GenderIcon = genderInfo.icon;
-                        const isSelected = selectedIndex === index;
-
-                        return (
-                          <motion.button
-                            key={result._id || index}
-                            initial={{ opacity: 0, x: -8 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: Math.min(index * 0.02, 0.2) }}
-                            onClick={() => handleResultClick(result, 'name')}
-                            onMouseEnter={() => setSelectedIndex(index)}
-                            className={`w-full px-4 py-3 flex items-start gap-3 transition-all duration-200 border-l-4 group ${
-                              isSelected
-                                ? `${religionStyle.bg.replace('50', '100')} ${religionStyle.border} shadow-inner`
-                                : 'border-transparent hover:bg-gray-50/80'
-                            }`}
-                            role="option"
-                            aria-selected={isSelected}
-                          >
-                            <div className={`flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br ${religionStyle.gradient} flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-200 ${isSelected ? 'scale-110' : ''}`}>
-                              <span className="text-white font-bold text-base">
-                                {result.name?.charAt(0).toUpperCase()}
-                              </span>
-                            </div>
-
-                            <div className="flex-1 text-left min-w-0">
-                              <div className="flex items-start justify-between gap-2 mb-1">
-                                <h3 className="font-semibold text-gray-900 text-base truncate">
-                                  {highlightText(result.name, query)}
-                                </h3>
-                                <ChevronRight className={`w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5 group-hover:text-gray-600 transition-all duration-200 ${isSelected ? 'translate-x-1' : ''}`} aria-hidden="true" />
-                              </div>
-                              
-                              <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-                                {highlightText(result.short_meaning || result.meaning, query)}
-                              </p>
-
-                              <div className="flex flex-wrap items-center gap-1.5">
-                                <span className={`inline-flex items-center px-2.5 py-1 ${religionStyle.bg} ${religionStyle.text} text-xs font-semibold rounded-lg border ${religionStyle.border}`}>
-                                  {result.religion || 'Global'}
-                                </span>
-                                <span className={`inline-flex items-center gap-1 px-2.5 py-1 ${genderInfo.bg} text-gray-700 text-xs font-semibold rounded-lg`}>
-                                  <GenderIcon className={`w-3 h-3 ${genderInfo.color}`} aria-hidden="true" />
-                                  {result.gender || 'Unisex'}
-                                </span>
-                                {result.origin && (
-                                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-lg">
-                                    <MapPin className="w-3 h-3 text-gray-500" aria-hidden="true" />
-                                    {result.origin}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </motion.button>
-                        );
-                      })}
-
-                      {/* Article Results */}
-                      {articleResults.map((article, index) => {
-                        const articleIndex = nameResults.length + index;
-                        const isSelected = selectedIndex === articleIndex;
-
-                        return (
-                          <motion.button
-                            key={article.id || article.slug || index}
-                            initial={{ opacity: 0, x: -8 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: Math.min(articleIndex * 0.02, 0.2) }}
-                            onClick={() => handleResultClick(article, 'article')}
-                            onMouseEnter={() => setSelectedIndex(articleIndex)}
-                            className={`w-full px-4 py-3 flex items-start gap-3 transition-all duration-200 border-l-4 group ${
-                              isSelected
-                                ? 'bg-purple-50 border-purple-200 shadow-inner'
-                                : 'border-transparent hover:bg-gray-50/80'
-                            }`}
-                            role="option"
-                            aria-selected={isSelected}
-                          >
-                            <div className={`flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-200 ${isSelected ? 'scale-110' : ''}`}>
-                              <FileText className="w-5 h-5 text-white" aria-hidden="true" />
-                            </div>
-
-                            <div className="flex-1 text-left min-w-0">
-                              <div className="flex items-start justify-between gap-2 mb-1">
-                                <h3 className="font-semibold text-gray-900 text-base truncate">
-                                  {highlightText(article.title, query)}
-                                </h3>
-                                <ChevronRight className={`w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5 group-hover:text-gray-600 transition-all duration-200 ${isSelected ? 'translate-x-1' : ''}`} aria-hidden="true" />
-                              </div>
-
-                              <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-                                {highlightText(article.excerpt || article.subtitle || article.summary, query)}
-                              </p>
-
-                              <div className="flex flex-wrap items-center gap-1.5">
-                                <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-lg border border-purple-200">
-                                  <BookOpen className="w-3 h-3" aria-hidden="true" />
-                                  Article
-                                </span>
-                                {article.category && (
-                                  <span className="inline-flex items-center px-2.5 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-lg">
-                                    {article.category}
-                                  </span>
-                                )}
-                                {article.read_time_minutes && (
-                                  <span className="inline-flex items-center px-2.5 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-lg">
-                                    {article.read_time_minutes} min read
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </motion.button>
-                        );
-                      })}
-                    </div>
-
-                    {/* View All Footer */}
-                    {hasResults && (
-                      <div className="sticky bottom-0 bg-gradient-to-t from-white via-white to-transparent border-t border-gray-200 px-4 py-3">
-                        <button
-                          onClick={handleSearchSubmit}
-                          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
-                        >
-                          <TrendingUp className="w-4 h-4" aria-hidden="true" />
-                          <span>View All Results for "{query}"</span>
-                          <ExternalLink className="w-4 h-4" aria-hidden="true" />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
-          </motion.div>
+            <X className="h-4 w-4 text-gray-400" />
+          </button>
         )}
-      </AnimatePresence>
-    </div>
-  );
-};
+      </div>
 
-export default React.memo(UniversalSearch);
+      {showSuggestions && (
+        <div
+          ref={suggestionsRef}
+          className="absolute z-50 mt-1 w-full rounded-xl border border-gray-200 bg-white shadow-xl max-h-80 overflow-y-auto"
+        >
+          {suggestions.map((item, i) => (
+            <button
+              key={`${item.religion}-${item.slug}-${i}`}
+              type="button"
+              onClick={() => handleSelect(item)}
+              className="w-full text-left px-4 py-3 hover:bg-indigo-50 transition-colors border-b border-gray-100 last:border-0"
+            >
+              <div className="flex items-center gap-3">
+                <span className="font-medium text-gray-900">{item.name}</span>
+                <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-gray-600">
+                  {item.religion}
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </form>
+  );
+}
