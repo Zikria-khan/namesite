@@ -1,7 +1,6 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
-import StickyBottomAd from '@/components/Ads/StickyBottomAd';
 import AdSlot from '@/components/Ads/AdSlot';
 import AppInstallPopup from "./install";
 import Script from 'next/script';
@@ -166,42 +165,44 @@ export default function RootLayout({ children }) {
         />
       </head>
 
-      <body className={`${bodyFont.variable} ${displayFont.variable} antialiased nv-body nv-page`}>
-        <div id="temp-wrapper" className="pb-[72px]">
-          <AppProvider>
-            <PerformanceInit />
-            <Suspense fallback={<div>Loading Navbar...</div>}>
-              <Navbar />
-            </Suspense>
+<body className={`${bodyFont.variable} ${displayFont.variable} antialiased nv-body nv-page`}>
+        <AppProvider>
+          <PerformanceInit />
+          <Suspense fallback={<div>Loading Navbar...</div>}>
+            <Navbar />
+          </Suspense>
 
-{/* Top display ad (autorelaxed) — lazy loaded with collapse on empty */}
-             <Suspense fallback={null}>
-               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                 <AdSlot
-                   slotId="9781955008"
-                   adFormat="autorelaxed"
-                   eager={false}
-                   collapseOnEmpty={true}
-                   className="mb-4 mx-auto w-full max-w-[320px] md:max-w-full"
-                   minHeight="65px"
-                   aria-label="Top display advertisement"
-                 />
-               </div>
-             </Suspense>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <AdSlot
+              slotId="9781955008"
+              adFormat="autorelaxed"
+              eager={false}
+              collapseOnEmpty={true}
+              className="mb-4 mx-auto w-full max-w-[320px] md:max-w-full"
+              minHeight="65px"
+              aria-label="Top display advertisement"
+            />
+          </div>
 
-            <RouteChrome>{children}</RouteChrome>
-            <Footer />
-            <AppInstallPopup />
-          </AppProvider>
-        </div>
+          <RouteChrome>{children}</RouteChrome>
+          <Footer />
+          <AppInstallPopup />
 
-        <div className="fixed inset-x-0 bottom-0 z-50 bg-white/90 border-t border-slate-200 shadow-[0_-10px_30px_rgba(15,23,42,0.14)] backdrop-blur-sm">
-          <div className="mx-auto flex max-w-7xl justify-center px-4 py-2">
-            <div className="w-full flex justify-center">
-              <StickyBottomAd />
+          {/* Bottom ad - in normal document flow after footer, reduced height */}
+          <div className="w-full bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-700 py-1.5">
+            <div className="mx-auto max-w-7xl px-4">
+              <AdSlot
+                slotId="9605048978"
+                adFormat="autorelaxed"
+                eager={false}
+                collapseOnEmpty={true}
+                className="w-full"
+                minHeight="50px"
+                aria-label="Bottom display advertisement"
+              />
             </div>
           </div>
-        </div>
+        </AppProvider>
 
         {/* ✅ Google AdSense script placed after page content for safer load ordering */}
         <Script

@@ -23,17 +23,22 @@ const AdSlot = ({
     const checkAdStatus = () => {
       const ins = adRef.current?.querySelector('ins.adsbygoogle');
       if (!ins) return false;
-
+      
+      // Check if ad has loaded content (iframe or innerHTML)
       const iframe = ins.querySelector('iframe');
       const hasContent = !!(iframe && iframe.offsetHeight > 0);
-      return hasContent;
+      const hasAdFilled = ins.children.length > 0;
+      
+      if (hasContent || hasAdFilled) {
+        setAdLoaded(true);
+        return true;
+      }
+      return false;
     };
 
-    const interval = setInterval(() => {
-      if (checkAdStatus()) {
-        setAdLoaded(true);
-      }
-    }, 300);
+    // Initial check + polling
+    checkAdStatus();
+    const interval = setInterval(checkAdStatus, 300);
 
     return () => clearInterval(interval);
   }, [collapseOnEmpty]);
@@ -52,17 +57,18 @@ const AdSlot = ({
 
   const containerClasses = `${className} ad-container`.trim();
 
+  // When not loaded and collapse enabled, minimize space
   if (collapseOnEmpty && !adLoaded) {
     return (
       <div
         ref={adRef}
-        className={`${containerClasses} invisible`}
+        className={`${containerClasses} invisible h-0 min-h-0 py-0`}
         aria-label={ariaLabel}
         role="region"
       >
         <ins
           className="adsbygoogle"
-          style={{ display: 'block', width: '100%', minHeight }}
+          style={{ display: 'block', width: '100%' }}
           data-ad-client="ca-pub-1510675468129183"
           data-ad-slot={slotId}
           data-ad-format={adFormat}
@@ -75,7 +81,7 @@ const AdSlot = ({
   return (
     <div
       ref={adRef}
-      className={`w-full my-6 flex justify-center ${containerClasses}`}
+      className={`w-full flex justify-center ${containerClasses}`}
       aria-label={ariaLabel}
       role="region"
     >
