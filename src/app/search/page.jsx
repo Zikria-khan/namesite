@@ -2,7 +2,6 @@ import GlobalSearchClient from './GlobalSearchClient';
 import { Suspense } from 'react';
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
-import AdSlot from '@/components/Ads/AdSlot';
 
 const publishedDate = new Date().toISOString().split('T')[0];
 const DOMAIN = getSiteUrl();

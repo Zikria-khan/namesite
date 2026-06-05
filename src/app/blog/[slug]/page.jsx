@@ -10,7 +10,6 @@ import hinduNames from '../../../../public/hindu_names.json';
 import christianNames from '../../../../public/christians_names.json';
 import SitePage from '@/components/Layout/SitePage';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
-import AdSlot from '@/components/Ads/AdSlot';
 
 // ISR with 90-day cache for blog posts — keep content stable
 export const revalidate = 7776000; // 90 days
@@ -323,7 +322,6 @@ export default async function BlogPostPage({ params }) {
            </div>
          </section>
  
-         <AdSlot slotId="9605048975" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="Blog post header advertisement" />
  
          {/* Content */}
          <article className="py-12 px-4">
@@ -346,7 +344,6 @@ export default async function BlogPostPage({ params }) {
                </p>
              </div>
              
-             <AdSlot slotId="9605048976" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="Blog post mid-content advertisement" />
  
              {/* Sections */}
              {post.content.sections && post.content.sections.map((section, index) => (
@@ -388,7 +385,6 @@ export default async function BlogPostPage({ params }) {
                </section>
              ))}
              
-             <AdSlot slotId="9605048977" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="Blog post lower content advertisement" />
  
              {/* FAQs Section */}
              {post.content.faqs && post.content.faqs.length > 0 && (
@@ -419,7 +415,6 @@ export default async function BlogPostPage({ params }) {
                </section>
              )}
  
-             <AdSlot slotId="9605048979" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="Blog post CTA advertisement" />
  
      {/* CTA */}
      <section className="py-12 px-4">

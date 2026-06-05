@@ -6,7 +6,6 @@ import StructuredData from '@/components/SEO/StructuredData';
 import BlogImageWithFallback from '@/components/Blog/BlogImageWithFallback';
 import { getSiteUrl } from '@/lib/seo/site';
 import SitePage from '@/components/Layout/SitePage';
-import AdSlot from '@/components/Ads/AdSlot';
 
 // ISR with 90-day cache for blog index — keep content stable
 export const revalidate = 7776000; // 90 days
@@ -95,8 +94,6 @@ export default function BlogPage() {
          </div>
        </section>
        
-       <AdSlot slotId="9605048971" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="Blog header advertisement" />
-
       {/* Blog internal links */}
       <section className="py-10 px-4 bg-gradient-to-r from-indigo-50 via-white to-cyan-50 border-b border-gray-200">
         <div className="max-w-6xl mx-auto">
@@ -298,8 +295,6 @@ export default function BlogPage() {
         </div>
        </section>
  
-<AdSlot slotId="9605048973" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="Blog lower content advertisement" />
-
         {/* FAQ Section */}
         <section className="py-16 px-4 bg-slate-50">
          <div className="max-w-6xl mx-auto">
@@ -315,7 +310,6 @@ export default function BlogPage() {
           </div>
         </section>
   
-        <AdSlot slotId="9605048974" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="Blog CTA advertisement" />
  
        {/* CTA Section */}
        <section className="py-16 px-4">

@@ -24,7 +24,7 @@ try {
   const sortedPosts = allPosts
     .filter(post => post.publishDate)
     .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
-  latestArticles = sortedPosts.slice(0, 3);
+  latestArticles = sortedPosts.slice(0, 6);
 } catch (error) {
 }
 
@@ -196,5 +196,5 @@ const homepageStructuredData = {
 };
 
 export default async function HomePage() {
-  return <HomePageClient />;
+  return <HomePageClient latestArticles={latestArticles} />;
 }

@@ -1,7 +1,6 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
-import AdSlot from '@/components/Ads/AdSlot';
 import AppInstallPopup from "./install";
 import Script from 'next/script';
 import { Fraunces, Instrument_Sans } from 'next/font/google';
@@ -171,48 +170,10 @@ export default function RootLayout({ children }) {
             <Navbar />
           </Suspense>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <AdSlot
-              slotId="9781955008"
-              adFormat="autorelaxed"
-              eager={false}
-              collapseOnEmpty={true}
-              className="mb-4 mx-auto w-full max-w-[320px] md:max-w-full"
-              minHeight="200px"
-              maxHeight="200px"
-              aria-label="Top display advertisement"
-            />
-          </div>
-
           <RouteChrome>{children}</RouteChrome>
           <Footer />
           <AppInstallPopup />
-
-          {/* Bottom display ad — fixed sticky, fast loading, works on all screens */}
-          <div className="sticky bottom-0 left-0 right-0 z-40 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-t border-slate-200 dark:border-slate-700">
-            <div className="mx-auto flex items-center justify-center">
-              <div className="w-full max-w-[728px] min-h-[200px] flex items-center justify-center">
-                <AdSlot
-                  slotId="9605048978"
-                  adFormat="show"
-                  eager={true}
-                  collapseOnEmpty={true}
-                  className="w-full flex items-center justify-center"
-                  minHeight="200px"
-                  maxHeight="200px"
-                  aria-label="Bottom display advertisement"
-                />
-              </div>
-            </div>
-          </div>
         </AppProvider>
-
-        {/* Google AdSense script */}
-        <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1510675468129183"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );

@@ -2,7 +2,6 @@ import PageLayout from '@/components/Layout/PageLayout';
 import StructuredData from '@/components/SEO/StructuredData';
 import { getSiteUrl } from '@/lib/seo/site';
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers';
-import AdSlot from '@/components/Ads/AdSlot';
 
 const siteUrl = getSiteUrl();
 
@@ -106,8 +105,6 @@ export default function AboutPage() {
              </div>
            </section>
            
-           <AdSlot slotId="9605048985" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="About header advertisement" />
-           
            {/* Stats */}
           <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             <div className="bg-white rounded-xl p-6 text-center shadow-sm">
@@ -154,8 +151,6 @@ export default function AboutPage() {
                </div>
              </div>
            </section>
-           
-           <AdSlot slotId="9605048986" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="About mid-content advertisement" />
            
            {/* Story Section */}
           <section className="bg-white rounded-xl p-8 sm:p-12 shadow-sm mb-12">
@@ -223,8 +218,6 @@ export default function AboutPage() {
               </p>
              </div>
            </section>
-           
-           <AdSlot slotId="9605048987" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="About lower content advertisement" />
            
            {/* CTA */}
            <section className="bg-gradient-to-br from-indigo-600 to-purple-600 text-white rounded-2xl p-8 sm:p-12 text-center">

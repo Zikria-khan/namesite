@@ -2,10 +2,11 @@ import { generateCanonicalUrl, validateMetaTitle, validateMetaDescription } from
 import { generateOptimizedTitle, generateOptimizedDescription, generateOptimizedKeywords, generateNamePageSchemas } from '@/lib/seo/name-page-seo';
 import { serverFetchNamesByLetter } from '@/lib/api/server-fetch';
 import { getSiteUrl, absoluteUrl } from '@/lib/seo/site';
-import { Sparkles, Moon, ChevronLeft, ChevronRight, Search, Star, BookOpen, Heart } from 'lucide-react';
+import { Sparkles, Moon, ChevronLeft, ChevronRight, Search, Star, BookOpen, Heart, Grid3X3 } from 'lucide-react';
 import Link from 'next/link';
 import Script from 'next/script';
 import FavoriteButton from '@/components/FavoriteButton';
+import BlogSection from '@/components/Blog/BlogSection';
 
 const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('');
@@ -614,6 +615,29 @@ export default async function LetterNamesPage({ params }) {
           </p>
         </div>
       </section>
+
+      {/* Cross-page internal links */}
+      <section className="max-w-7xl mx-auto px-4 pb-8">
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+          <h3 className="text-sm font-semibold text-slate-700 mb-3">Explore More Ways to Browse</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <Link href={`/names/${religion}/categories/modern/1`} className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all text-xs font-semibold text-slate-600 hover:text-indigo-700">
+              <Grid3X3 className="w-3.5 h-3.5" /> Browse by Category
+            </Link>
+            <Link href={`/names/${religion}/origin/arabic/1`} className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all text-xs font-semibold text-slate-600 hover:text-indigo-700">
+              <Grid3X3 className="w-3.5 h-3.5" /> Browse by Origin
+            </Link>
+            <Link href="/search" className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all text-xs font-semibold text-slate-600 hover:text-indigo-700">
+              <Search className="w-3.5 h-3.5" /> Search All Names
+            </Link>
+            <Link href="/names" className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all text-xs font-semibold text-slate-600 hover:text-indigo-700">
+              <BookOpen className="w-3.5 h-3.5" /> All Traditions
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <BlogSection religion={religion} title={`${religionLabel} Name Guides`} />
     </main>
   );
 }
