@@ -1,18 +1,12 @@
 /**
  * STRUCTURED DATA (Schema.org) — Cultural & Linguistic Knowledge Graph
- * Replaced: Product/Article schema types
- * With: Dataset, ScholarlyArticle, Linguistic system schemas
+ * ALL name URLs via url-builder for lowercase, consistent format
  */
 import { getSiteUrl } from '@/lib/seo/site';
 import { nameAbsoluteUrl } from '@/lib/seo/url-builder';
 
 /**
  * Generate NameDataset schema for individual name pages
- * Structured cultural and linguistic analysis of personal names across civilizations.
- * @param {Object} nameData - Name data
- * @param {string} religion - Religion category
- * @param {string} slug - Name slug
- * @returns {Object} Dataset schema
  */
 export function generateNameDatasetSchema(nameData, religion, slug) {
   const pageUrl = nameAbsoluteUrl(religion, slug);
@@ -40,15 +34,9 @@ export function generateNameDatasetSchema(nameData, religion, slug) {
       description: 'Cultural Name Knowledge Base — Multilingual Onomastics System'
     },
     keywords: [
-      'linguistic origin analysis',
-      'cultural semantic interpretation',
-      'historical naming evolution',
-      'cross-cultural onomastic study',
-      name,
-      `${name} etymology`,
-      `${name} linguistic root`,
-      `${name} cultural context`,
-      origin
+      'linguistic origin analysis', 'cultural semantic interpretation',
+      'historical naming evolution', 'cross-cultural onomastic study',
+      name, `${name} etymology`, `${name} linguistic root`, `${name} cultural context`, origin
     ].filter(Boolean).join(', '),
     about: {
       '@type': 'Thing',
@@ -60,116 +48,65 @@ export function generateNameDatasetSchema(nameData, religion, slug) {
       name: 'NameVerse Cultural Name Knowledge Base',
       url: getSiteUrl()
     },
-    spatialCoverage: {
-      '@type': 'Place',
-      name: origin || 'Global'
-    },
+    spatialCoverage: { '@type': 'Place', name: origin || 'Global' },
     inLanguage: 'en',
     variableMeasured: [
-      {
-        '@type': 'PropertyValue',
-        name: 'linguisticOrigin',
-        value: origin
-      },
-      {
-        '@type': 'PropertyValue',
-        name: 'semanticMeaning',
-        value: coreMeaning
-      },
-      {
-        '@type': 'PropertyValue',
-        name: 'culturalContext',
-        value: nameData.religion || religion || 'Multicultural'
-      },
-      {
-        '@type': 'PropertyValue',
-        name: 'phoneticStructure',
-        value: nameData.pronunciation?.english || ''
-      },
-      {
-        '@type': 'PropertyValue',
-        name: 'languageFamily',
-        value: nameData.language_family || nameData.origin_language || ''
-      },
-      {
-        '@type': 'PropertyValue',
-        name: 'regionalUsage',
-        value: Array.isArray(nameData.regional_usage) ? nameData.regional_usage.join(', ') : ''
-      }
+      { '@type': 'PropertyValue', name: 'linguisticOrigin', value: origin },
+      { '@type': 'PropertyValue', name: 'semanticMeaning', value: coreMeaning },
+      { '@type': 'PropertyValue', name: 'culturalContext', value: nameData.religion || religion || 'Multicultural' },
+      { '@type': 'PropertyValue', name: 'phoneticStructure', value: nameData.pronunciation?.english || '' },
+      { '@type': 'PropertyValue', name: 'languageFamily', value: nameData.language_family || nameData.origin_language || '' },
+      { '@type': 'PropertyValue', name: 'regionalUsage', value: Array.isArray(nameData.regional_usage) ? nameData.regional_usage.join(', ') : '' }
     ]
   };
-
   return schema;
 }
 
 /**
- * Generate ScholarlyArticle schema for name pages
- * Replaces the old "Article" basic SEO spam type
+ * Generate ScholarlyArticle schema
  */
 export function generateNameScholarlyArticle(nameData, religion, slug) {
   const pageUrl = nameAbsoluteUrl(religion, slug);
   const name = nameData.name || '';
-  const coreMeaning = nameData.short_meaning || nameData.meaning || '';
   const origin = nameData.origin || '';
   const publishedDate = nameData.published_date || nameData.created_at || new Date().toISOString().split('T')[0];
   const modifiedDate = nameData.updated_at || publishedDate;
+  const baseUrl = getSiteUrl();
 
   return {
     '@context': 'https://schema.org',
     '@type': 'ScholarlyArticle',
     headline: `${name} — Cultural & Linguistic Origin Analysis | NameVerse`,
     name: `${name} — Linguistic Origin Analysis`,
-    description: `Linguistic origin analysis of the name "${name}": root language etymology, phonetic structure, cultural semantic interpretation across traditions, and historical naming evolution through civilizations. Part of the NameVerse multilingual onomastics knowledge base.`,
+    description: `Linguistic origin analysis of the name "${name}": root language etymology, phonetic structure, cultural semantic interpretation across traditions, and historical naming evolution through civilizations.`,
     url: pageUrl,
-    image: `${getSiteUrl()}/logo.png`,
+    image: `${baseUrl}/logo.png`,
     datePublished: publishedDate,
     dateModified: modifiedDate,
     inLanguage: 'en',
-    author: {
-      '@type': 'Organization',
-      name: 'NameVerse',
-      description: 'Cultural Name Knowledge Base'
-    },
+    author: { '@type': 'Organization', name: 'NameVerse', description: 'Cultural Name Knowledge Base' },
     publisher: {
-      '@type': 'Organization',
-      name: 'NameVerse',
-      logo: {
-        '@type': 'ImageObject',
-        url: `${getSiteUrl()}/logo.png`,
-        width: 512,
-        height: 512
-      }
+      '@type': 'Organization', name: 'NameVerse',
+      logo: { '@type': 'ImageObject', url: `${baseUrl}/logo.png`, width: 512, height: 512 }
     },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': pageUrl
-    },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
     about: {
-      '@type': 'Thing',
-      name: 'Onomastics — Cultural Name Research',
+      '@type': 'Thing', name: 'Onomastics — Cultural Name Research',
       description: 'Structured cultural and linguistic analysis of personal names across civilizations.'
     },
     articleSection: 'Cultural Onomastics',
     keywords: `linguistic origin analysis, cultural semantic interpretation, ${name} etymology, ${origin ? `${origin} linguistics, ` : ''}historical naming evolution, cross-cultural onomastic study`,
     wordCount: 500,
-    citation: {
-      '@type': 'CreativeWork',
-      name: 'NameVerse — Cultural Name Knowledge Base',
-      url: getSiteUrl()
-    }
+    citation: { '@type': 'CreativeWork', name: 'NameVerse — Cultural Name Knowledge Base', url: baseUrl }
   };
 }
 
 /**
  * Generate FAQPage schema
- * @param {Array} faqs - Array of {question, answer} objects
- * @returns {Object} FAQPage schema
  */
 export function generateFAQSchema(faqs, pageDate = null) {
   if (!faqs || faqs.length === 0) return null;
-  
   const publishedDate = pageDate || new Date().toISOString().split('T')[0];
-
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -177,83 +114,59 @@ export function generateFAQSchema(faqs, pageDate = null) {
       '@type': 'Question',
       name: faq.question || faq.q,
       datePublished: publishedDate,
-      author: {
-        '@type': 'Organization',
-        name: 'NameVerse'
-      },
+      author: { '@type': 'Organization', name: 'NameVerse' },
       answerCount: 1,
       acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer || faq.a,
-        datePublished: publishedDate,
-        upvoteCount: 0,
-        author: {
-          '@type': 'Organization',
-          name: 'NameVerse'
-        }
+        '@type': 'Answer', text: faq.answer || faq.a, datePublished: publishedDate,
+        upvoteCount: 0, author: { '@type': 'Organization', name: 'NameVerse' }
       }
     }))
   };
 }
 
 /**
- * Generate BreadcrumbList schema
- * @param {Array} items - Breadcrumb items [{label, href}]
- * @returns {Object} BreadcrumbList schema
+ * Generate BreadcrumbList schema — all internal hrefs via url-builder
  */
 export function generateBreadcrumbSchema(items) {
   if (!items || items.length === 0) return null;
-
+  const baseUrl = getSiteUrl();
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Home',
-        item: getSiteUrl()
-      },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl },
       ...items.map((item, index) => ({
-        '@type': 'ListItem',
-        position: index + 2,
-        name: item.label,
-        ...(item.href && { item: absoluteUrl(item.href) })
+        '@type': 'ListItem', position: index + 2, name: item.label,
+        ...(item.href && { item: item.href.startsWith('http') ? item.href : `${baseUrl}${item.href}` })
       }))
     ]
   };
 }
 
 /**
- * Generate CollectionPage schema for category pages
- * @param {Object} data - Collection data
- * @returns {Object} CollectionPage schema
+ * Generate CollectionPage schema
  */
 export function generateCollectionSchema(data) {
   const religion = data.religion || '';
+  const baseUrl = getSiteUrl();
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: data.title || `${(religion.charAt(0).toUpperCase() + religion.slice(1))} — Linguistic Name Collection`,
-    description: data.description || `Structured cultural and linguistic analysis of ${religion} personal names. Browse cross-cultural onomastic data with etymological roots, semantic meanings, and regional variations.`,
-    url: absoluteUrl(data.url || '/names'),
+    description: data.description || `Structured cultural and linguistic analysis of ${religion} personal names.`,
+    url: `${baseUrl}${data.url || '/names'}`,
     isPartOf: {
-      '@type': 'WebSite',
-      name: 'NameVerse',
+      '@type': 'WebSite', name: 'NameVerse',
       description: 'Cultural Name Knowledge Base — Multilingual Onomastics Research System',
-      url: getSiteUrl()
+      url: baseUrl
     },
     mainEntity: {
-      '@type': 'ItemList',
-      numberOfItems: data.totalNames || data.count || 0,
+      '@type': 'ItemList', numberOfItems: data.totalNames || data.count || 0,
       itemListElement: (data.names || []).slice(0, 10).map((name, index) => ({
-        '@type': 'ListItem',
-        position: index + 1,
+        '@type': 'ListItem', position: index + 1,
         item: {
-          '@type': 'Thing',
-          name: name.name,
-          description: name.short_meaning || name.meaning || '',
-          url: absoluteUrl('/names/' + (religion || name.religion) + '/' + name.slug)
+          '@type': 'Thing', name: name.name, description: name.short_meaning || name.meaning || '',
+          url: `${baseUrl}/names/${(religion || name.religion)}/${name.slug}`
         }
       }))
     }
@@ -262,12 +175,9 @@ export function generateCollectionSchema(data) {
 
 /**
  * Render JSON-LD script tag
- * @param {Object} schema - Schema object
- * @returns {JSX} Script element
  */
 export function renderSchema(schema) {
   if (!schema) return null;
-
   return (
     <script
       type="application/ld+json"

@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
 import { getSiteUrl } from '@/lib/seo/site';
+import { nameAbsoluteUrl, createSlug } from '@/lib/seo/url-builder';
 import { generateNamePageMetadata, generateNamePageSchemas } from '@/lib/seo/name-page-seo';
 import { serverFetchNameDetail } from '@/lib/api/server-fetch';
 import { sanitizeNameData } from '@/lib/utils/sanitizeNameData';
-import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 import CulturalNameAnalysisCard from '@/components/name/NameDetail';
 import Script from 'next/script';
 import fs from 'fs';
