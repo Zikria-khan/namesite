@@ -95,7 +95,7 @@ export default function BlogPage() {
          </div>
        </section>
        
-       <AdSlot slotId="9605048971" className="mb-8" minHeight="90px" aria-label="Blog header advertisement" />
+       <AdSlot slotId="9605048971" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="Blog header advertisement" />
 
       {/* Blog internal links */}
       <section className="py-10 px-4 bg-gradient-to-r from-indigo-50 via-white to-cyan-50 border-b border-gray-200">
@@ -298,24 +298,24 @@ export default function BlogPage() {
         </div>
        </section>
  
-       <AdSlot slotId="9605048973" className="mb-8" minHeight="90px" aria-label="Blog lower content advertisement" />
- 
-       {/* FAQ Section */}
-       <section className="py-16 px-4 bg-slate-50">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {blogFaq.map((item, index) => (
-              <div key={index} className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{item.question}</h3>
-                <p className="text-gray-600 leading-relaxed">{item.answer}</p>
-              </div>
-            ))}
+<AdSlot slotId="9605048973" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="Blog lower content advertisement" />
+
+        {/* FAQ Section */}
+        <section className="py-16 px-4 bg-slate-50">
+         <div className="max-w-6xl mx-auto">
+           <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             {blogFaq.map((item, index) => (
+               <div key={index} className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+                 <h3 className="text-lg font-semibold text-gray-900 mb-3">{item.question}</h3>
+                 <p className="text-gray-600 leading-relaxed">{item.answer}</p>
+               </div>
+             ))}
+           </div>
           </div>
-         </div>
-       </section>
- 
-       <AdSlot slotId="9605048974" className="mb-8" minHeight="90px" aria-label="Blog CTA advertisement" />
+        </section>
+  
+        <AdSlot slotId="9605048974" className="mb-8" minHeight="200px" maxHeight="200px" aria-label="Blog CTA advertisement" />
  
        {/* CTA Section */}
        <section className="py-16 px-4">

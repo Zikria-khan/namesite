@@ -178,7 +178,8 @@ export default function RootLayout({ children }) {
               eager={false}
               collapseOnEmpty={true}
               className="mb-4 mx-auto w-full max-w-[320px] md:max-w-full"
-              minHeight="65px"
+              minHeight="200px"
+              maxHeight="200px"
               aria-label="Top display advertisement"
             />
           </div>
@@ -190,13 +191,15 @@ export default function RootLayout({ children }) {
           {/* Bottom display ad — fixed sticky, fast loading, works on all screens */}
           <div className="sticky bottom-0 left-0 right-0 z-40 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-t border-slate-200 dark:border-slate-700">
             <div className="mx-auto flex items-center justify-center">
-              <div className="w-full max-w-[728px] min-h-[50px] md:min-h-[90px] flex items-center justify-center">
+              <div className="w-full max-w-[728px] min-h-[200px] flex items-center justify-center">
                 <AdSlot
                   slotId="9605048978"
                   adFormat="show"
                   eager={true}
                   collapseOnEmpty={true}
                   className="w-full flex items-center justify-center"
+                  minHeight="200px"
+                  maxHeight="200px"
                   aria-label="Bottom display advertisement"
                 />
               </div>

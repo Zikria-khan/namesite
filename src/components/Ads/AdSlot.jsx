@@ -7,6 +7,7 @@ const AdSlot = ({
   slotId,
   className = '',
   minHeight = '90px',
+  maxHeight = '200px',
   ariaLabel = 'Advertisement',
   adFormat = 'auto',
   eager = false,
@@ -87,7 +88,7 @@ const AdSlot = ({
     >
       <ins
         className="adsbygoogle"
-        style={{ display: 'block', width: '100%', minHeight }}
+        style={{ display: 'block', width: '100%', minHeight, maxHeight }}
         data-ad-client="ca-pub-1510675468129183"
         data-ad-slot={slotId}
         data-ad-format={adFormat}

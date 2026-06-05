@@ -211,7 +211,7 @@ export default async function CategoryNamesPage({ params }) {
         </div>
       </section>
       
-      <AdSlot slotId="9605048980" collapseOnEmpty={true} className="mb-8" minHeight="90px" aria-label="Category header advertisement" />
+      <AdSlot slotId="9605048980" collapseOnEmpty={true} className="mb-8" minHeight="200px" maxHeight="200px" aria-label="Category header advertisement" />
          
          {/* Breadcrumb */}
       <nav className="max-w-7xl mx-auto px-4 py-5" aria-label="Breadcrumb">
@@ -305,7 +305,7 @@ export default async function CategoryNamesPage({ params }) {
         </div>
       </section>
 
-      <AdSlot slotId="9605048982" collapseOnEmpty={true} className="mb-8" minHeight="90px" aria-label="Category footer advertisement" />
+      <AdSlot slotId="9605048982" collapseOnEmpty={true} className="mb-8" minHeight="200px" maxHeight="200px" aria-label="Category footer advertisement" />
 
     </main>
   );

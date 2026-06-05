@@ -218,6 +218,8 @@ body {
 /* Prevent layout shift for ads - reserve space only when loaded */
 .ad-container:not(.invisible) {
   min-height: var(--ad-min-height, auto);
+  max-height: 200px;
+  overflow: hidden;
 }
 
 /* Multiplex ad responsive sizing */
