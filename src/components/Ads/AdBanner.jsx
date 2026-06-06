@@ -31,14 +31,21 @@ export default function AdBanner({ className = '' }) {
   return (
     <div
       ref={containerRef}
-      className={`w-full flex justify-center py-2 ${className}`}
-      style={{ minHeight: 'auto' }}
+      className={`w-full flex items-center justify-center ${className}`}
+      style={{
+        minHeight: 'auto',
+        overflow: 'hidden',
+      }}
     >
       <div
         id="container-1606e7870f004d67136f85f2b1698cd3"
-        className="w-full max-w-[728px] mx-auto"
+        className="w-full"
         style={{
           minHeight: '90px',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       />
     </div>
