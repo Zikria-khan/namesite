@@ -3,9 +3,13 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Ad Banner Component
- * Loads ad script and renders the ad container.
- * Optimized for all screen sizes — responsive width, minimal height.
+ * Ad Banner Component — CLS-Safe, Responsive, Horizontal
+ * 
+ * Placement rules:
+ * - Always after main content, never before H1 or critical above-fold content
+ * - Max height: 90-120px to prevent layout shift
+ * - Full-width with proper spacing
+ * - Horizontal on desktop, responsive on mobile
  */
 export default function AdBanner({ className = '' }) {
   const containerRef = useRef(null);
@@ -15,9 +19,8 @@ export default function AdBanner({ className = '' }) {
     if (scriptLoaded.current) return;
     if (!containerRef.current) return;
 
-    // Load the ad script
     const script = document.createElement('script');
-    script.src = 'https://pl29092372.effectivecpmnetwork.com/1606e7870f004d67136f85f2b1698cd3/invoke.js';
+    script.src = 'https://revolthem.com/1606e7870f004d67136f85f2b1698cd3/invoke.js';
     script.async = true;
     script.setAttribute('data-cfasync', 'false');
     
@@ -31,21 +34,24 @@ export default function AdBanner({ className = '' }) {
   return (
     <div
       ref={containerRef}
-      className={`w-full flex items-center justify-center ${className}`}
+      className={`w-full my-4 ${className}`}
+      role="complementary"
+      aria-label="Sponsored content"
       style={{
-        minHeight: 'auto',
-        overflow: 'hidden',
+        minHeight: '90px',
+        maxHeight: '120px',
       }}
     >
       <div
         id="container-1606e7870f004d67136f85f2b1698cd3"
-        className="w-full"
         style={{
-          minHeight: '90px',
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
+          width: '100%',
+          minHeight: '90px',
+          overflow: 'hidden',
         }}
       />
     </div>

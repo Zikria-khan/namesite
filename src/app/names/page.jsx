@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import FAQAccordion from '@/components/names/FAQAccordion'
+import AdBanner from '@/components/Ads/AdBanner'
 import { getSiteUrl } from '@/lib/seo/site'
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers'
 
@@ -366,6 +367,11 @@ export default function Page() {
           </div>
         </div>
       </section>
+
+      {/* Ad Banner — placed after main content to avoid SEO impact */}
+      <div className="max-w-7xl mx-auto px-4 py-6 mb-16">
+        <AdBanner />
+      </div>
 
       {/* ── FAQ Section ── */}
       <section className="max-w-3xl mx-auto px-4 mb-20">

@@ -7,6 +7,7 @@ import { Sparkles, Moon, ChevronLeft, ChevronRight, Search, Grid3X3, BookOpen } 
 import FavoriteButton from '@/components/FavoriteButton';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 import BlogSection from '@/components/Blog/BlogSection';
+import AdBanner from '@/components/Ads/AdBanner';
 
 const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 const STATIC_CATEGORIES = ['modern', 'traditional', 'nature', 'religious', 'classical', 'unique'];
@@ -245,6 +246,11 @@ export default async function CategoryNamesPage({ params }) {
         </div>
       </div>
 
+      {/* Ad — placed mid-scroll after nav, before names for natural flow */}
+      <div className="max-w-7xl mx-auto px-4 mb-8">
+        <AdBanner />
+      </div>
+
       <section className="max-w-7xl mx-auto px-4 pb-16">
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {names.map((item, index) => (
@@ -302,7 +308,6 @@ export default async function CategoryNamesPage({ params }) {
           )}
         </div>
       </section>
-
 
       {/* Cross-page internal links */}
       <section className="max-w-7xl mx-auto px-4 pb-8">

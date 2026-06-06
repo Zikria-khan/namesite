@@ -4,6 +4,7 @@ import { TrendingUp, BarChart2, ArrowUp, ArrowDown, Users, Sparkles, ChevronRigh
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
 import SitePage from '@/components/Layout/SitePage';
+import AdBanner from '@/components/Ads/AdBanner';
 
 // ISR: 30-day cache — static content
 export const revalidate = 2592000; // 30 days
@@ -368,6 +369,11 @@ export default async function PopularityPage() {
             </div>
           </div>
         </section>
+
+        {/* Ad — placed mid-scroll after first section for natural reading flow */}
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <AdBanner />
+        </div>
 
         {/* FAQ Section with Schema */}
         <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-orange-50 to-amber-50/30">

@@ -4,6 +4,7 @@ import FAQ from './FAQ';
 import RelatedNames from './RelatedNames';
 import SitePage from '@/components/Layout/SitePage';
 import BlogSection from '@/components/Blog/BlogSection';
+import AdBanner from '@/components/Ads/AdBanner';
 import Link from 'next/link';
 import { ArrowRight, Search, Grid3X3, BookOpen, Sparkles } from 'lucide-react';
 
@@ -24,6 +25,12 @@ export default function CulturalNameAnalysisCard({ data, faqData = [], pageUrl }
         <NameHero data={data} pageUrl={pageUrl} />
         <div className="nv-stack">
           <LinguisticOriginPanel data={data} />
+
+          {/* Ad — placed after meaning section for natural reading flow */}
+          <div className="max-w-7xl mx-auto px-4">
+            <AdBanner />
+          </div>
+
           <RelatedNames data={data} />
 
           {/* Cross-page internal links */}

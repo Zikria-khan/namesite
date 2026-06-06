@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Script from 'next/script';
 import FavoriteButton from '@/components/FavoriteButton';
 import BlogSection from '@/components/Blog/BlogSection';
+import AdBanner from '@/components/Ads/AdBanner';
 
 const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('');
@@ -447,6 +448,11 @@ export default async function LetterNamesPage({ params }) {
             </Link>
           ))}
         </div>
+      </div>
+
+      {/* Ad — placed mid-scroll after nav, before names for natural flow */}
+      <div className="max-w-7xl mx-auto px-4 mb-8">
+        <AdBanner />
       </div>
 
       {/* Names Grid */}
