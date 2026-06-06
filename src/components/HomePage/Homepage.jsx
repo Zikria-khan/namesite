@@ -13,8 +13,8 @@ export default function HomePageClient({ latestArticles = [] }) {
   return (
     <main role="main" className="min-h-screen flex flex-col bg-[color:var(--nv-canvas)] nv-body">
       <HeroSection />
-      <AdBanner />
       <ContentSection />
+      <AdBanner />
       <PopularNamesSection />
       <FaqSection />
       <LatestArticles articles={latestArticles} />

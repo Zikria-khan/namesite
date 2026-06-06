@@ -246,14 +246,44 @@ export default async function CategoryNamesPage({ params }) {
         </div>
       </div>
 
-      {/* Ad — placed mid-scroll after nav, before names for natural flow */}
-      <div className="max-w-7xl mx-auto px-4 mb-8">
-        <AdBanner />
-      </div>
-
       <section className="max-w-7xl mx-auto px-4 pb-16">
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {names.map((item, index) => (
+          {names.slice(0, Math.ceil(names.length / 2)).map((item, index) => (
+            <article
+              key={`${item.name || item.id || index}-${index}`}
+              className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+            >
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">{item.name}</h2>
+                  {item.gender && (
+                    <p className="text-sm text-gray-500 mt-1">{item.gender}</p>
+                  )}
+                </div>
+                <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-700">
+                  {item.origin || religion.charAt(0).toUpperCase() + religion.slice(1)}
+                </span>
+              </div>
+              {item.meaning && (
+                <p className="text-gray-600 mb-4 line-clamp-3">{item.meaning}</p>
+              )}
+              <Link
+                href={`/names/${religion}/${generateSlug(item.name)}`}
+                className="inline-flex items-center gap-2 text-emerald-700 font-semibold hover:text-emerald-900"
+              >
+                View name details
+              </Link>
+            </article>
+          ))}
+        </div>
+
+        {/* Ad — embedded inside content, between first half and second half */}
+        <div className="max-w-7xl mx-auto px-4 mb-8 mt-8">
+          <AdBanner />
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {names.slice(Math.ceil(names.length / 2)).map((item, index) => (
             <article
               key={`${item.name || item.id || index}-${index}`}
               className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md"

@@ -450,11 +450,6 @@ export default async function LetterNamesPage({ params }) {
         </div>
       </div>
 
-      {/* Ad — placed mid-scroll after nav, before names for natural flow */}
-      <div className="max-w-7xl mx-auto px-4 mb-8">
-        <AdBanner />
-      </div>
-
       {/* Names Grid */}
       <section className="max-w-7xl mx-auto px-4 pb-16" aria-label={`${religionLabel} names starting with ${letter}`}>
         {names.length === 0 ? (
@@ -474,7 +469,88 @@ export default async function LetterNamesPage({ params }) {
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-12">
-              {names.map((nameItem, index) => {
+              {names.slice(0, Math.ceil(names.length / 2)).map((nameItem, index) => {
+                const itemKey = nameItem.slug || generateSlug(nameItem.name) || nameItem._id || index;
+                return (
+                  <Link
+                    key={itemKey}
+                    href={`/names/${religion}/${generateSlug(nameItem.name)}`}
+                    className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 border border-gray-100 hover:border-emerald-300 group hover:-translate-y-1 block"
+                    title={`${nameItem.name} meaning — ${religionLabel} baby name`}
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors truncate">
+                          {nameItem.name || 'Unknown'}
+                        </h3>
+                        <div className="flex flex-wrap gap-1.5 mt-1.5">
+                          {nameItem.quranicReference && (
+                            <span className="inline-block bg-emerald-100 text-emerald-700 text-xs px-2 py-0.5 rounded-full font-medium">
+                              Quranic
+                            </span>
+                          )}
+                          {nameItem.gender && (
+                            <span className={`inline-block text-xs px-2 py-0.5 rounded-full font-medium ${
+                              nameItem.gender.toLowerCase() === 'boy' || nameItem.gender.toLowerCase() === 'male'
+                                ? 'bg-blue-50 text-blue-600'
+                                : 'bg-pink-50 text-pink-600'
+                            }`}>
+                              {nameItem.gender}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 flex-shrink-0 ml-2">
+                        <FavoriteButton
+                          nameData={{
+                            name: nameItem.name,
+                            slug: generateSlug(nameItem.name),
+                            religion,
+                            meaning: nameItem.short_meaning || nameItem.meaning,
+                            origin: nameItem.origin,
+                          }}
+                          size="small"
+                        />
+                        <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
+                          <Moon className="w-5 h-5 text-emerald-600" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-emerald-700 font-semibold text-sm mb-3 line-clamp-2 leading-snug">
+                      &ldquo;{nameItem.short_meaning || nameItem.meaning || 'No meaning available'}&rdquo;
+                    </p>
+
+                    <div className="space-y-1.5 text-xs text-gray-500 border-t border-gray-50 pt-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-gray-600">Origin</span>
+                        <span className="text-right">
+                          {Array.isArray(nameItem.origin)
+                            ? nameItem.origin.join(', ')
+                            : nameItem.origin || 'Unknown'}
+                        </span>
+                      </div>
+                      {nameItem.luckyNumber && (
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium text-gray-600">Lucky No.</span>
+                          <span className="inline-flex items-center justify-center w-7 h-7 bg-amber-50 text-amber-700 rounded-full font-bold text-xs border border-amber-100">
+                            {nameItem.luckyNumber}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Ad — embedded inside the content, between first half and second half of names */}
+            <div className="max-w-7xl mx-auto px-4 mb-8">
+              <AdBanner />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-12">
+              {names.slice(Math.ceil(names.length / 2)).map((nameItem, index) => {
                 const itemKey = nameItem.slug || generateSlug(nameItem.name) || nameItem._id || index;
                 return (
                   <Link

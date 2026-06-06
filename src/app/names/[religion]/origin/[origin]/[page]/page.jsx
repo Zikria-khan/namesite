@@ -226,11 +226,6 @@ export default async function OriginNamesPage({ params }) {
         </div>
       </div>
 
-      {/* Ad — placed mid-scroll after nav, before names for natural flow */}
-      <div className="max-w-7xl mx-auto px-4 mb-8">
-        <AdBanner />
-      </div>
-
       {/* Names Grid */}
       <section className="max-w-7xl mx-auto px-4 pb-16">
         {names.length === 0 ? (
@@ -241,11 +236,65 @@ export default async function OriginNamesPage({ params }) {
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-              {names.map((nameItem, index) => {
+              {names.slice(0, Math.ceil(names.length / 2)).map((nameItem, index) => {
                 const displayMeaning = nameItem.short_meaning || nameItem.meaning || nameItem.long_meaning || 'No meaning available';
 
                 const itemKey = nameItem.slug || generateSlug(nameItem.name) || nameItem._id || index;
 
+                return (
+                  <Link
+                    key={itemKey}
+                    href={`/names/${religion}/${generateSlug(nameItem.name)}`}
+                    className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-emerald-100 hover:border-emerald-300 group hover:-translate-y-1 block"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
+                          {nameItem.name || 'Unknown'}
+                        </h3>
+                        {nameItem.quranicReference && (
+                          <span className="inline-block mt-2 bg-emerald-100 text-emerald-700 text-xs px-3 py-1 rounded-full font-medium">
+                            Quranic
+                          </span>
+                        )}
+                      </div>
+                      <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                        <Moon className="w-6 h-6 text-emerald-600" />
+                      </div>
+                    </div>
+
+                    <p className="text-emerald-600 font-semibold text-lg mb-4">
+                      "{displayMeaning}"
+                    </p>
+
+                    <div className="space-y-2 text-sm text-gray-600">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">Origin:</span>
+                        <span>{nameItem.origin || 'Unknown'}</span>
+                      </div>
+                      {nameItem.luckyNumber && (
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium">Lucky Number:</span>
+                          <span className="inline-flex items-center justify-center w-8 h-8 bg-amber-100 text-amber-700 rounded-full font-bold">
+                            {nameItem.luckyNumber || 'N/A'}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Ad — embedded inside content, between first half and second half of names */}
+            <div className="max-w-7xl mx-auto px-4 mb-8">
+              <AdBanner />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+              {names.slice(Math.ceil(names.length / 2)).map((nameItem, index) => {
+                const displayMeaning = nameItem.short_meaning || nameItem.meaning || nameItem.long_meaning || 'No meaning available';
+                const itemKey = nameItem.slug || generateSlug(nameItem.name) || nameItem._id || index;
                 return (
                   <Link
                     key={itemKey}
