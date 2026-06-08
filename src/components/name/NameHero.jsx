@@ -1,4 +1,5 @@
 import ShareButtons from './ShareButtons';
+import AdBanner from '@/components/Ads/AdBanner';
 import { Crown, Volume2, Globe, Star, Hash, Calendar, BookOpen, Languages } from 'lucide-react';
 
 const statItems = (data) => [
@@ -69,6 +70,18 @@ export default function NameHero({ data, pageUrl }) {
           })}
         </div>
       ) : null}
+
+      {/* ⚡ Fast-load ads in hero section — 2 banners side by side (above the fold) */}
+      <div className="relative mt-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <div className="flex-1 min-w-0">
+            <AdBanner variant="inline" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <AdBanner variant="inline" />
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

@@ -137,6 +137,10 @@ export default function RootLayout({ children }) {
         <link rel="icon" type="image/png" href="/logo.png" />
         <link rel="shortcut icon" type="image/png" href="/logo.png" />
 
+        {/* ⚡ Preload Revolthem ad config script for faster ad initialization */}
+        <link rel="preload" href="https://revolthem.com/1b/54/37/1b543736c10a38ea4ca3f6f7bc8a7a9b.js" as="script" />
+        <link rel="preload" href="https://revolthem.com/f0e3fe0e0c4dc5a8ddc1d06d28e8997e/invoke.js" as="script" />
+
         {/* Microsoft Clarity Analytics */}
         <Script
           id="microsoft-clarity"

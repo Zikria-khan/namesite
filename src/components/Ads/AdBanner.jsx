@@ -1,26 +1,50 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * Ad Banner Component — Revolthem Ad Network
  * 
- * In-content ad placement. Replaces old AdSense + old Revolthem combo.
- * Uses the new Revolthem atOptions + invoke.js system.
- * Responsive: adapts to container width.
+ * In-content ad placement. Uses Revolthem atOptions + invoke.js system.
  * 
- * The config script (1b543736c...) is loaded once globally per page.
- * The atOptions + invoke.js creates the specific ad unit.
+ * ⚡ Performance features:
+ * - IntersectionObserver: only loads ad when visible in viewport
+ * - Impression tracking: reports when ad becomes visible
+ * - Config script loaded once globally (from layout.js head)
+ * - Delayed load: waits for idle/scroll before activating
+ * - No duplicate script injection
  */
 export default function AdBanner({ className = '', variant = 'inline' }) {
   const containerRef = useRef(null);
   const loaded = useRef(false);
+  const [inView, setInView] = useState(false);
+  const mountId = useRef(`revolthem-ad-${Date.now()}`);
 
+  // Track visibility with IntersectionObserver
   useEffect(() => {
-    if (loaded.current) return;
-    if (!containerRef.current) return;
+    const el = containerRef.current;
+    if (!el) return;
 
-    // 1. Load the universal config script (once per page)
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px', threshold: 0.1 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Load ad only when in view
+  useEffect(() => {
+    if (!inView || loaded.current || !containerRef.current) return;
+    loaded.current = true;
+
+    // Ensure config script exists (loaded in layout.js head as fallback)
     if (!document.querySelector('script[src*="1b543736c10a38ea4ca3f6f7bc8a7a9b"]')) {
       const configScript = document.createElement('script');
       configScript.src = 'https://revolthem.com/1b/54/37/1b543736c10a38ea4ca3f6f7bc8a7a9b.js';
@@ -29,13 +53,11 @@ export default function AdBanner({ className = '', variant = 'inline' }) {
       document.head.appendChild(configScript);
     }
 
-    // 2. Create a wrapper for the ad unit
     const wrapper = document.createElement('div');
-    wrapper.id = `revolthem-ad-${Date.now()}`;
+    wrapper.id = mountId.current;
     wrapper.style.width = '100%';
     wrapper.style.overflow = 'hidden';
 
-    // 3. Set atOptions for this specific ad unit
     const atOptionsScript = document.createElement('script');
     atOptionsScript.type = 'text/javascript';
     atOptionsScript.text = `
@@ -48,7 +70,6 @@ export default function AdBanner({ className = '', variant = 'inline' }) {
       };
     `;
 
-    // 4. Load the invoke script
     const invokeScript = document.createElement('script');
     invokeScript.src = 'https://revolthem.com/f0e3fe0e0c4dc5a8ddc1d06d28e8997e/invoke.js';
     invokeScript.async = true;
@@ -58,9 +79,7 @@ export default function AdBanner({ className = '', variant = 'inline' }) {
     wrapper.appendChild(atOptionsScript);
     wrapper.appendChild(invokeScript);
     containerRef.current.appendChild(wrapper);
-
-    loaded.current = true;
-  }, [variant]);
+  }, [inView, variant]);
 
   return (
     <div

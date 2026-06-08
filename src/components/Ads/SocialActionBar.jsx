@@ -23,10 +23,16 @@ export default function SocialActionBar() {
       return;
     }
 
-    const timer = setTimeout(() => {
-      setVisible(true);
-    }, 5000);
+    // Use requestIdleCallback to avoid blocking critical rendering
+    const showBar = () => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => setVisible(true), { timeout: 5000 });
+      } else {
+        setTimeout(() => setVisible(true), 4000);
+      }
+    };
 
+    const timer = setTimeout(showBar, 4000);
     return () => clearTimeout(timer);
   }, []);
 

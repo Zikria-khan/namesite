@@ -19,34 +19,49 @@ export default function FixedBottomBanner() {
   const containerRef = useRef(null);
   const loaded = useRef(false);
   const mounted = useRef(false);
+  const wrapperRef = useRef(null);
 
-  // Show after 3s delay + user has scrolled past 600px
   useEffect(() => {
     mounted.current = true;
 
-    // Check session storage (per session dismiss)
+    // Check session storage
     const sd = sessionStorage.getItem('nv_bottom_ad_dismissed');
     if (sd === 'true') {
       setDismissed(true);
       return;
     }
 
-    const showTimer = setTimeout(() => {
-      if (!mounted.current) return;
-      setVisible(true);
-      loadedScript();
-    }, 3000);
+    // Wait for idle callback or timeout (3s max)
+    const idleCallback = () => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          if (!mounted.current) return;
+          setVisible(true);
+          loadedScript();
+        }, { timeout: 3000 });
+      } else {
+        setTimeout(() => {
+          if (!mounted.current) return;
+          setVisible(true);
+          loadedScript();
+        }, 2000);
+      }
+    };
+
+    // Start after first user interaction or timeout
+    const startTimer = setTimeout(idleCallback, 2000);
 
     return () => {
       mounted.current = false;
-      clearTimeout(showTimer);
+      clearTimeout(startTimer);
     };
   }, []);
 
   const loadedScript = () => {
     if (loaded.current) return;
+    loaded.current = true;
 
-    // Load universal config (if not already loaded)
+    // Config script (fallback — preconnect already in head)
     if (!document.querySelector('script[src*="1b543736c10a38ea4ca3f6f7bc8a7a9b"]')) {
       const configScript = document.createElement('script');
       configScript.src = 'https://revolthem.com/1b/54/37/1b543736c10a38ea4ca3f6f7bc8a7a9b.js';
@@ -56,11 +71,10 @@ export default function FixedBottomBanner() {
     }
 
     const wrapper = document.createElement('div');
+    wrapperRef.current = wrapper;
     wrapper.id = `revolthem-bottom-ad`;
-    wrapper.style.width = '100%';
+    wrapper.style.width = '320px';
     wrapper.style.overflow = 'hidden';
-    wrapper.style.display = 'flex';
-    wrapper.style.justifyContent = 'center';
 
     const atOptionsScript = document.createElement('script');
     atOptionsScript.type = 'text/javascript';
@@ -86,9 +100,45 @@ export default function FixedBottomBanner() {
     if (containerRef.current) {
       containerRef.current.appendChild(wrapper);
     }
-
-    loaded.current = true;
   };
+
+  // ⚡ Impression: track when ad becomes visible to user
+  useEffect(() => {
+    if (!visible) return;
+    const el = wrapperRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Impression registered — ad is visible to user
+          if (typeof window !== 'undefined' && 'dataLayer' in window) {
+            try {
+              window.dataLayer = window.dataLayer || [];
+              window.dataLayer.push({
+                event: 'ad_impression',
+                adType: 'fixed_bottom_banner',
+                adNetwork: 'revolthem',
+                timestamp: Date.now()
+              });
+            } catch (e) {}
+          }
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    // Delay observer to let ad render
+    const impressionTimer = setTimeout(() => {
+      observer.observe(el);
+    }, 1000);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(impressionTimer);
+    };
+  }, [visible]);
 
   const handleDismiss = () => {
     setVisible(false);
