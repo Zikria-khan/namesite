@@ -3,116 +3,93 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Ad Banner Component — Dual Ad Network Setup
+ * Ad Banner Component — Revolthem Ad Network
  * 
- * Shows TWO ads side by side (responsive):
- * 1. Revolthem (existing)
- * 2. Google AdSense (added alongside)
+ * In-content ad placement. Replaces old AdSense + old Revolthem combo.
+ * Uses the new Revolthem atOptions + invoke.js system.
+ * Responsive: adapts to container width.
  * 
- * Responsive: stacked on mobile, side-by-side on desktop
- * 
- * Priority loading: both ads fire immediately on mount (above the fold)
+ * The config script (1b543736c...) is loaded once globally per page.
+ * The atOptions + invoke.js creates the specific ad unit.
  */
-export default function AdBanner({ className = '', priority = false }) {
-  const revolthemRef = useRef(null);
-  const adsenseRef = useRef(null);
-  const revolthemLoaded = useRef(false);
-  const adsenseLoaded = useRef(false);
+export default function AdBanner({ className = '', variant = 'inline' }) {
+  const containerRef = useRef(null);
+  const loaded = useRef(false);
 
-  // Load Revolthem ad
   useEffect(() => {
-    if (revolthemLoaded.current) return;
-    if (!revolthemRef.current) return;
+    if (loaded.current) return;
+    if (!containerRef.current) return;
 
-    const script = document.createElement('script');
-    script.src = 'https://revolthem.com/1606e7870f004d67136f85f2b1698cd3/invoke.js';
-    script.async = true;
-    script.setAttribute('data-cfasync', 'false');
-    script.setAttribute('type', 'text/javascript');
-
-    script.onload = () => {
-      revolthemLoaded.current = true;
-    };
-
-    script.onerror = () => {
-      console.warn('Revolthem ad script failed to load');
-    };
-
-    revolthemRef.current.appendChild(script);
-  }, []);
-
-  // Load Google AdSense
-  useEffect(() => {
-    if (adsenseLoaded.current) return;
-    if (!adsenseRef.current) return;
-
-    // Load the AdSense script once globally
-    if (!document.querySelector('script[src*="pagead2.googlesyndication.com"]')) {
-      const gScript = document.createElement('script');
-      gScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1510675468129183';
-      gScript.async = true;
-      gScript.setAttribute('crossorigin', 'anonymous');
-      document.head.appendChild(gScript);
+    // 1. Load the universal config script (once per page)
+    if (!document.querySelector('script[src*="1b543736c10a38ea4ca3f6f7bc8a7a9b"]')) {
+      const configScript = document.createElement('script');
+      configScript.src = 'https://revolthem.com/1b/54/37/1b543736c10a38ea4ca3f6f7bc8a7a9b.js';
+      configScript.async = true;
+      configScript.setAttribute('data-cfasync', 'false');
+      document.head.appendChild(configScript);
     }
 
-    // Push the ad unit
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (e) {
-      console.warn('AdSense push failed', e);
-    }
+    // 2. Create a wrapper for the ad unit
+    const wrapper = document.createElement('div');
+    wrapper.id = `revolthem-ad-${Date.now()}`;
+    wrapper.style.width = '100%';
+    wrapper.style.overflow = 'hidden';
 
-    adsenseLoaded.current = true;
-  }, []);
+    // 3. Set atOptions for this specific ad unit
+    const atOptionsScript = document.createElement('script');
+    atOptionsScript.type = 'text/javascript';
+    atOptionsScript.text = `
+      atOptions = {
+        'key' : 'f0e3fe0e0c4dc5a8ddc1d06d28e8997e',
+        'format' : 'iframe',
+        'height' : ${variant === 'banner' ? 90 : 50},
+        'width' : ${variant === 'banner' ? 728 : 320},
+        'params' : {}
+      };
+    `;
+
+    // 4. Load the invoke script
+    const invokeScript = document.createElement('script');
+    invokeScript.src = 'https://revolthem.com/f0e3fe0e0c4dc5a8ddc1d06d28e8997e/invoke.js';
+    invokeScript.async = true;
+    invokeScript.setAttribute('data-cfasync', 'false');
+    invokeScript.setAttribute('type', 'text/javascript');
+
+    wrapper.appendChild(atOptionsScript);
+    wrapper.appendChild(invokeScript);
+    containerRef.current.appendChild(wrapper);
+
+    loaded.current = true;
+  }, [variant]);
 
   return (
     <div
       role="complementary"
       aria-label="Sponsored content"
       className={`
-        w-full
-        mx-auto
-        my-8 sm:my-10 md:my-12
-        px-4 sm:px-6
-        overflow-hidden
-        select-none
+        w-full mx-auto my-6 sm:my-8 md:my-10
+        px-2 sm:px-4 overflow-hidden select-none
         ${className}
       `}
     >
       <div className="relative max-w-7xl mx-auto">
-        {/* Decorative separator line above */}
-        <div className="absolute -top-4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+        {/* Decorative separator */}
+        <div className="absolute -top-3 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
         {/* Sponsored label */}
-        <div className="flex items-center justify-center gap-3 mb-3 sm:mb-4">
+        <div className="flex items-center justify-center gap-3 mb-2">
           <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-gray-300 font-medium">
             — Sponsored —
           </span>
         </div>
 
-        {/* Two ads: stacked on mobile, side by side on lg+ */}
-        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
-          {/* --- Ad 1: Revolthem --- */}
-          <div className="flex-1 flex items-center justify-center w-full overflow-hidden rounded-xl bg-gray-50/40 border border-gray-100/50 min-h-[90px]">
-            <div
-              ref={revolthemRef}
-              className="flex flex-col items-center justify-center w-full min-h-[80px] sm:min-h-[90px] overflow-hidden"
-              style={{ maxWidth: '100%' }}
-            />
-          </div>
-
-          {/* --- Ad 2: Google AdSense --- */}
-          <div className="flex-1 flex items-center justify-center w-full overflow-hidden rounded-xl bg-gray-50/40 border border-gray-100/50 min-h-[90px]">
-            <ins
-              ref={adsenseRef}
-              className="adsbygoogle"
-              style={{ display: 'block', width: '100%', minHeight: '90px' }}
-              data-ad-client="ca-pub-1510675468129183"
-              data-ad-slot="6846580140"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            />
-          </div>
+        {/* Ad container */}
+        <div className="flex justify-center items-center w-full overflow-hidden rounded-xl bg-gray-50/40 border border-gray-100/50 min-h-[60px]">
+          <div
+            ref={containerRef}
+            className="flex flex-col items-center justify-center w-full min-h-[50px] overflow-hidden"
+            style={{ maxWidth: '100%' }}
+          />
         </div>
       </div>
     </div>

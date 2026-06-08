@@ -14,6 +14,8 @@ import { AppProvider } from "@/contexts/AppContext";
 import LoadingWrapper from "@/components/LoadingAnimation/LoadingWrapper";
 import { Suspense } from 'react';
 import RouteChrome from "@/components/Layout/RouteChrome";
+import FixedBottomBanner from "@/components/Ads/FixedBottomBanner";
+import SocialActionBar from "@/components/Ads/SocialActionBar";
 
 import { getSiteUrl } from '@/lib/seo/site';
 const siteUrl = getSiteUrl();
@@ -178,7 +180,7 @@ export default function RootLayout({ children }) {
         />
       </head>
 
-      <body className={`${bodyFont.variable} ${displayFont.variable} antialiased nv-body nv-page`}>
+      <body className={`${bodyFont.variable} ${displayFont.variable} antialiased nv-body nv-page pb-16 lg:pb-0`}>
         <AppProvider>
           <PerformanceInit />
           <Suspense fallback={<div>Loading Navbar...</div>}>
@@ -188,6 +190,12 @@ export default function RootLayout({ children }) {
           <RouteChrome>{children}</RouteChrome>
           <Footer />
           <AppInstallPopup />
+
+          {/* Fixed bottom ad banner (sticky) — visible on mobile/tablet */}
+          <FixedBottomBanner />
+
+          {/* Social action bar (floating right) */}
+          <SocialActionBar />
         </AppProvider>
       </body>
     </html>

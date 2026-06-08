@@ -1,0 +1,147 @@
+'use client';
+
+import { useEffect, useState, useRef } from 'react';
+import { X } from 'lucide-react';
+
+/**
+ * Fixed Bottom Banner — Sticky ad bar at bottom of viewport
+ * 
+ * - Shows a 320x50 Revolthem ad
+ * - Sticky to bottom, appears after scrolling past first fold
+ * - Dismissible with X button (stored in sessionStorage)
+ * - Slides up animation on entry
+ * - Does NOT overlap content (margin-bottom on body via layout)
+ * - Refreshes on each new page navigation
+ */
+export default function FixedBottomBanner() {
+  const [visible, setVisible] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const containerRef = useRef(null);
+  const loaded = useRef(false);
+  const mounted = useRef(false);
+
+  // Show after 3s delay + user has scrolled past 600px
+  useEffect(() => {
+    mounted.current = true;
+
+    // Check session storage (per session dismiss)
+    const sd = sessionStorage.getItem('nv_bottom_ad_dismissed');
+    if (sd === 'true') {
+      setDismissed(true);
+      return;
+    }
+
+    const showTimer = setTimeout(() => {
+      if (!mounted.current) return;
+      setVisible(true);
+      loadedScript();
+    }, 3000);
+
+    return () => {
+      mounted.current = false;
+      clearTimeout(showTimer);
+    };
+  }, []);
+
+  const loadedScript = () => {
+    if (loaded.current) return;
+
+    // Load universal config (if not already loaded)
+    if (!document.querySelector('script[src*="1b543736c10a38ea4ca3f6f7bc8a7a9b"]')) {
+      const configScript = document.createElement('script');
+      configScript.src = 'https://revolthem.com/1b/54/37/1b543736c10a38ea4ca3f6f7bc8a7a9b.js';
+      configScript.async = true;
+      configScript.setAttribute('data-cfasync', 'false');
+      document.head.appendChild(configScript);
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.id = `revolthem-bottom-ad`;
+    wrapper.style.width = '100%';
+    wrapper.style.overflow = 'hidden';
+    wrapper.style.display = 'flex';
+    wrapper.style.justifyContent = 'center';
+
+    const atOptionsScript = document.createElement('script');
+    atOptionsScript.type = 'text/javascript';
+    atOptionsScript.text = `
+      atOptions = {
+        'key' : 'f0e3fe0e0c4dc5a8ddc1d06d28e8997e',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+      };
+    `;
+
+    const invokeScript = document.createElement('script');
+    invokeScript.src = 'https://revolthem.com/f0e3fe0e0c4dc5a8ddc1d06d28e8997e/invoke.js';
+    invokeScript.async = true;
+    invokeScript.setAttribute('data-cfasync', 'false');
+    invokeScript.setAttribute('type', 'text/javascript');
+
+    wrapper.appendChild(atOptionsScript);
+    wrapper.appendChild(invokeScript);
+
+    if (containerRef.current) {
+      containerRef.current.appendChild(wrapper);
+    }
+
+    loaded.current = true;
+  };
+
+  const handleDismiss = () => {
+    setVisible(false);
+    setDismissed(true);
+    try {
+      sessionStorage.setItem('nv_bottom_ad_dismissed', 'true');
+    } catch (e) {
+      // sessionStorage may be unavailable
+    }
+  };
+
+  if (dismissed) return null;
+
+  return (
+    <div
+      className={`
+        fixed bottom-0 left-0 right-0 z-[9999]
+        transition-all duration-500 ease-in-out
+        ${visible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}
+      `}
+      role="complementary"
+      aria-label="Sponsored content"
+    >
+      {/* Gradient top border */}
+      <div className="absolute -top-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-400/30 to-transparent" />
+
+      <div className="bg-white/95 backdrop-blur-md border-t border-gray-200/50 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+        <div className="relative max-w-7xl mx-auto px-4 py-2 flex items-center justify-center">
+          {/* Left spacer for centering */}
+          <div className="w-8 sm:w-10" />
+
+          {/* Ad container */}
+          <div className="flex flex-col items-center gap-0.5">
+            <span className="text-[9px] uppercase tracking-[0.15em] text-gray-400 font-medium">
+              — Sponsored —
+            </span>
+            <div
+              ref={containerRef}
+              className="flex items-center justify-center min-h-[50px] w-[320px] overflow-hidden rounded-lg bg-gray-50/60"
+            />
+          </div>
+
+          {/* Close button */}
+          <button
+            onClick={handleDismiss}
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 active:bg-gray-200 transition-colors cursor-pointer z-10"
+            aria-label="Close ad"
+            title="Close"
+          >
+            <X className="w-4 h-4 text-gray-400 hover:text-gray-600" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
