@@ -10,8 +10,10 @@ import { useEffect, useRef } from 'react';
  * 2. Google AdSense (added alongside)
  * 
  * Responsive: stacked on mobile, side-by-side on desktop
+ * 
+ * Priority loading: both ads fire immediately on mount (above the fold)
  */
-export default function AdBanner({ className = '' }) {
+export default function AdBanner({ className = '', priority = false }) {
   const revolthemRef = useRef(null);
   const adsenseRef = useRef(null);
   const revolthemLoaded = useRef(false);

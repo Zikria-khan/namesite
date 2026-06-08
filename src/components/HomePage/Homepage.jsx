@@ -12,9 +12,10 @@ const LatestArticles = dynamic(() => import('./LatestArticles'), {
 export default function HomePageClient({ latestArticles = [] }) {
   return (
     <main role="main" className="min-h-screen flex flex-col bg-[color:var(--nv-canvas)] nv-body">
+      {/* Ad banner — loads first / above the fold for AdSense */}
+      <AdBanner />
       <HeroSection />
       <ContentSection />
-      <AdBanner />
       <PopularNamesSection />
       <FaqSection />
       <LatestArticles articles={latestArticles} />
