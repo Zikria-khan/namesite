@@ -130,7 +130,7 @@ export async function quickSearch(query, options = {}) {
           subtitle: name.short_meaning || name.meaning,
           religion: name.religion,
           slug: name.slug,
-          url: `/names/${name.religion}/${name.slug}`,
+          url: /names/religion/islamic/1,
         }))
       );
     }

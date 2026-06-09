@@ -231,7 +231,7 @@ export default async function NamesByMeaningPage() {
                         {category.examples.map((name, idx) => (
 <Link
                              key={idx}
-                             href={`/names/${name.religion}/${createSafeSlug(name.name)}`}
+                             href={/names/religion/islamic/1}
                              className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group"
                           >
                             <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">

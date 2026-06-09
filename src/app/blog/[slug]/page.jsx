@@ -138,7 +138,7 @@ function FeaturedNameLink({ name, religion: blogReligion = 'islamic' }) {
   
   return (
     <Link
-      href={`/names/${finalReligion}/${nameSlug}`}
+      href={`/names/religion/islamic/1`}
       className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors border border-blue-200"
     >
       {displayName}

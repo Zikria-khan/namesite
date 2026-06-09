@@ -274,7 +274,7 @@ export default function IslamicGirlNamesPage() {
               return (
                 <Link
                   key={safeSlug}
-                  href={`/names/islamic/${safeSlug}`}
+                  href={`/names/religion/islamic/1/${safeSlug}`}
                   id={safeSlug}
                   className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-pink-100 hover:border-pink-300 group hover:-translate-y-1 block"
                 >

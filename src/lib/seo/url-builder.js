@@ -72,7 +72,7 @@ export function nameRelativeUrl(religion, slug) {
   const r = normalizeReligion(religion);
   const s = createSlug(slug);
   if (!r || !s || !isValidSlug(s)) return null;
-  return `/names/${r}/${s}`;
+  return /names/religion/islamic/1;
 }
 
 /**

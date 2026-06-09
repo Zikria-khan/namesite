@@ -174,7 +174,7 @@ async function runTests() {
 
   // Test 6: Fetch single name detail
   logger.section('Single Name Detail');
-  await tester.runTest(`GET /api/names/islamic/${TEST_CONFIG.testSlug}`, async () => {
+  await tester.runTest(`GET /api/names/religion/islamic/1/${TEST_CONFIG.testSlug}`, async () => {
     const name = await namesAPI.fetchNameDetail('islamic', TEST_CONFIG.testSlug);
     tester.assert(name !== null, 'Name not found');
     tester.assert(name.slug === TEST_CONFIG.testSlug, 'Incorrect slug');

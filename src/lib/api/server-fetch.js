@@ -220,7 +220,7 @@ export async function serverFetchTrendingNames(options = {}) {
 export async function serverFetchRelatedNames(religion, slug) {
   if (!religion || !slug) return { data: [], count: 0, success: false };
 
-  const data = await isrFetch(`${API_BASE}/api/names/${religion}/${slug}/related`);
+  const data = await isrFetch(`${API_BASE}/api/names/religion/islamic/1/related`);
 
   if (!data) return { data: [], count: 0, success: false };
 
@@ -238,7 +238,7 @@ export async function serverFetchRelatedNames(religion, slug) {
 export async function serverFetchSimilarNames(religion, slug) {
   if (!religion || !slug) return { data: [], count: 0, success: false };
 
-  const data = await isrFetch(`${API_BASE}/api/names/${religion}/${slug}/similar`);
+  const data = await isrFetch(`${API_BASE}/api/names/religion/islamic/1/similar`);
 
   if (!data) return { data: [], count: 0, success: false };
 

@@ -60,7 +60,7 @@ export default function LetterNamesClient({ selectedReligion, letter, page }) {
   }, [selectedReligion, letter, page]);
 
   const handleReligionChange = (newReligion) => {
-    router.push(`/names/${newReligion}/letter/${letter}/${page}`);
+    router.push(/names/religion/islamic/1);
   };
 
   if (loading) {
@@ -88,7 +88,7 @@ export default function LetterNamesClient({ selectedReligion, letter, page }) {
   const currentPage = Math.min(Math.max(page, 1), totalPages);
   const hasPrev = currentPage > 1;
   const hasNext = currentPage < totalPages;
-  const createUrl = (newPage) => `/names/${selectedReligion}/letter/${letter}/${newPage}`;
+  const createUrl = (newPage) => /names/religion/islamic/1;
   const prevUrl = hasPrev ? createUrl(currentPage - 1) : null;
   const nextUrl = hasNext ? createUrl(currentPage + 1) : null;
 
@@ -183,7 +183,7 @@ export default function LetterNamesClient({ selectedReligion, letter, page }) {
                 return (
                   <Link
                     key={itemKey}
-                    href={`/names/${selectedReligion}/${generateSlug(nameItem.name)}`}
+                    href={/names/religion/islamic/1}
                   className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-emerald-100 hover:border-emerald-300 group hover:-translate-y-1 block"
                 >
                   <div className="flex items-start justify-between mb-4">

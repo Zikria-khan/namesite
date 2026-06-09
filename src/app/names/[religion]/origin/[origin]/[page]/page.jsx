@@ -56,7 +56,7 @@ export async function generateMetadata({ params }) {
   const page = parseInt(awaitedParams.page, 10) > 0 ? parseInt(awaitedParams.page, 10) : 1;
   const religionLabel = religion.charAt(0).toUpperCase() + religion.slice(1);
   const originLabel = origin.charAt(0).toUpperCase() + origin.slice(1);
-  const canonical = generateCanonicalUrl(`/names/${religion}/origin/${origin}/${page}`);
+const canonical = generateCanonicalUrl(`/names/religion/${religion}/1`);
   const ogImage = `${getSiteUrl()}/api/og?section=origin&religion=${religion}&origin=${encodeURIComponent(originLabel)}`;
   const pageSuffix = page > 1 ? ` - Page ${page}` : '';
 
@@ -170,8 +170,8 @@ export default async function OriginNamesPage({ params }) {
   const hasPrev = page > 1;
   const hasNext = page < totalPages;
 
-  const prevUrl = hasPrev ? `/names/${religion}/origin/${origin}/${page - 1}` : null;
-  const nextUrl = hasNext ? `/names/${religion}/origin/${origin}/${page + 1}` : null;
+  const prevUrl = hasPrev ? `/names/religion/${religion}/1` : null;
+  const nextUrl = hasNext ? `/names/religion/${religion}/1` : null;
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-emerald-50">
@@ -244,7 +244,7 @@ export default async function OriginNamesPage({ params }) {
                 return (
                   <Link
                     key={itemKey}
-                    href={`/names/${religion}/${generateSlug(nameItem.name)}`}
+                      href={`/names/${religion}/${generateSlug(nameItem.name || '')}`}
                     className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-emerald-100 hover:border-emerald-300 group hover:-translate-y-1 block"
                   >
                     <div className="flex items-start justify-between mb-4">
@@ -293,7 +293,7 @@ export default async function OriginNamesPage({ params }) {
                 return (
                   <Link
                     key={itemKey}
-                    href={`/names/${religion}/${generateSlug(nameItem.name)}`}
+                      href={`/names/${religion}/${generateSlug(nameItem.name || '')}`}
                     className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-emerald-100 hover:border-emerald-300 group hover:-translate-y-1 block"
                   >
                     <div className="flex items-start justify-between mb-4">

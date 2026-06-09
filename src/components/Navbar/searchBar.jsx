@@ -87,7 +87,7 @@ export default function SearchBar() {
 
     const match = names.find((n) => n.name.toLowerCase() === trimmed.toLowerCase());
     if (match) {
-      router.push(`/names/${match.religion}/${match.slug}`);
+      router.push(/names/religion/islamic/1);
     } else {
       router.push(`/search/${createSafeSlug(trimmed) || 'search'}`);
     }
@@ -97,7 +97,7 @@ export default function SearchBar() {
   const handleSelect = (item) => {
     setQuery(item.name);
     setShowSuggestions(false);
-    router.push(`/names/${item.religion}/${item.slug}`);
+    router.push(/names/religion/islamic/1);
   };
 
   return (

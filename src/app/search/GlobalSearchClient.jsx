@@ -294,7 +294,7 @@ export default function GlobalSearchClient() {
                   {results.map((name) => (
                     <Link
                       key={`${name.religion}-${name.slug}`}
-                      href={`/names/${name.religion}/${name.slug}`}
+                      href={/names/religion/islamic/1}
                       className="block p-4 bg-white rounded-lg border-2 border-gray-100 hover:border-purple-300 hover:shadow-lg transition-all"
                     >
                       <h3 className="text-lg font-bold text-gray-900 mb-2">{name.name}</h3>

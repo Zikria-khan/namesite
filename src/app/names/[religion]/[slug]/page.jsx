@@ -200,7 +200,7 @@ export default async function NameDetailPage({ params }) {
 
   nameData = sanitizeNameData(nameData);
 
-  const pageUrl = `${getSiteUrl()}/names/${religion}/${slug}`;
+  const pageUrl = `${getSiteUrl()}/names/religion/${religion}/1`;
   const schemas = generateNamePageSchemas(nameData, religion, slug);
   const faqData = schemas.faqData || [];
 

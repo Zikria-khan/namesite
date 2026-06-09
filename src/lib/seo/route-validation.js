@@ -156,26 +156,26 @@ export function isSystemRoute(pathname) {
  * Returns the canonical path if a redirect is needed, or null if no redirect needed
  */
 export function getReligionRedirect(pathname) {
-  // Check /names/islam/... → /names/islamic/...
+  // Check /names/islam/... → /names/religion/islamic/1/...
   const islamMatch = pathname.match(/^\/names\/(islam|muslim)(\/.+)$/i);
   if (islamMatch) {
     const rest = islamMatch[2];
-    const redirect = `/names/islamic${rest}`;
+    const redirect = `/names/religion/islamic/1${rest}`;
     return redirect !== pathname.toLowerCase() ? redirect : null;
   }
 
-  // Check /names/christianity/... → /names/christian/...
+  // Check /names/religion/christian/1ity/... → /names/religion/christian/1/...
   const christianMatch = pathname.match(/^\/names\/christianity(\/.+)$/i);
   if (christianMatch) {
     const rest = christianMatch[1];
-    return `/names/christian${rest}`;
+    return `/names/religion/christian/1${rest}`;
   }
 
-  // Check /names/hinduism/... → /names/hindu/...
+  // Check /names/religion/hindu/1ism/... → /names/religion/hindu/1/...
   const hinduMatch = pathname.match(/^\/names\/hinduism(\/.+)$/i);
   if (hinduMatch) {
     const rest = hinduMatch[1];
-    return `/names/hindu${rest}`;
+    return `/names/religion/hindu/1${rest}`;
   }
 
   return null;

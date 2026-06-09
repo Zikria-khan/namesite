@@ -91,7 +91,7 @@ export function generateNameBreadcrumbs(name, religion, slug) {
     const firstLetter = name.name[0].toUpperCase();
     items.push({
       label: `Letter ${firstLetter}`,
-      href: `/names/${religion}/letter/${firstLetter.toLowerCase()}/1`
+      href: `/names/religion/${religion}/letter/${firstLetter.toLowerCase()}/1`
     });
   }
 

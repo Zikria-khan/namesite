@@ -1,0 +1,380 @@
+{
+  "brokenUrlsRemoved": [],
+  "brokenUrlsRepaired": [],
+  "categoryUrlsUpdated": [],
+  "undefinedUrlsFixed": [],
+  "relatedNameLinksReplaced": [
+    {
+      "post": "christian-biblical-names-guide",
+      "section": "Top 50 Christian Boy Names for 2026",
+      "old": "Philip",
+      "new": "pace",
+      "reason": "name not in sitemap or database",
+      "url": "/names/christian/philip"
+    },
+    {
+      "post": "christian-biblical-names-guide",
+      "section": "Top 50 Christian Girl Names for 2026",
+      "old": "Martha",
+      "new": "maacah",
+      "reason": "name not in sitemap or database",
+      "url": "/names/christian/martha"
+    },
+    {
+      "post": "hindu-vedic-naming-guide",
+      "section": "Top 50 Hindu Boy Names for 2026",
+      "old": "Krishna",
+      "new": "kaalin",
+      "reason": "name not in sitemap or database",
+      "url": "/names/hindu/krishna"
+    },
+    {
+      "post": "hindu-vedic-naming-guide",
+      "section": "Top 50 Hindu Girl Names for 2026",
+      "old": "Kavya",
+      "new": "kaalin",
+      "reason": "name not in sitemap or database",
+      "url": "/names/hindu/kavya"
+    },
+    {
+      "post": "hindu-vedic-naming-guide",
+      "section": "Top 50 Hindu Girl Names for 2026",
+      "old": "Veda",
+      "new": "vaanamali",
+      "reason": "name not in sitemap or database",
+      "url": "/names/hindu/veda"
+    },
+    {
+      "post": "hindu-vedic-naming-guide",
+      "field": "relatedNames",
+      "old": "Krishna",
+      "new": "kaalin",
+      "reason": "name not in sitemap or database"
+    },
+    {
+      "post": "unique-rare-baby-names",
+      "section": "Rare Names from Around the World",
+      "old": "Zephyr",
+      "new": "za",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/zephyr"
+    },
+    {
+      "post": "unique-rare-baby-names",
+      "field": "relatedNames",
+      "old": "Zephyr",
+      "new": "za",
+      "reason": "name not in sitemap or database"
+    },
+    {
+      "post": "nature-inspired-baby-names",
+      "section": "Flower Names Beyond Rose and Lily",
+      "old": "Peony",
+      "new": "padida",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/peony"
+    },
+    {
+      "post": "nature-inspired-baby-names",
+      "section": "Flower Names Beyond Rose and Lily",
+      "old": "Wisteria",
+      "new": "waabisah",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/wisteria"
+    },
+    {
+      "post": "nature-inspired-baby-names",
+      "section": "Flower Names Beyond Rose and Lily",
+      "old": "Freesia",
+      "new": "faadhil",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/freesia"
+    },
+    {
+      "post": "nature-inspired-baby-names",
+      "section": "Tree and Forest Names",
+      "old": "Cedar",
+      "new": "caamira",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/cedar"
+    },
+    {
+      "post": "nature-inspired-baby-names",
+      "section": "Tree and Forest Names",
+      "old": "Maple",
+      "new": "ma",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/maple"
+    },
+    {
+      "post": "vintage-baby-names-comeback",
+      "section": "Top Vintage Boy Names",
+      "old": "Ambrose",
+      "new": "aabad",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/ambrose"
+    },
+    {
+      "post": "vintage-baby-names-comeback",
+      "section": "Top Vintage Girl Names",
+      "old": "Edith",
+      "new": "ebad",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/edith"
+    },
+    {
+      "post": "gender-neutral-baby-names",
+      "section": "Classic Gender-Neutral Names",
+      "old": "Hayden",
+      "new": "haabeel",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/hayden"
+    },
+    {
+      "post": "gender-neutral-baby-names",
+      "section": "Modern Gender-Neutral Names",
+      "old": "Zephyr",
+      "new": "za",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/zephyr"
+    },
+    {
+      "post": "baby-name-numerology-guide",
+      "section": "Hindu Numerology (Ank Jyotish)",
+      "old": "Krishna",
+      "new": "kaab",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/krishna"
+    },
+    {
+      "post": "best-baby-names-2026",
+      "section": "Rising Stars: Names Gaining Popularity",
+      "old": "Atlas",
+      "new": "aabad",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/atlas"
+    },
+    {
+      "post": "best-baby-names-2026",
+      "section": "Rising Stars: Names Gaining Popularity",
+      "old": "Atlas",
+      "new": "aaban",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/atlas"
+    },
+    {
+      "post": "baby-names-start-with-a",
+      "section": "Unique and Rare A Names",
+      "old": "Atlas",
+      "new": "aabad",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/atlas"
+    },
+    {
+      "post": "baby-names-start-with-a",
+      "section": "Unique and Rare A Names",
+      "old": "Astra",
+      "new": "aaban",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/astra"
+    },
+    {
+      "post": "baby-names-start-with-a",
+      "section": "Unique and Rare A Names",
+      "old": "Artemis",
+      "new": "aabdar",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/artemis"
+    },
+    {
+      "post": "baby-names-start-with-a",
+      "section": "Unique and Rare A Names",
+      "old": "Aurembiaix",
+      "new": "aabeer",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/aurembiaix"
+    },
+    {
+      "post": "baby-names-start-with-a",
+      "section": "Unique and Rare A Names",
+      "old": "Aurembiaix",
+      "new": "aabid",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/aurembiaix"
+    },
+    {
+      "post": "baby-names-start-with-a",
+      "section": "Modern A Names Gaining Popularity",
+      "old": "Atlas",
+      "new": "aabad",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/atlas"
+    },
+    {
+      "post": "baby-names-start-with-a",
+      "section": "Modern A Names Gaining Popularity",
+      "old": "Arrow",
+      "new": "aaban",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/arrow"
+    },
+    {
+      "post": "baby-names-start-with-a",
+      "section": "Modern A Names Gaining Popularity",
+      "old": "Astra",
+      "new": "aabdar",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/astra"
+    },
+    {
+      "post": "baby-names-start-with-a",
+      "section": "Modern A Names Gaining Popularity",
+      "old": "Azure",
+      "new": "aabeer",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/azure"
+    },
+    {
+      "post": "baby-names-start-with-a",
+      "section": "Modern A Names Gaining Popularity",
+      "old": "Azul",
+      "new": "aabid",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/azul"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Aries (March 21 - April 19): Bold and Courageous Names",
+      "old": "Marcus",
+      "new": "ma",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/marcus"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Aries (March 21 - April 19): Bold and Courageous Names",
+      "old": "Freya",
+      "new": "faadhil",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/freya"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Gemini (May 21 - June 20): Versatile and Intelligent Names",
+      "old": "Cassandra",
+      "new": "caamira",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/cassandra"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Gemini (May 21 - June 20): Versatile and Intelligent Names",
+      "old": "Atlas",
+      "new": "aabad",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/atlas"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Leo (July 23 - August 22): Confident and Creative Names",
+      "old": "Helena",
+      "new": "haabeel",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/helena"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Libra (September 23 - October 22): Balanced and Harmonious Names",
+      "old": "Caspian",
+      "new": "caamira",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/caspian"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Scorpio (October 23 - November 21): Intense and Passionate Names",
+      "old": "Raven",
+      "new": "raabia",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/raven"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Scorpio (October 23 - November 21): Intense and Passionate Names",
+      "old": "Morrigan",
+      "new": "ma",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/morrigan"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Scorpio (October 23 - November 21): Intense and Passionate Names",
+      "old": "Cassius",
+      "new": "caamira",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/cassius"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Sagittarius (November 22 - December 21): Adventurous and Optimistic Names",
+      "old": "Jasper",
+      "new": "jaad",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/jasper"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Sagittarius (November 22 - December 21): Adventurous and Optimistic Names",
+      "old": "Atlas",
+      "new": "aabad",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/atlas"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Aquarius (January 20 - February 18): Innovative and Independent Names",
+      "old": "Atlas",
+      "new": "aabad",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/atlas"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Aquarius (January 20 - February 18): Innovative and Independent Names",
+      "old": "Cassius",
+      "new": "caamira",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/cassius"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "section": "Aquarius (January 20 - February 18): Innovative and Independent Names",
+      "old": "Freya",
+      "new": "faadhil",
+      "reason": "name not in sitemap or database",
+      "url": "/names/islamic/freya"
+    },
+    {
+      "post": "baby-names-by-zodiac-sign",
+      "field": "relatedNames",
+      "old": "Atlas",
+      "new": "aabad",
+      "reason": "name not in sitemap or database"
+    },
+    {
+      "post": "celebrity-baby-names-2026",
+      "field": "relatedNames",
+      "old": "Caspian",
+      "new": "caamira",
+      "reason": "name not in sitemap or database"
+    },
+    {
+      "post": "celebrity-baby-names-2026",
+      "field": "relatedNames",
+      "old": "Ziggy",
+      "new": "za",
+      "reason": "name not in sitemap or database"
+    }
+  ],
+  "finalBrokenLinkCount": 47
+}

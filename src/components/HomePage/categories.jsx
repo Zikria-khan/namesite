@@ -6,7 +6,7 @@ const QuickCategories = () => {
   const categories = [
     {
       title: "Islamic Names",
-      href: "/names/islamic",
+      href: "/names/religion/islamic/1",
       icon: <div className="text-4xl">🕌</div>,
       lucideIcon: <Star className="w-6 h-6" />,
       gradient: "from-emerald-500 via-teal-500 to-green-500",
@@ -18,7 +18,7 @@ const QuickCategories = () => {
     },
     {
       title: "Hindu Names", 
-      href: "/names/hindu",
+      href: "/names/religion/hindu/1",
       icon: <div className="text-4xl">🕉️</div>,
       lucideIcon: <Globe className="w-6 h-6" />,
       gradient: "from-orange-500 via-amber-500 to-yellow-500",
@@ -30,7 +30,7 @@ const QuickCategories = () => {
     },
     {
       title: "Christian Names",
-      href: "/names/christian", 
+      href: "/names/religion/christian/1", 
       icon: <div className="text-4xl">✝️</div>,
       lucideIcon: <BookOpen className="w-6 h-6" />,
       gradient: "from-blue-500 via-indigo-500 to-purple-500",

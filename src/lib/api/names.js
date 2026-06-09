@@ -650,7 +650,7 @@ export async function fetchRelatedNames(religion, slug) {
       };
     }
 
-    const { data } = await apiClient.get(`/api/names/${religion}/${slug}/related`);
+    const { data } = await apiClient.get(`/api/names/religion/islamic/1/related`);
 
 
     const result = {
@@ -686,7 +686,7 @@ export async function fetchSimilarNames(religion, slug) {
       };
     }
 
-    const { data } = await apiClient.get(`/api/names/${religion}/${slug}/similar`);
+    const { data } = await apiClient.get(`/api/names/religion/islamic/1/similar`);
 
 
     const result = {

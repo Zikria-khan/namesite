@@ -136,7 +136,7 @@ export function generateOptimizedSchemas(data, religion, slug) {
 
   // Generate Breadcrumb schema — uses url-builder for ALL links
   const breadcrumbSchema = generateBreadcrumbSchema([
-    { label: `${religion.charAt(0).toUpperCase() + religion.slice(1)} Names`, href: `/names/${religion}` },
+    { label: `${religion.charAt(0).toUpperCase() + religion.slice(1)} Names`, href: `/names/religion/${religion}/1` },
     { label: name, href: relativeUrl },
   ]);
 
