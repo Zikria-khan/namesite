@@ -83,7 +83,7 @@ export default function Breadcrumbs({ items = [], className = '' }) {
 export function generateNameBreadcrumbs(name, religion, slug) {
   const items = [
     { label: 'Names', href: '/names' },
-    { label: religion.charAt(0).toUpperCase() + religion.slice(1), href: `/names/religion/${religion}/1` }
+    { label: religion.charAt(0).toUpperCase() + religion.slice(1), href: null }
   ];
 
   // Add letter navigation if available
