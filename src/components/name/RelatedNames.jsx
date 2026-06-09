@@ -5,7 +5,8 @@ import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 const normalizeLink = (name, religion) => {
   const segment = createSafeSlug(name);
   if (!segment) return null;
-  return '/names/religion/islamic/1';
+  const rel = (religion || 'islamic').toLowerCase();
+  return `/names/${rel}/${segment}`;
 };
 
 export default function RelatedNames({ data }) {

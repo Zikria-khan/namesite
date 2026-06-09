@@ -553,7 +553,7 @@ const displayName = nameItem.name || nameItem.title || `Name ${index + 1}`;
                       </div>
                     </div>
                     <Link
-                      href={`/names/religion/islamic/1`}
+                      href={`/names/${religion}/${slug}`}
                       className="text-sm leading-6 text-slate-600 transition-colors hover:text-[color:var(--nv-accent-2)]"
                     >
                       {displayMeaning}
@@ -682,10 +682,10 @@ const displayName = nameItem.name || nameItem.title || `Name ${index + 1}`;
                              size="small"
                            />
                          </div>
-                         <Link href={`/names/religion/islamic/1/${slug}`}>
-                           <div className="font-semibold text-slate-900">{nameItem.name}</div>
-                           <div className="mt-1 text-xs text-slate-600">{nameItem.meaning}</div>
-                         </Link>
+                          <Link href={`/names/islamic/${slug}`}>
+                            <div className="font-semibold text-slate-900">{nameItem.name}</div>
+                            <div className="mt-1 text-xs text-slate-600">{nameItem.meaning}</div>
+                          </Link>
                        </div>
                      );
                    })}
@@ -715,10 +715,10 @@ const displayName = nameItem.name || nameItem.title || `Name ${index + 1}`;
                              size="small"
                            />
                          </div>
-                         <Link href={`/names/religion/hindu/1/${slug}`}>
-                           <div className="font-semibold text-slate-900">{nameItem.name}</div>
-                           <div className="mt-1 text-xs text-slate-600">{nameItem.meaning}</div>
-                         </Link>
+                          <Link href={`/names/hindu/${slug}`}>
+                            <div className="font-semibold text-slate-900">{nameItem.name}</div>
+                            <div className="mt-1 text-xs text-slate-600">{nameItem.meaning}</div>
+                          </Link>
                        </div>
                      );
                    })}
@@ -748,10 +748,10 @@ const displayName = nameItem.name || nameItem.title || `Name ${index + 1}`;
                              size="small"
                            />
                          </div>
-                         <Link href={`/names/religion/christian/1/${slug}`}>
-                           <div className="font-semibold text-slate-900">{nameItem.name}</div>
-                           <div className="mt-1 text-xs text-slate-600">{nameItem.meaning}</div>
-                         </Link>
+                          <Link href={`/names/christian/${slug}`}>
+                            <div className="font-semibold text-slate-900">{nameItem.name}</div>
+                            <div className="mt-1 text-xs text-slate-600">{nameItem.meaning}</div>
+                          </Link>
                        </div>
                      );
                    })}

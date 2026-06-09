@@ -269,7 +269,7 @@ export default function HinduBoyNamesPage() {
             {namesData.map((nameItem, index) => (
               <Link
                 key={index}
-                href={`/names/religion/hindu/1/${createSafeSlug(nameItem.name)}`}
+                href={`/names/hindu/${createSafeSlug(nameItem.name)}`}
                 id={createSafeSlug(nameItem.name)}
                 className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-orange-100 hover:border-orange-300 group hover:-translate-y-1 block"
               >

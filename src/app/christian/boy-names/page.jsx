@@ -268,7 +268,7 @@ export default function ChristianBoyNamesPage() {
               return (
 <Link
                   key={safeSlug}
-                  href={`/names/religion/christian/1#${safeSlug}`}
+                   href={`/names/christian/${safeSlug}`}
                   id={safeSlug}
                   className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-blue-100 hover:border-blue-300 group hover:-translate-y-1 block"
                 >
