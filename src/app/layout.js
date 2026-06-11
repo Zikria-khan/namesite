@@ -16,6 +16,7 @@ import { Suspense } from 'react';
 import RouteChrome from "@/components/Layout/RouteChrome";
 import FixedBottomBanner from "@/components/Ads/FixedBottomBanner";
 import SocialActionBar from "@/components/Ads/SocialActionBar";
+import SidebarSlideIn from "@/components/Ads/SidebarSlideIn";
 
 import { getSiteUrl } from '@/lib/seo/site';
 const siteUrl = getSiteUrl();
@@ -200,6 +201,9 @@ export default function RootLayout({ children }) {
 
           {/* Social action bar (floating right) */}
           <SocialActionBar />
+
+          {/* Sidebar — appears once per visit after 8s delay */}
+          <SidebarSlideIn />
         </AppProvider>
       </body>
     </html>

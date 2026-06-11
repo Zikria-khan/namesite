@@ -80,4 +80,8 @@
     <loc>https://nameverse.vercel.app/sitemap-hindu-names-5.xml</loc>
     <lastmod>2026-06-06</lastmod>
   </sitemap>
+  <sitemap>
+    <loc>https://nameverse.vercel.app/sitemap-blog.xml</loc>
+    <lastmod>2026-06-11</lastmod>
+  </sitemap>
 </sitemapindex>
