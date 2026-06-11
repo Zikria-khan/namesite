@@ -237,7 +237,7 @@ export default function LetterNamesClient({ selectedReligion, letter, page }) {
                     )}
                   </div>
                 </Link>
-              ))}
+               )  })}
             </div>
 
             <div className="flex items-center justify-center gap-4">
