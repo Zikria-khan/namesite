@@ -125,7 +125,7 @@ const Navbar = () => {
       { name: '🔱 Hindu Boy Names', href: '/hindu/boy-names' },
       { name: '🔱 Hindu Girl Names', href: '/hindu/girl-names' },
       { name: '📝 Name Meanings', href: '/name-meanings' },
-      { name: '🔤 Names by Letter', href: '/names/islamic/letter/A' },
+      { name: '🔤 Names by Letter', href: '/names/islamic/letter/A/1' },
       { name: '🌍 Names by Origin', href: '/names/islamic/origin/arabic/1' },
     ],
   };
@@ -143,7 +143,7 @@ const Navbar = () => {
     { name: '📖 Name Meanings', href: '/name-meanings' },
     { name: '🔍 Browse by Meaning', href: '/names-by-meaning' },
     { name: '🌍 Names by Language', href: '/languages' },
-    { name: '🔤 Names by Letter A–Z', href: '/names/islamic/letter/A' },
+    { name: '🔤 Names by Letter A–Z', href: '/names/islamic/letter/A/1' },
     { name: '🔎 Advanced Search', href: '/advanced-search' },
     { name: '🔎 Search Names', href: '/search' },
   ];

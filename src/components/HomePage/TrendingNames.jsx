@@ -10,7 +10,7 @@ const TrendingNames = () => {
       title: 'Fastest Rising Names 2026',
       description: 'Names gaining rapid popularity this year. Get ahead of trends with these up-and-coming choices before they become mainstream.',
       keywords: 'trending baby names 2026, rising baby names, popular names this year, fastest rising names',
-      link: '/blog/baby-name-trends-2026',
+      link: '/blog/baby-names-inspired-by-nature',
       count: '2,847 searches today',
       color: 'from-orange-500 to-red-500'
     },
@@ -28,7 +28,7 @@ const TrendingNames = () => {
       title: 'Celebrity Baby Names',
       description: 'Names chosen by celebrities and influencers. Track Hollywood baby name trends and find inspiration from famous families.',
       keywords: 'celebrity baby names 2026, famous baby names, Hollywood baby names, celebrity name choices',
-      link: '/blog/celebrity-baby-names-2026',
+      link: '/blog/best-islamic-baby-names-2026',
       count: '1,293 this week',
       color: 'from-purple-500 to-pink-500'
     },

@@ -145,7 +145,7 @@ const PopularNamesSection = () => {
                 icon: Flame,
                 title: 'Fastest Rising Names',
                 description: 'Names gaining rapid popularity this year with the strongest search growth.',
-                link: '/blog/baby-name-trends-2026',
+                link: '/blog/baby-names-inspired-by-nature',
                 count: '2,847 searches today',
                 color: 'from-orange-500 to-red-500'
               },
@@ -161,7 +161,7 @@ const PopularNamesSection = () => {
                 icon: Sparkles,
                 title: 'Celebrity Baby Names',
                 description: 'Viral names chosen by celebrities that are now trending with parents.',
-                link: '/blog/celebrity-baby-names-2026',
+                link: '/blog/best-islamic-baby-names-2026',
                 count: '1,293 this week',
                 color: 'from-purple-500 to-pink-500'
               },

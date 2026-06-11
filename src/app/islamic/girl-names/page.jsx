@@ -386,7 +386,7 @@ export default function IslamicGirlNamesPage() {
               <p className="text-blue-100 text-sm">Find 100+ Biblical girl names</p>
             </Link>
             <Link 
-              href="/guides/islamic-baby-names"
+              href="/blog/how-to-choose-a-baby-name-in-islam"
               className="bg-gradient-to-br from-purple-500 to-pink-600 text-white rounded-2xl p-6 hover:shadow-xl transition-all hover:-translate-y-1"
             >
               <h3 className="font-bold text-lg mb-2">Islamic Guide</h3>

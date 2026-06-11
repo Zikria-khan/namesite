@@ -68,7 +68,7 @@ export default function Footer() {
               <li><Link href="/name-meanings" className="transition hover:text-slate-900">📖 Cultural Semantic Index</Link></li>
               <li><Link href="/names-by-meaning" className="transition hover:text-slate-900">🔍 Semantic Meaning Research</Link></li>
               <li><Link href="/languages" className="transition hover:text-slate-900">🌍 Linguistic Families</Link></li>
-              <li><Link href="/names/islamic/letter/A" className="transition hover:text-slate-900">🔤 Phonetic Index A–Z</Link></li>
+              <li><Link href="/names/islamic/letter/A/1" className="transition hover:text-slate-900">🔤 Phonetic Index A–Z</Link></li>
               <li><Link href="/advanced-search" className="transition hover:text-slate-900">🔎 Advanced Linguistic Search</Link></li>
               <li><Link href="/search" className="transition hover:text-slate-900">🔎 Search Cultural Names</Link></li>
             </ul>

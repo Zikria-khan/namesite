@@ -530,7 +530,11 @@ const displayName = nameItem.name || nameItem.title || `Name ${index + 1}`;
                  const slug = nameItem.slug || generateSlug(displayName) || createSafeSlug(displayName) || '';
 
                 return (
-                  <div key={slug} className="nv-card-solid group block p-6 transition hover:-translate-y-0.5">
+                  <Link
+                    key={slug}
+                    href={`/names/${religion}/${slug}`}
+                    className="nv-card-solid group block p-6 transition hover:-translate-y-0.5"
+                  >
                     <div className="mb-4 flex items-center justify-between gap-4">
                       <div className="flex-1">
                         <h2 className="nv-display text-2xl font-semibold text-slate-900 group-hover:text-[color:var(--nv-accent-2)]">{displayName}</h2>
@@ -552,13 +556,10 @@ const displayName = nameItem.name || nameItem.title || `Name ${index + 1}`;
                         </div>
                       </div>
                     </div>
-                    <Link
-                      href={`/names/${religion}/${slug}`}
-                      className="text-sm leading-6 text-slate-600 transition-colors hover:text-[color:var(--nv-accent-2)]"
-                    >
+                    <p className="text-sm leading-6 text-slate-600 transition-colors hover:text-[color:var(--nv-accent-2)]">
                       {displayMeaning}
-                    </Link>
-                  </div>
+                    </p>
+                  </Link>
                 );
               })}
             </div>
@@ -604,14 +605,14 @@ const displayName = nameItem.name || nameItem.title || `Name ${index + 1}`;
                 Learn More About {RELIGION_LABELS[religion]} Naming
             </h3>
             <div className="mt-5 space-y-3">
-                {religion === 'islamic' && [
+                  {religion === 'islamic' && [
                   { title: 'Islamic Naming Traditions', desc: 'Understanding the importance of names in Islamic culture' },
                   { title: 'Quranic Name Meanings', desc: 'Deep dive into names from the Holy Quran' },
                   { title: 'Prophet Names & Stories', desc: 'Learn about names of Islamic prophets and their significance' }
                 ].map((item, index) => (
                   <Link
                     key={index}
-                    href={`/blog/ultimate-guide-islamic-names`}
+                    href={`/blog/how-to-choose-a-baby-name-in-islam`}
                     className="nv-card-solid block p-4 transition hover:-translate-y-0.5"
                   >
                     <h4 className="font-semibold text-slate-900">{item.title}</h4>
@@ -626,7 +627,7 @@ const displayName = nameItem.name || nameItem.title || `Name ${index + 1}`;
                 ].map((item, index) => (
                   <Link
                     key={index}
-                    href={`/blog/hindu-vedic-naming-guide`}
+                    href={`/blog/how-to-choose-a-gender-neutral-baby-name`}
                     className="nv-card-solid block p-4 transition hover:-translate-y-0.5"
                   >
                     <h4 className="font-semibold text-slate-900">{item.title}</h4>
@@ -634,14 +635,14 @@ const displayName = nameItem.name || nameItem.title || `Name ${index + 1}`;
                   </Link>
                 ))}
 
-                {religion === 'christian' && [
+                  {religion === 'christian' && [
                   { title: 'Biblical Name Stories', desc: 'The stories behind Christian biblical names' },
                   { title: 'Christian Saints & Names', desc: 'Names inspired by Christian saints and martyrs' },
                   { title: 'Faith-Based Naming Guide', desc: 'Choosing names that reflect Christian values' }
                 ].map((item, index) => (
                   <Link
                     key={index}
-                    href={`/blog/christian-biblical-names-guide`}
+                    href={`/blog/how-to-choose-a-baby-name-with-meaning`}
                     className="nv-card-solid block p-4 transition hover:-translate-y-0.5"
                   >
                     <h4 className="font-semibold text-slate-900">{item.title}</h4>
