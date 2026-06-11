@@ -70,7 +70,7 @@ const PopularNamesSection = () => {
                 return (
                   <Link
                     key={name.slug}
-                    href={'/names/religion/islamic/1'}
+                    href={`/names/${name.religion.toLowerCase()}/${name.slug}`}
                     className="block p-3 rounded-lg border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                   >
                     <div className="flex items-center justify-between">
@@ -107,7 +107,7 @@ const PopularNamesSection = () => {
                 return (
                   <Link
                     key={name.slug}
-                    href={'/names/religion/islamic/1'}
+                    href={`/names/${name.religion.toLowerCase()}/${name.slug}`}
                     className="block p-3 rounded-lg border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                   >
                     <div className="flex items-center justify-between">

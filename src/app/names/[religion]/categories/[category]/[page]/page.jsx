@@ -268,7 +268,7 @@ export default async function CategoryNamesPage({ params }) {
                 <p className="text-gray-600 mb-4 line-clamp-3">{item.meaning}</p>
               )}
               <Link
-                href={`/names/religion/${religion}/1`}
+                href={`/names/${religion}/${item.slug || createSafeSlug(item.name || '')}`}
                 className="inline-flex items-center gap-2 text-emerald-700 font-semibold hover:text-emerald-900"
               >
                 View name details
@@ -298,7 +298,7 @@ export default async function CategoryNamesPage({ params }) {
                 <p className="text-gray-600 mb-4 line-clamp-3">{item.meaning}</p>
               )}
               <Link
-                href={`/names/religion/${religion}/1`}
+                href={`/names/${religion}/${item.slug || createSafeSlug(item.name || '')}`}
                 className="inline-flex items-center gap-2 text-emerald-700 font-semibold hover:text-emerald-900"
               >
                 View name details

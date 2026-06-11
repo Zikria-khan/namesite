@@ -474,7 +474,7 @@ export default async function LetterNamesPage({ params }) {
                 return (
                   <Link
                     key={itemKey}
-                    href={`/names/religion/${religion}/1`}
+                    href={`/names/${religion}/${itemKey}`}
                     className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 border border-gray-100 hover:border-emerald-300 group hover:-translate-y-1 block"
                     title={`${nameItem.name} meaning — ${religionLabel} baby name`}
                   >
@@ -551,7 +551,7 @@ export default async function LetterNamesPage({ params }) {
                 return (
                   <Link
                     key={itemKey}
-                    href={`/names/religion/${religion}/1`}
+                    href={`/names/${religion}/${itemKey}`}
                     className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-5 border border-gray-100 hover:border-emerald-300 group hover:-translate-y-1 block"
                     title={`${nameItem.name} meaning — ${religionLabel} baby name`}
                   >

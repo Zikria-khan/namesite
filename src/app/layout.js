@@ -15,7 +15,6 @@ import LoadingWrapper from "@/components/LoadingAnimation/LoadingWrapper";
 import { Suspense } from 'react';
 import RouteChrome from "@/components/Layout/RouteChrome";
 import FixedBottomBanner from "@/components/Ads/FixedBottomBanner";
-import SocialActionBar from "@/components/Ads/SocialActionBar";
 import SidebarSlideIn from "@/components/Ads/SidebarSlideIn";
 
 import { getSiteUrl } from '@/lib/seo/site';
@@ -199,8 +198,6 @@ export default function RootLayout({ children }) {
           {/* Fixed bottom ad banner (sticky) — visible on mobile/tablet */}
           <FixedBottomBanner />
 
-          {/* Social action bar (floating right) */}
-          <SocialActionBar />
 
           {/* Sidebar — appears once per visit after 8s delay */}
           <SidebarSlideIn />

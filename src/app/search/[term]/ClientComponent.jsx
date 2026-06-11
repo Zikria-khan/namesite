@@ -218,7 +218,7 @@ export default function SearchResultsClient({
                       return (
                         <Link
                           key={n._id}
-                          href={`/names/religion/${religion}/1`}
+                          href={`/names/${religion}/${name.slug || name.name?.toLowerCase()?.replace(/\s+/g, '-')}`}
                           className="inline-block px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"
                         >
                           {n.name}
@@ -311,7 +311,7 @@ function NameCard({ name, viewMode, index, searchTerm, router }) {
     'christianity': 'christian',
   };
   const religion = religionMap[name.religion?.toLowerCase()] || 'islamic';
-  const url = `/names/religion/${religion}/1`;
+  const url = `/names/${religion}/${name.slug || name.name?.toLowerCase()?.replace(/\s+/g, '-')}`;
 
   return (
     <article

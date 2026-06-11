@@ -163,10 +163,11 @@ export default async function OriginNamesPage({ religionFromRoute, params }) {
                 const displayMeaning = nameItem.short_meaning || nameItem.meaning || nameItem.long_meaning || 'No meaning available';
                 const itemKey = nameItem.slug || generateSlug(nameItem.name) || nameItem._id || index;
 
+                const slug = itemKey || generateSlug(nameItem.name) || '';
                 return (
                   <Link
                     key={itemKey}
-                    href={/names/religion/islamic/1}
+                    href={`/names/${religion}/${slug}`}
                     className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-emerald-100 hover:border-emerald-300 group hover:-translate-y-1 block"
                   >
                     <div className="flex items-start justify-between mb-4">

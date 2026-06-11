@@ -712,7 +712,7 @@ export default function NameDetailClient({ data, initialLanguage }) {
             {data.similar_sounding_names?.slice(0, 8).map((similarName) => (
               <Link
                 key={similarName}
-                href={/names/religion/islamic/1}
+                href={`/names/${religion}/${createSafeSlug(similarName)}`}
                 className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all text-center"
               >
                 <div className="font-semibold text-blue-600">{similarName}</div>
