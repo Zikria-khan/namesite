@@ -709,10 +709,15 @@ export default function NameDetailClient({ data, initialLanguage }) {
             id="related"
           />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {data.similar_sounding_names?.slice(0, 8).map((similarName) => (
+            {data.similar_sounding_names?.filter((n) => {
+              // Validate: must be a real name string, not garbage data
+              if (!n || typeof n !== 'string') return false;
+              const slug = createSafeSlug(n.trim());
+              return slug && slug.length >= 2;
+            }).slice(0, 8).map((similarName) => (
               <Link
                 key={similarName}
-                href={`/names/${religion}/${createSafeSlug(similarName)}`}
+                href={`/names/${religion}/${createSafeSlug(similarName.trim())}`}
                 className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all text-center"
               >
                 <div className="font-semibold text-blue-600">{similarName}</div>

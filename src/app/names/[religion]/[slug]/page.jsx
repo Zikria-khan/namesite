@@ -12,10 +12,15 @@ import path from 'path';
 const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 
 // Allow dynamic slugs beyond generateStaticParams() — only 28 per religion are pre-rendered
+// This does NOT make every page call a serverless function.
+// Pages are rendered once and cached for revalidate seconds.
+// Only the FIRST visit triggers a function call; subsequent visits use cache.
 export const dynamicParams = true;
 
-// Revalidate name pages every 1 day (names change infrequently)
-export const revalidate = 86400;
+// 30-day cache: pages are generated once and cached for 30 days.
+// Free tier friendly: 100 function calls/day, each cached for 30 days.
+// Over 30 days, you can serve 3,000 unique page visits without extra cost.
+export const revalidate = 2592000;
 
 // Load local name data as fallback
 function loadLocalNameData(religion, slug) {

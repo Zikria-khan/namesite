@@ -50,12 +50,16 @@ async function isrFetch(url, revalidate = ISR_TTL) {
 }
 
 /**
- * Fetch with retry — used for critical name detail lookups
- * where a single transient failure should NOT cause a 404.
+ * Fetch with retry — used for critical name detail lookups.
+ * IMPORTANT: Never use revalidate: 0 as it causes "Dynamic server usage"
+ * errors during static generation. Always use a positive revalidation time.
  */
 async function isrFetchWithRetry(url, retries = 2, revalidate = ISR_TTL) {
   for (let attempt = 0; attempt <= retries; attempt++) {
-    const result = await isrFetch(url, attempt === 0 ? revalidate : 0);
+    // Always use positive revalidation to allow static rendering.
+    // On retries, use a shorter cache to get fresh responses.
+    const attemptRevalidate = attempt === 0 ? revalidate : Math.min(revalidate, 60);
+    const result = await isrFetch(url, attemptRevalidate);
     if (result) return result;
     if (attempt < retries) {
       // Brief delay before retry (exponential backoff)
@@ -190,12 +194,13 @@ export async function serverFetchNameDetail(religion, slug) {
   const normalizedReligion = normalizeReligion(religion);
   const safeSlug = encodeURIComponent(String(slug).trim().toLowerCase());
 
-  // Use retry + shorter cache (1 hour) for name detail lookups.
+  // Use retry + 30-day cache for name detail lookups.
   // A single transient error must NOT cause a permanent 404.
+  // 30-day cache is free-tier friendly: each function call is cached for 30 days.
   let data = await isrFetchWithRetry(
     `${API_BASE}/api/v1/names/${normalizedReligion}/${safeSlug}`,
-    2,  // 2 retries
-    3600 // 1-hour cache instead of 30 days
+    2,  // 2 retries (with fresh fetch on each retry)
+    ISR_TTL // 30-day cache
   );
 
   // Fallback to legacy endpoint
@@ -203,7 +208,7 @@ export async function serverFetchNameDetail(religion, slug) {
     data = await isrFetchWithRetry(
       `${API_BASE}/api/names/${normalizedReligion}/${safeSlug}`,
       1,  // 1 retry
-      3600
+      ISR_TTL
     );
   }
 

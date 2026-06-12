@@ -2,9 +2,20 @@ import Link from 'next/link';
 import { Link as LinkIcon } from 'lucide-react';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 
+/**
+ * Build a safe link for a similar/related name.
+ * Only generates a link if the slug is valid and the name is
+ * a real name (not garbage data like "marudeen.").
+ */
 const normalizeLink = (name, religion) => {
-  const segment = createSafeSlug(name);
-  if (!segment) return null;
+  if (!name || typeof name !== 'string') return null;
+  const cleaned = name.trim();
+  if (cleaned.length < 2) return null;
+  const segment = createSafeSlug(cleaned);
+  // Skip invalid slugs or single-char slugs
+  if (!segment || segment.length < 2) return null;
+  // Skip slugs that are obviously not real names (contain only common garbage patterns)
+  if (/^\d+$/.test(segment)) return null;
   const rel = (religion || 'islamic').toLowerCase();
   return `/names/${rel}/${segment}`;
 };

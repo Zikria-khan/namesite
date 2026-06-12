@@ -45,6 +45,7 @@ function normalizePage(page) {
 }
 
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
+import { getCanonicalSlug } from '@/lib/utils/nameSlug';
 
 function generateSlug(name) {
   if (!name || typeof name !== 'string') return '';
@@ -469,8 +470,8 @@ export default async function LetterNamesPage({ params }) {
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-12">
-              {names.slice(0, Math.ceil(names.length / 2)).map((nameItem, index) => {
-                const itemKey = nameItem.slug || generateSlug(nameItem.name) || nameItem._id || index;
+            {names.slice(0, Math.ceil(names.length / 2)).map((nameItem, index) => {
+                const itemKey = getCanonicalSlug(nameItem) || nameItem._id || index;
                 return (
                   <Link
                     key={itemKey}
@@ -547,7 +548,7 @@ export default async function LetterNamesPage({ params }) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-12">
               {names.slice(Math.ceil(names.length / 2)).map((nameItem, index) => {
-                const itemKey = nameItem.slug || generateSlug(nameItem.name) || nameItem._id || index;
+                const itemKey = getCanonicalSlug(nameItem) || nameItem._id || index;
                 return (
                   <Link
                     key={itemKey}
