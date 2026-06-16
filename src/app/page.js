@@ -1,200 +1,263 @@
-import HomePageClient from "../components/HomePage/Homepage";
-import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers';
 import fs from 'fs';
 import path from 'path';
-import HeroSection from '@/components/HomePage/HeroSection';
-import ContentSection from '@/components/HomePage/ContentSection';
-import AuthorityStats from '@/components/HomePage/AuthorityStats';
-import SearchTools from '@/components/HomePage/SearchTools';
-import ReligiousNamesSection from '@/components/HomePage/ReligiousNamesSection';
-import dynamic from 'next/dynamic';
+import HomePageClient from '@/components/HomePage/Homepage';
+import { validateMetaDescription, validateMetaTitle } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
 
-// ISR with 30-day cache
-export const revalidate = 2592000; // 30 days
+export const revalidate = 2592000;
 
 const DOMAIN = process.env.NEXT_PUBLIC_SITE_URL || getSiteUrl();
+const publishedDate = new Date().toISOString().split('T')[0];
+const homepageUrl = `${DOMAIN}/`;
+const ogImage = `${DOMAIN}/og-home.png`;
 
-// Read blog posts data server-side
 const blogPostsPath = path.join(process.cwd(), 'public', 'data', 'blog-posts.json');
 let latestArticles = [];
 try {
   const fileContents = fs.readFileSync(blogPostsPath, 'utf8');
   const allPosts = JSON.parse(fileContents);
-  const sortedPosts = allPosts
-    .filter(post => post.publishDate)
-    .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
-  latestArticles = sortedPosts.slice(0, 6);
-} catch (error) {
+  latestArticles = allPosts
+    .filter((post) => post.publishDate)
+    .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
+    .slice(0, 6);
+} catch {
+  latestArticles = [];
 }
 
-const publishedDate = new Date().toISOString().split('T')[0];
-
 export const metadata = {
-  title: validateMetaTitle('NameVerse — Cultural Name Knowledge Base | Linguistic Origin Analysis'),
+  title: validateMetaTitle('NameVerse — Baby Names with Meanings, Origins & Cultural Roots'),
   description: validateMetaDescription(
-    'NameVerse is a Cultural Name Knowledge Base and Multilingual Onomastics System for structured cultural and linguistic analysis of personal names across civilizations. Explore linguistic origin analysis, cultural semantic interpretation, and historical naming evolution.'
+    'Search 65,000+ Islamic, Hindu, Christian and global baby names with meanings, origins, popularity, trends and cultural roots. Browse Arabic, Urdu, Persian, Sanskrit, Hebrew and Greek name traditions on NameVerse.'
   ),
   keywords: [
-    'cultural name knowledge base',
-    'linguistic origin analysis',
-    'multilingual onomastics system',
-    'cultural semantic interpretation',
-    'historical naming evolution',
-    'cross-cultural onomastic study',
-    'linguistic intelligence database',
-    'cultural naming research platform',
-    'Islamic onomastics',
-    'Christian onomastics',
-    'Hindu onomastics',
-    'name etymology research'
+    'baby names with meanings',
+    'Islamic names with meaning',
+    'Muslim baby names',
+    'Hindu baby names',
+    'Christian baby names',
+    'Arabic names',
+    'Urdu names',
+    'Sanskrit names',
+    'unique baby names',
+    'trending baby names',
+    'popular baby names',
+    'names by meaning',
+    'names by origin',
+    'baby name search',
+    'NameVerse'
   ].join(', '),
+  robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+  authors: [{ name: 'NameVerse', url: DOMAIN }],
+  creator: 'NameVerse',
+  publisher: 'NameVerse',
+  metadataBase: new URL(DOMAIN),
+  alternates: {
+    canonical: homepageUrl,
+    languages: { en: homepageUrl, 'x-default': homepageUrl }
+  },
   openGraph: {
-    title: validateMetaTitle('NameVerse — Cultural Name Knowledge Base | Multilingual Onomastics'),
+    title: validateMetaTitle('NameVerse — Baby Names with Meanings, Origins & Cultural Roots'),
     description: validateMetaDescription(
-      'A structured cultural and linguistic knowledge graph for human names. Multilingual onomastics system for cross-cultural name research, linguistic origin analysis, and cultural semantic interpretation.'
+      'Find meaningful baby names across Islamic, Hindu, Christian and global traditions. NameVerse offers fast search, origin hubs, trending names and trusted cultural context.'
     ),
-    url: `${DOMAIN}/`,
+    url: homepageUrl,
     type: 'website',
-    siteName: 'NameVerse — Cultural Name Knowledge Base',
+    siteName: 'NameVerse',
     images: [
-      { url: `${DOMAIN}/logo.png`, width: 512, height: 512, alt: 'NameVerse — Cultural Name Knowledge Base' }
-    ]
+      {
+        url: ogImage,
+        width: 1200,
+        height: 630,
+        type: 'image/png',
+        alt: 'NameVerse baby names with meanings and origins'
+      }
+    ],
+    locale: 'en_US'
   },
   twitter: {
     card: 'summary_large_image',
-    title: validateMetaTitle('NameVerse — Cultural Name Knowledge Base'),
-    description: 'A structured cultural and linguistic knowledge graph for human names. Multilingual onomastics system for cross-cultural name research and analysis.'
+    title: validateMetaTitle('NameVerse — Baby Names with Meanings & Origins'),
+    description: validateMetaDescription(
+      'Search 65,000+ baby names with meanings, origins, trends and cultural context across Islamic, Hindu, Christian and global traditions.'
+    ),
+    images: [ogImage],
+    creator: '@NameVerseOfficial',
+    site: '@NameVerseOfficial'
   },
-  alternates: {
-    canonical: `${DOMAIN}/`,
-    languages: { en: `${DOMAIN}/`, 'x-default': `${DOMAIN}/` }
+  other: {
+    'content-language': 'en'
   }
 };
 
 const homepageStructuredData = {
-  "@context": "https://schema.org",
-  "@graph": [
+  '@context': 'https://schema.org',
+  '@graph': [
     {
-      "@type": "WebSite",
-      "@id": `${DOMAIN}/#website`,
-      "url": DOMAIN,
-      "name": "NameVerse — Cultural Name Knowledge Base",
-      "description": "A structured cultural and linguistic knowledge graph for human names. Multilingual onomastics system for cross-cultural name research, linguistic origin analysis, cultural semantic interpretation, and historical naming evolution across civilizations.",
-      "inLanguage": "en-US",
-      "publisher": {
-        "@id": `${DOMAIN}/#organization`
+      '@type': 'WebSite',
+      '@id': `${DOMAIN}/#website`,
+      'url': DOMAIN,
+      'name': 'NameVerse',
+      'alternateName': 'NameVerse — Baby Names with Meanings, Origins and Cultural Roots',
+      'description': 'NameVerse helps parents search baby names with meanings, origins, trends and cultural context across Islamic, Hindu, Christian and global traditions.',
+      'inLanguage': 'en-US',
+      'publisher': {
+        '@id': `${DOMAIN}/#organization`
       },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": `${DOMAIN}/search?q={search_term_string}`
+      'potentialAction': {
+        '@type': 'SearchAction',
+        'target': {
+          '@type': 'EntryPoint',
+          'urlTemplate': `${DOMAIN}/search?q={search_term_string}`
         },
-        "query-input": "required name=search_term_string"
-      },
-      "about": {
-        "@type": "Thing",
-        "name": "Cultural Onomastics — Linguistic and Cultural Name Analysis",
-        "description": "Structured cultural and linguistic analysis of personal names across civilizations."
+        'query-input': 'required name=search_term_string'
       }
     },
     {
-      "@type": "Organization",
-      "@id": `${DOMAIN}/#organization`,
-      "name": "NameVerse",
-      "alternateName": "NameVerse — Cultural Name Knowledge Base",
-      "url": DOMAIN,
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${DOMAIN}/logo.png`,
-        "width": 512,
-        "height": 512,
-        "caption": "NameVerse — Cultural Name Knowledge Base"
+      '@type': 'Organization',
+      '@id': `${DOMAIN}/#organization`,
+      'name': 'NameVerse',
+      'url': DOMAIN,
+      'logo': {
+        '@type': 'ImageObject',
+        'url': `${DOMAIN}/logo.png`,
+        'width': 512,
+        'height': 512
       },
-      "description": "NameVerse is a Cultural Name Knowledge Base and Multilingual Onomastics System for structured cultural and linguistic analysis of personal names across civilizations.",
-      "foundingDate": "2025",
-      "founders": [{ "@type": "Person", "name": "Zakriya Khan" }]
+      'sameAs': ['https://twitter.com/NameVerseOfficial'],
+      'description': 'NameVerse is a baby name knowledge base for meanings, origins, cultural roots, trends and trusted name research.'
     },
     {
-      "@type": "FAQPage",
-      "@id": `${DOMAIN}/#faq`,
-      "mainEntity": [
+      '@type': 'WebPage',
+      '@id': `${DOMAIN}/#webpage`,
+      'url': homepageUrl,
+      'name': 'NameVerse — Baby Names with Meanings, Origins and Cultural Roots',
+      'description': 'Search baby names by meaning, origin, religion, gender and trend. Browse Islamic, Hindu, Christian, Arabic, Urdu, Persian, Sanskrit and global name hubs.',
+      'isPartOf': {
+        '@id': `${DOMAIN}/#website`
+      },
+      'primaryImageOfPage': {
+        '@type': 'ImageObject',
+        'url': ogImage,
+        'width': 1200,
+        'height': 630
+      },
+      'about': [
         {
-          "@type": "Question",
-          "name": "What is NameVerse?",
-          "answerCount": 1,
-          "datePublished": publishedDate,
-          "upvoteCount": 0,
-          "author": { "@type": "Organization", "name": "NameVerse" },
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "NameVerse is a Cultural Name Knowledge Base and Multilingual Onomastics System. It provides structured cultural and linguistic analysis of personal names across civilizations — including Islamic, Christian, and Hindu naming traditions — with linguistic origin analysis, cultural semantic interpretation, and historical naming evolution data.",
-            "datePublished": publishedDate,
-            "upvoteCount": 0,
-            "author": { "@type": "Organization", "name": "NameVerse" }
+          '@type': 'Thing',
+          'name': 'Baby Names with Meanings'
+        },
+        {
+          '@type': 'Thing',
+          'name': 'Islamic, Hindu and Christian Name Origins'
+        },
+        {
+          '@type': 'Thing',
+          'name': 'Trending Baby Names'
+        }
+      ]
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${DOMAIN}/#faq`,
+      'mainEntity': [
+        {
+          '@type': 'Question',
+          'name': 'How do I find the best baby name with meaning?',
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': 'Start by searching a name, meaning, origin, religion or theme. NameVerse connects each query to curated name lists, cultural context and related browsing paths so you can compare options quickly.'
           }
         },
         {
-          "@type": "Question",
-          "name": "What types of linguistic analysis does NameVerse provide?",
-          "answerCount": 1,
-          "datePublished": publishedDate,
-          "upvoteCount": 0,
-          "author": { "@type": "Organization", "name": "NameVerse" },
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "NameVerse provides comprehensive linguistic origin analysis including root language etymology, phonetic structure analysis, cultural semantic interpretation, historical naming evolution tracking, and cross-cultural onomastic patterns for personal names across multiple linguistic traditions.",
-            "datePublished": publishedDate,
-            "upvoteCount": 0,
-            "author": { "@type": "Organization", "name": "NameVerse" }
+          '@type': 'Question',
+          'name': 'Which baby names are trending in 2026?',
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': 'Parents are searching for short, meaningful and globally pronounceable names. Popular homepage picks include Muhammad, Aisha, Rayan, Noah, Olivia, Aarav, Diya and Ananya, with more options in the trending names hub.'
           }
         },
         {
-          "@type": "Question",
-          "name": "Are NameVerse linguistic analyses verified?",
-          "answerCount": 1,
-          "datePublished": publishedDate,
-          "upvoteCount": 0,
-          "author": { "@type": "Organization", "name": "NameVerse" },
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes, NameVerse verifies linguistic analyses against authoritative sources: Islamic names against Quranic Arabic and classical dictionaries, Christian names against Biblical Hebrew and Greek concordances, and Hindu names against Sanskrit etymological references.",
-            "datePublished": publishedDate,
-            "upvoteCount": 0,
-            "author": { "@type": "Organization", "name": "NameVerse" }
+          '@type': 'Question',
+          'name': 'Can I search names by religion, origin or meaning?',
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': 'Yes. Browse Islamic, Hindu and Christian names by religion, then narrow by origins such as Arabic, Urdu, Persian, Sanskrit, Hebrew, Greek or Latin. You can also search meanings such as light, love, strength or peace.'
           }
         },
         {
-          "@type": "Question",
-          "name": "How do I research names by cultural tradition on NameVerse?",
-          "answerCount": 1,
-          "datePublished": publishedDate,
-          "upvoteCount": 0,
-          "author": { "@type": "Organization", "name": "NameVerse" },
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "You can browse names by cultural tradition — Islamic (Arabic/Semitic linguistic roots), Christian (Biblical Hebrew/Aramaic/Greek roots), and Hindu (Sanskrit/Dravidian linguistic roots). Each section provides linguistic origin analysis, cultural semantic interpretation, and phonetic structure data.",
-            "datePublished": publishedDate,
-            "upvoteCount": 0,
-            "author": { "@type": "Organization", "name": "NameVerse" }
+          '@type': 'Question',
+          'name': 'Are NameVerse meanings verified?',
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': 'NameVerse prioritizes verified meanings and cultural context. Entries are reviewed for linguistic origin, common usage and faith-aware interpretation before being surfaced in search and curated lists.'
+          }
+        },
+        {
+          '@type': 'Question',
+          'name': 'Is NameVerse free to use?',
+          'acceptedAnswer': {
+            '@type': 'Answer',
+            'text': 'Yes. NameVerse search, name meanings, browsing pages, FAQs and name discovery tools are free for parents, families and researchers.'
           }
         }
       ]
     },
     {
-      "@type": "BreadcrumbList",
-      "@id": `${DOMAIN}/#breadcrumb`,
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": DOMAIN },
-        { "@type": "ListItem", "position": 2, "name": "Islamic Onomastics", "item": `${DOMAIN}/names/religion/islamic/1` },
-        { "@type": "ListItem", "position": 3, "name": "Christian Onomastics", "item": `${DOMAIN}/names/religion/christian/1` },
-        { "@type": "ListItem", "position": 4, "name": "Hindu Onomastics", "item": `${DOMAIN}/names/religion/hindu/1` }
+      '@type': 'BreadcrumbList',
+      '@id': `${DOMAIN}/#breadcrumb`,
+      'itemListElement': [
+        {
+          '@type': 'ListItem',
+          'position': 1,
+          'name': 'Home',
+          'item': homepageUrl
+        },
+        {
+          '@type': 'ListItem',
+          'position': 2,
+          'name': 'Baby Names',
+          'item': `${DOMAIN}/names`
+        },
+        {
+          '@type': 'ListItem',
+          'position': 3,
+          'name': 'Search Names',
+          'item': `${DOMAIN}/search`
+        }
+      ]
+    },
+    {
+      '@type': 'ItemList',
+      '@id': `${DOMAIN}/#homepage-trending-names`,
+      'name': 'Homepage Trending Baby Names',
+      'description': 'Curated trending names featured on the NameVerse homepage.',
+      'numberOfItems': 12,
+      'itemListElement': [
+        { '@type': 'ListItem', 'position': 1, 'name': 'Muhammad', 'url': `${DOMAIN}/names/islamic/muhammad` },
+        { '@type': 'ListItem', 'position': 2, 'name': 'Aisha', 'url': `${DOMAIN}/names/islamic/aisha` },
+        { '@type': 'ListItem', 'position': 3, 'name': 'Rayan', 'url': `${DOMAIN}/names/islamic/rayan` },
+        { '@type': 'ListItem', 'position': 4, 'name': 'Zainab', 'url': `${DOMAIN}/names/islamic/zainab` },
+        { '@type': 'ListItem', 'position': 5, 'name': 'Ayaan', 'url': `${DOMAIN}/names/islamic/ayaan` },
+        { '@type': 'ListItem', 'position': 6, 'name': 'Noah', 'url': `${DOMAIN}/names/christian/noah` },
+        { '@type': 'ListItem', 'position': 7, 'name': 'Olivia', 'url': `${DOMAIN}/names/christian/olivia` },
+        { '@type': 'ListItem', 'position': 8, 'name': 'Sophia', 'url': `${DOMAIN}/names/christian/sophia` },
+        { '@type': 'ListItem', 'position': 9, 'name': 'Aarav', 'url': `${DOMAIN}/names/hindu/aarav` },
+        { '@type': 'ListItem', 'position': 10, 'name': 'Diya', 'url': `${DOMAIN}/names/hindu/diya` },
+        { '@type': 'ListItem', 'position': 11, 'name': 'Ananya', 'url': `${DOMAIN}/names/hindu/ananya` },
+        { '@type': 'ListItem', 'position': 12, 'name': 'Vihaan', 'url': `${DOMAIN}/names/hindu/vihaan` }
       ]
     }
   ]
 };
 
 export default async function HomePage() {
-  return <HomePageClient latestArticles={latestArticles} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageStructuredData) }}
+      />
+      <HomePageClient latestArticles={latestArticles} />
+    </>
+  );
 }

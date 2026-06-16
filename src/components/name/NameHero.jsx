@@ -1,5 +1,4 @@
 import ShareButtons from './ShareButtons';
-import AdBanner from '@/components/Ads/AdBanner';
 import { Volume2, Globe, Star, Hash, Calendar, BookOpen } from 'lucide-react';
 
 function cleanText(text = '') {
@@ -149,10 +148,10 @@ export default function NameHero({ data, pageUrl }) {
       <div className="relative mt-6">
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="flex-1 min-w-0">
-            <AdBanner variant="inline" />
+
           </div>
           <div className="flex-1 min-w-0">
-            <AdBanner variant="inline" />
+
           </div>
         </div>
       </div>

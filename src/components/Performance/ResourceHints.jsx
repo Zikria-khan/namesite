@@ -38,10 +38,6 @@ export default function ResourceHints() {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-      {/* ⚡ DNS Prefetch + Preconnect for Revolthem ad network (replaces AdSense) */}
-      <link rel="dns-prefetch" href="https://revolthem.com" />
-      <link rel="preconnect" href="https://revolthem.com" crossOrigin="anonymous" />
-
       {/* ⚡ DNS Prefetch + Preconnect for Microsoft Clarity analytics */}
       <link rel="dns-prefetch" href="https://www.clarity.ms" />
       <link rel="preconnect" href="https://www.clarity.ms" crossOrigin="anonymous" />

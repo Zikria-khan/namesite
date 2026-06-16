@@ -31,6 +31,95 @@ const POPULAR_SEARCHES = [
   'Vihaan', 'Arjun', 'Ananya', 'Diya', 'Aryan'
 ];
 
+const STATIC_INTENT_RESULTS = {
+  'baby names with meanings': [
+    { name: 'Muhammad', religion: 'islamic', slug: 'muhammad', meaning: 'Praised, commendable', origin: 'Arabic', gender: 'Boy' },
+    { name: 'Aisha', religion: 'islamic', slug: 'aisha', meaning: 'Living, prosperous', origin: 'Arabic', gender: 'Girl' },
+    { name: 'Noah', religion: 'christian', slug: 'noah', meaning: 'Rest, comfort', origin: 'Hebrew', gender: 'Boy' },
+    { name: 'Olivia', religion: 'christian', slug: 'olivia', meaning: 'Olive tree, peace', origin: 'Latin', gender: 'Girl' },
+    { name: 'Aarav', religion: 'hindu', slug: 'aarav', meaning: 'Peaceful, wise', origin: 'Sanskrit', gender: 'Boy' },
+    { name: 'Diya', religion: 'hindu', slug: 'diya', meaning: 'Light, lamp', origin: 'Sanskrit', gender: 'Girl' }
+  ],
+  'boy names': [
+    { name: 'Muhammad', religion: 'islamic', slug: 'muhammad', meaning: 'Praised, commendable', origin: 'Arabic', gender: 'Boy' },
+    { name: 'Rayan', religion: 'islamic', slug: 'rayan', meaning: 'Gates of Paradise, lush', origin: 'Arabic', gender: 'Boy' },
+    { name: 'Noah', religion: 'christian', slug: 'noah', meaning: 'Rest, comfort', origin: 'Hebrew', gender: 'Boy' },
+    { name: 'Aarav', religion: 'hindu', slug: 'aarav', meaning: 'Peaceful, wise', origin: 'Sanskrit', gender: 'Boy' },
+    { name: 'Vihaan', religion: 'hindu', slug: 'vihaan', meaning: 'Dawn, morning', origin: 'Sanskrit', gender: 'Boy' }
+  ],
+  'girl names': [
+    { name: 'Aisha', religion: 'islamic', slug: 'aisha', meaning: 'Living, prosperous', origin: 'Arabic', gender: 'Girl' },
+    { name: 'Zainab', religion: 'islamic', slug: 'zainab', meaning: 'Fragrant flower, beauty', origin: 'Arabic', gender: 'Girl' },
+    { name: 'Olivia', religion: 'christian', slug: 'olivia', meaning: 'Olive tree, peace', origin: 'Latin', gender: 'Girl' },
+    { name: 'Sophia', religion: 'christian', slug: 'sophia', meaning: 'Wisdom', origin: 'Greek', gender: 'Girl' },
+    { name: 'Diya', religion: 'hindu', slug: 'diya', meaning: 'Light, lamp', origin: 'Sanskrit', gender: 'Girl' },
+    { name: 'Ananya', religion: 'hindu', slug: 'ananya', meaning: 'Unique, matchless', origin: 'Sanskrit', gender: 'Girl' }
+  ],
+  light: [
+    { name: 'Noor', religion: 'islamic', slug: 'noor', meaning: 'Light, radiance', origin: 'Arabic', gender: 'Unisex' },
+    { name: 'Diya', religion: 'hindu', slug: 'diya', meaning: 'Light, lamp', origin: 'Sanskrit', gender: 'Girl' },
+    { name: 'Lucia', religion: 'christian', slug: 'lucia', meaning: 'Light', origin: 'Latin', gender: 'Girl' },
+    { name: 'Ziya', religion: 'islamic', slug: 'ziya', meaning: 'Light, splendor', origin: 'Arabic', gender: 'Boy' }
+  ],
+  love: [
+    { name: 'Priya', religion: 'hindu', slug: 'priya', meaning: 'Beloved, dear one', origin: 'Sanskrit', gender: 'Girl' },
+    { name: 'David', religion: 'christian', slug: 'david', meaning: 'Beloved', origin: 'Hebrew', gender: 'Boy' },
+    { name: 'Esme', religion: 'christian', slug: 'esme', meaning: 'Esteemed, loved', origin: 'French', gender: 'Girl' },
+    { name: 'Aziz', religion: 'islamic', slug: 'aziz', meaning: 'Beloved, mighty', origin: 'Arabic', gender: 'Boy' }
+  ],
+  strength: [
+    { name: 'Ethan', religion: 'christian', slug: 'ethan', meaning: 'Strong, enduring', origin: 'Hebrew', gender: 'Boy' },
+    { name: 'Gabriel', religion: 'christian', slug: 'gabriel', meaning: 'God is my strength', origin: 'Hebrew', gender: 'Boy' },
+    { name: 'Veer', religion: 'hindu', slug: 'veer', meaning: 'Brave, courageous', origin: 'Sanskrit', gender: 'Boy' },
+    { name: 'Qasim', religion: 'islamic', slug: 'qasim', meaning: 'Divider, distributor; strength of character', origin: 'Arabic', gender: 'Boy' }
+  ],
+  peace: [
+    { name: 'Salam', religion: 'islamic', slug: 'salam', meaning: 'Peace, safety', origin: 'Arabic', gender: 'Boy' },
+    { name: 'Shanti', religion: 'hindu', slug: 'shanti', meaning: 'Peace, tranquility', origin: 'Sanskrit', gender: 'Girl' },
+    { name: 'Jonah', religion: 'christian', slug: 'jonah', meaning: 'Dove, peace', origin: 'Hebrew', gender: 'Boy' },
+    { name: 'Frederick', religion: 'christian', slug: 'frederick', meaning: 'Peaceful ruler', origin: 'Germanic', gender: 'Boy' }
+  ],
+  blessing: [
+    { name: 'Barakah', religion: 'islamic', slug: 'barakah', meaning: 'Blessing, abundance', origin: 'Arabic', gender: 'Girl' },
+    { name: 'Asher', religion: 'christian', slug: 'asher', meaning: 'Happy, blessed', origin: 'Hebrew', gender: 'Boy' },
+    { name: 'Anugraha', religion: 'hindu', slug: 'anugraha', meaning: 'Blessing, grace', origin: 'Sanskrit', gender: 'Unisex' },
+    { name: 'Benedict', religion: 'christian', slug: 'benedict', meaning: 'Blessed', origin: 'Latin', gender: 'Boy' }
+  ],
+  wisdom: [
+    { name: 'Hikmah', religion: 'islamic', slug: 'hikmah', meaning: 'Wisdom', origin: 'Arabic', gender: 'Girl' },
+    { name: 'Sophia', religion: 'christian', slug: 'sophia', meaning: 'Wisdom', origin: 'Greek', gender: 'Girl' },
+    { name: 'Medha', religion: 'hindu', slug: 'medha', meaning: 'Intelligence, wisdom', origin: 'Sanskrit', gender: 'Girl' },
+    { name: 'Solomon', religion: 'christian', slug: 'solomon', meaning: 'Peace; wise king', origin: 'Hebrew', gender: 'Boy' }
+  ],
+  courage: [
+    { name: 'Hamza', religion: 'islamic', slug: 'hamza', meaning: 'Lion, steadfast', origin: 'Arabic', gender: 'Boy' },
+    { name: 'Veer', religion: 'hindu', slug: 'veer', meaning: 'Brave, courageous', origin: 'Sanskrit', gender: 'Boy' },
+    { name: 'Audrey', religion: 'christian', slug: 'audrey', meaning: 'Noble strength', origin: 'English', gender: 'Girl' },
+    { name: 'Valor', religion: 'christian', slug: 'valor', meaning: 'Courage, bravery', origin: 'English', gender: 'Unisex' }
+  ],
+  grace: [
+    { name: 'Grace', religion: 'christian', slug: 'grace', meaning: 'Grace, goodness', origin: 'Latin', gender: 'Girl' },
+    { name: 'Anugraha', religion: 'hindu', slug: 'anugraha', meaning: 'Blessing, grace', origin: 'Sanskrit', gender: 'Unisex' },
+    { name: 'Karim', religion: 'islamic', slug: 'karim', meaning: 'Generous, noble', origin: 'Arabic', gender: 'Boy' },
+    { name: 'Lutfi', religion: 'islamic', slug: 'lutfi', meaning: 'Gentle, kind, gracious', origin: 'Arabic', gender: 'Boy' }
+  ]
+};
+
+function getStaticIntentResults(query, religion) {
+  const normalizedQuery = query
+    .toLowerCase()
+    .replace(/^names\s+(that\s+)?mean\s+/, '')
+    .replace(/^baby\s+names\s+(that\s+)?mean\s+/, '')
+    .trim();
+
+  const intentResults = STATIC_INTENT_RESULTS[normalizedQuery] || STATIC_INTENT_RESULTS[query.toLowerCase().trim()];
+  if (!intentResults) return null;
+
+  return religion === 'all'
+    ? intentResults
+    : intentResults.filter((item) => item.religion === religion);
+}
+
 export default function GlobalSearchClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -105,9 +194,19 @@ export default function GlobalSearchClient() {
 
       setHasSearched(true);
       const lowerQuery = searchQuery.toLowerCase();
+      const staticIntentResults = getStaticIntentResults(searchQuery, religion);
+
+      if (staticIntentResults) {
+        setResults(staticIntentResults.slice(0, 20));
+        return;
+      }
 
       let filtered = allNames.filter((item) =>
-        item.name.toLowerCase().includes(lowerQuery)
+        item.name.toLowerCase().includes(lowerQuery) ||
+        item.meaning?.toLowerCase().includes(lowerQuery) ||
+        item.origin?.toLowerCase().includes(lowerQuery) ||
+        item.religion?.toLowerCase().includes(lowerQuery) ||
+        item.gender?.toLowerCase().includes(lowerQuery)
       );
 
       if (religion !== 'all') {

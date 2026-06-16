@@ -15,7 +15,6 @@ import LoadingWrapper from "@/components/LoadingAnimation/LoadingWrapper";
 import { Suspense } from 'react';
 import RouteChrome from "@/components/Layout/RouteChrome";
 import FixedBottomBanner from "@/components/Ads/FixedBottomBanner";
-import SidebarSlideIn from "@/components/Ads/SidebarSlideIn";
 
 import { getSiteUrl } from '@/lib/seo/site';
 const siteUrl = getSiteUrl();
@@ -107,7 +106,7 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
-  themeColor: "#1E40AF",
+  themeColor: "#2563EB",
 };
 
 export default function RootLayout({ children }) {
@@ -118,13 +117,13 @@ export default function RootLayout({ children }) {
         <meta name="application-name" content="NameVerse — Cultural Name Knowledge Base" />
         <meta property="og:site_name" content="NameVerse — Cultural Name Knowledge Base" />
         <meta name="content-language" content="en" />
-        <meta name="theme-color" content="#4F46E5" />
+        <meta name="theme-color" content="#2563EB" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="google-site-verification" content="iPU1wdP26kg58gDN3U4H39YuS20alsLvjfXRM-QtKLw" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="NameVerse" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="msapplication-TileColor" content="#4F46E5" />
+        <meta name="msapplication-TileColor" content="#2563EB" />
         <meta name="msapplication-TileImage" content="/logo.png" />
         <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="manifest" href="/manifest.json" />
@@ -136,10 +135,6 @@ export default function RootLayout({ children }) {
         {/* Icons - use relative paths */}
         <link rel="icon" type="image/png" href="/logo.png" />
         <link rel="shortcut icon" type="image/png" href="/logo.png" />
-
-        {/* ⚡ Preload Revolthem ad config script for faster ad initialization */}
-        <link rel="preload" href="https://revolthem.com/1b/54/37/1b543736c10a38ea4ca3f6f7bc8a7a9b.js" as="script" />
-        <link rel="preload" href="https://revolthem.com/f0e3fe0e0c4dc5a8ddc1d06d28e8997e/invoke.js" as="script" />
 
         {/* Microsoft Clarity Analytics */}
         <Script
@@ -198,9 +193,6 @@ export default function RootLayout({ children }) {
           {/* Fixed bottom ad banner (sticky) — visible on mobile/tablet */}
           <FixedBottomBanner />
 
-
-          {/* Sidebar — appears once per visit after 8s delay */}
-          <SidebarSlideIn />
         </AppProvider>
       </body>
     </html>

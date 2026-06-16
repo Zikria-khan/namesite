@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { Save, Heart, Share2, Star, Trash2, Copy, Check, ChevronRight } from 'lucide-react';
-import AdBanner from '@/components/Ads/AdBanner';
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
 import SitePage from '@/components/Layout/SitePage';
@@ -360,7 +359,6 @@ export default async function MyNamesPage() {
           </div>
         </section>
 
-        <AdBanner />
 
         {/* FAQ Section with Schema */}
         <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-white">

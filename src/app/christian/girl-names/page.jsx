@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { getSiteUrl } from '@/lib/seo/site';
 import { Heart, Star, BookOpen, Sparkles, Flower2 } from 'lucide-react';
-import AdBanner from '@/components/Ads/AdBanner';
 import namesData from '../../../../public/data/christian-girl-names.json';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 
@@ -252,7 +251,6 @@ export default function ChristianGirlNamesPage() {
           </div>
         </section>
 
-        <AdBanner />
 
         {/* Names Grid */}
         <section className="max-w-7xl mx-auto px-4 pb-16">

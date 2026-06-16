@@ -1,124 +1,119 @@
-import Link from 'next/link';
 import Image from 'next/image';
-import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import Link from 'next/link';
+import { Globe, Link2, Share2, User } from 'lucide-react';
+
+const footerLinks = {
+  Names: [
+    { label: 'All Names', href: '/names' },
+    { label: 'Islamic Names', href: '/names/religion/islamic/1' },
+    { label: 'Christian Names', href: '/names/religion/christian/1' },
+    { label: 'Hindu Names', href: '/names/religion/hindu/1' },
+    { label: 'Arabic Names', href: '/names/islamic/origin/arabic/1' },
+    { label: 'Urdu Names', href: '/names/islamic/origin/urdu/1' },
+    { label: 'Sanskrit Names', href: '/names/hindu/origin/sanskrit/1' }
+  ],
+  Tools: [
+    { label: 'Name Search', href: '/search' },
+    { label: 'Advanced Search', href: '/advanced-search' },
+    { label: 'Name Meanings', href: '/name-meanings' },
+    { label: 'Names by Meaning', href: '/names-by-meaning' },
+    { label: 'Trending Names', href: '/trending-names' },
+    { label: 'Unique Names', href: '/unique-names' },
+    { label: 'Saved Names', href: '/my-names' }
+  ],
+  Resources: [
+    { label: 'Blog', href: '/blog' },
+    { label: 'Expert Naming Guide', href: '/guides/expert-naming-guide' },
+    { label: 'Popularity', href: '/popularity' },
+    { label: 'Languages', href: '/languages' },
+    { label: 'Popular by State', href: '/popular-by-state' }
+  ],
+  Company: [
+    { label: 'About', href: '/about' },
+    { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Terms of Service', href: '/terms' },
+    { label: 'Sitemap', href: '/sitemap.xml' }
+  ]
+};
+
+const socialLinks = [
+  { label: 'Twitter', href: 'https://twitter.com/NameVerseOfficial', icon: Share2 },
+  { label: 'Facebook', href: 'https://www.facebook.com/', icon: Globe },
+  { label: 'Instagram', href: 'https://www.instagram.com/', icon: Link2 },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/', icon: User }
+];
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="nv-page border-t border-[rgba(15,23,42,0.10)]">
-      <div className="nv-container nv-section">
-        <div className="nv-card">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Column 1: Logo + About */}
-          <div className="min-w-0">
-            <Link href="/" className="flex items-center gap-3 mb-4">
-              <div className="relative h-10 w-10 shrink-0">
-                <Image
-                  src="/logo.png"
-                  alt="NameVerse — Cultural Name Knowledge Base — Linguistic Origin Analysis Platform"
-                  fill
-                  className="object-cover rounded-2xl"
-                />
+    <footer className="border-t border-slate-200 bg-white">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
+          <div>
+            <Link href="/" className="flex items-center gap-3">
+              <div className="grid h-11 w-11 place-items-center rounded-2xl bg-slate-950 text-white">
+                <Image src="/logo.png" alt="NameVerse logo" width={30} height={30} className="object-contain" />
               </div>
-              <span className="nv-display text-xl font-extrabold tracking-tight text-slate-900">NameVerse</span>
+              <div>
+                <div className="text-lg font-black tracking-tight text-slate-950">NameVerse</div>
+                <div className="text-xs font-semibold text-slate-500">Meanings, origins & guides</div>
+              </div>
             </Link>
-            <p className="text-sm leading-relaxed text-slate-600 mb-4">
-              <strong>NameVerse = Cultural Name Knowledge Base</strong>
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-slate-600">
+              NameVerse helps parents and researchers discover baby names with meanings, cultural origins, linguistic context and trusted naming guidance.
             </p>
-            <p className="text-xs leading-relaxed text-slate-500 mb-4">
-              Multilingual Onomastics Research System · Global Linguistic Name Intelligence Database · Cultural Naming Research Platform
-            </p>
-            <p className="text-sm leading-relaxed text-slate-600 mb-4">
-              A structured cultural and linguistic knowledge graph for personal names across civilizations. Explore linguistic origin analysis, cultural semantic interpretation, and historical naming evolution of names from Islamic, Christian, Hindu, and other global traditions.
-            </p>
-            <Link
-              href="/names"
-              className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
-            >
-              Explore Cultural Name Research →
-            </Link>
+            <div className="mt-6 flex gap-2">
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <a key={social.label} href={social.href} target="_blank" rel="noreferrer" className="grid h-10 w-10 place-items-center rounded-full border border-slate-200 text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700" aria-label={social.label}>
+                    <Icon className="h-4 w-4" />
+                  </a>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Column 2: Names by Religion */}
-          <div>
-            <h3 className="text-sm font-semibold text-slate-900 mb-3">Names by Cultural Tradition</h3>
-            <ul className="space-y-2 text-sm text-slate-600">
-              <li><Link href="/names" className="transition hover:text-slate-900">All Cultural Names</Link></li>
-              <li><Link href="/islamic/boy-names" className="transition hover:text-slate-900">🕌 Islamic Masculine Names</Link></li>
-              <li><Link href="/islamic/girl-names" className="transition hover:text-slate-900">🕌 Islamic Feminine Names</Link></li>
-              <li><Link href="/christian/boy-names" className="transition hover:text-slate-900">✝️ Christian Masculine Names</Link></li>
-              <li><Link href="/christian/girl-names" className="transition hover:text-slate-900">✝️ Christian Feminine Names</Link></li>
-              <li><Link href="/hindu/boy-names" className="transition hover:text-slate-900">🔱 Hindu Masculine Names</Link></li>
-              <li><Link href="/hindu/girl-names" className="transition hover:text-slate-900">🔱 Hindu Feminine Names</Link></li>
-              <li><Link href="/names/religion/islamic/1" className="transition hover:text-slate-900">All Islamic Names A–Z</Link></li>
-              <li><Link href="/names/religion/christian/1" className="transition hover:text-slate-900">All Christian Names A–Z</Link></li>
-              <li><Link href="/names/religion/hindu/1" className="transition hover:text-slate-900">All Hindu Names A–Z</Link></li>
-              <li><Link href="/names/islamic/origin/arabic/1" className="transition hover:text-slate-900">Names by Linguistic Origin</Link></li>
-            </ul>
-          </div>
-
-          {/* Column 3: Explore & Tools */}
-          <div>
-            <h3 className="text-sm font-semibold text-slate-900 mb-3">Onomastics Research Tools</h3>
-            <ul className="space-y-2 text-sm text-slate-600">
-              <li><Link href="/trending-names" className="transition hover:text-slate-900">📈 Linguistic Trend Analysis</Link></li>
-              <li><Link href="/unique-names" className="transition hover:text-slate-900">✨ Cultural Name Distinctiveness</Link></li>
-              <li><Link href="/popularity" className="transition hover:text-slate-900">⭐ Historical Name Popularity</Link></li>
-              <li><Link href="/name-meanings" className="transition hover:text-slate-900">📖 Cultural Semantic Index</Link></li>
-              <li><Link href="/names-by-meaning" className="transition hover:text-slate-900">🔍 Semantic Meaning Research</Link></li>
-              <li><Link href="/languages" className="transition hover:text-slate-900">🌍 Linguistic Families</Link></li>
-              <li><Link href="/names/islamic/letter/A/1" className="transition hover:text-slate-900">🔤 Phonetic Index A–Z</Link></li>
-              <li><Link href="/advanced-search" className="transition hover:text-slate-900">🔎 Advanced Linguistic Search</Link></li>
-              <li><Link href="/search" className="transition hover:text-slate-900">🔎 Search Cultural Names</Link></li>
-            </ul>
-          </div>
-
-          {/* Column 4: Resources & Info */}
-          <div>
-            <h3 className="text-sm font-semibold text-slate-900 mb-3">Research Resources</h3>
-            <ul className="space-y-2 text-sm text-slate-600">
-              <li><Link href="/blog" className="transition hover:text-slate-900">📝 Onomastics Articles</Link></li>
-              <li><Link href="/guides/expert-naming-guide" className="transition hover:text-slate-900">📚 Cultural Naming Guide</Link></li>
-              <li><Link href="/my-names" className="transition hover:text-slate-900">💾 Saved Research</Link></li>
-            </ul>
-
-            <h3 className="text-sm font-semibold text-slate-900 mb-3 mt-6">Platform</h3>
-            <ul className="space-y-2 text-sm text-slate-600">
-              <li><Link href="/about" className="transition hover:text-slate-900">ℹ️ About NameVerse</Link></li>
-              <li><Link href="/privacy" className="transition hover:text-slate-900">🔒 Privacy Policy</Link></li>
-              <li><Link href="/terms" className="transition hover:text-slate-900">📄 Terms of Service</Link></li>
-              <li><a href="/sitemap.xml" className="transition hover:text-slate-900">🗺️ Sitemap</a></li>
-            </ul>
-          </div>
-          </div>
+          {Object.entries(footerLinks).map(([title, links]) => (
+            <div key={title}>
+              <h3 className="mb-4 text-sm font-black uppercase tracking-[0.16em] text-slate-950">{title}</h3>
+              <ul className="space-y-3">
+                {links.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="text-sm font-semibold text-slate-600 transition hover:text-blue-700">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        {/* Footer Authority Lock — RULE 8 */}
-        <div className="mt-8 border-t border-[rgba(15,23,42,0.10)] pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-slate-600">
-            <div className="p-3 rounded-lg bg-slate-50">
-              <p className="font-semibold text-slate-900">NameVerse = Cultural Name Knowledge Base</p>
-              <p className="text-xs text-slate-500 mt-1">Structured cultural and linguistic analysis of personal names across civilizations.</p>
+        <div className="mt-10 rounded-[2rem] border border-slate-200 bg-slate-50 p-5">
+          <div className="grid gap-4 md:grid-cols-3">
+            <div>
+              <div className="text-sm font-bold text-slate-950">Verified name research</div>
+              <p className="mt-1 text-xs leading-relaxed text-slate-600">Curated meanings, origins and cultural context for major naming traditions.</p>
             </div>
-            <div className="p-3 rounded-lg bg-slate-50">
-              <p className="font-semibold text-slate-900">Multilingual Onomastics Research System</p>
-              <p className="text-xs text-slate-500 mt-1">Cross-cultural linguistic intelligence database for global name research.</p>
+            <div>
+              <div className="text-sm font-bold text-slate-950">Fast discovery</div>
+              <p className="mt-1 text-xs leading-relaxed text-slate-600">Search, browse and compare names with clean, mobile-first navigation.</p>
             </div>
-            <div className="p-3 rounded-lg bg-slate-50">
-              <p className="font-semibold text-slate-900">Global Linguistic Name Intelligence Database</p>
-              <p className="text-xs text-slate-500 mt-1">Cultural naming research platform for scholars, linguists, and researchers.</p>
+            <div>
+              <div className="text-sm font-bold text-slate-950">Parent-first guidance</div>
+              <p className="mt-1 text-xs leading-relaxed text-slate-600">Practical articles and tools designed for confident family decisions.</p>
             </div>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-[rgba(15,23,42,0.10)] pt-6 text-sm text-slate-500 md:flex-row md:items-center">
-          <div className="flex flex-wrap items-center gap-4">
-            <p>© {currentYear} NameVerse — Cultural Name Knowledge Base. All rights reserved.</p>
-            <Link href="/privacy" className="transition hover:text-slate-900">Privacy Policy</Link>
-            <Link href="/terms" className="transition hover:text-slate-900">Terms of Service</Link>
-            <a href="/sitemap.xml" className="transition hover:text-slate-900">Sitemap</a>
+        <div className="mt-8 flex flex-col gap-3 border-t border-slate-200 pt-6 text-sm text-slate-500 md:flex-row md:items-center md:justify-between">
+          <p>© {currentYear} NameVerse. All rights reserved.</p>
+          <div className="flex flex-wrap gap-4">
+            <Link href="/privacy" className="font-semibold hover:text-blue-700">Privacy</Link>
+            <Link href="/terms" className="font-semibold hover:text-blue-700">Terms</Link>
+            <a href="/sitemap.xml" className="font-semibold hover:text-blue-700">Sitemap</a>
           </div>
         </div>
       </div>

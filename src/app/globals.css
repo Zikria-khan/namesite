@@ -2,32 +2,38 @@
 @import "tw-animate-css";
 
 :root {
-  --nv-canvas: #f7f5f0;
-  --nv-canvas-2: #f1efe8;
-  --nv-ink: #0b1020;
-  --nv-muted: #4b5563;
-  --nv-card: rgba(255, 255, 255, 0.72);
-  --nv-card-strong: rgba(255, 255, 255, 0.92);
-  --nv-border: rgba(15, 23, 42, 0.14);
-  --nv-shadow: rgba(2, 6, 23, 0.18);
-  --nv-accent: #0ea5a4;
-  --nv-accent-2: #4f46e5;
-  --nv-accent-3: #f59e0b;
+  --nv-canvas: #F8FAFC;
+  --nv-canvas-2: #EFF6FF;
+  --nv-ink: #0F172A;
+  --nv-muted: #64748B;
+  --nv-card: rgba(255, 255, 255, 0.86);
+  --nv-card-strong: rgba(255, 255, 255, 0.96);
+  --nv-border: #E2E8F0;
+  --nv-shadow: rgba(15, 23, 42, 0.12);
+  --nv-accent: #0EA5E9;
+  --nv-accent-2: #2563EB;
+  --nv-accent-3: #3B82F6;
+  --nv-success: #10B981;
+  --nv-warning: #F59E0B;
+  --nv-error: #EF4444;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --nv-canvas: #070914;
-    --nv-canvas-2: #0a0f23;
-    --nv-ink: #eef2ff;
-    --nv-muted: rgba(226, 232, 240, 0.72);
-    --nv-card: rgba(12, 18, 39, 0.72);
-    --nv-card-strong: rgba(12, 18, 39, 0.92);
-    --nv-border: rgba(226, 232, 240, 0.12);
-    --nv-shadow: rgba(2, 6, 23, 0.52);
-    --nv-accent: #2dd4bf;
-    --nv-accent-2: #818cf8;
-    --nv-accent-3: #fbbf24;
+    --nv-canvas: #0F172A;
+    --nv-canvas-2: #1E293B;
+    --nv-ink: #F8FAFC;
+    --nv-muted: #CBD5E1;
+    --nv-card: rgba(15, 23, 42, 0.84);
+    --nv-card-strong: rgba(15, 23, 42, 0.96);
+    --nv-border: rgba(148, 163, 184, 0.22);
+    --nv-shadow: rgba(0, 0, 0, 0.42);
+    --nv-accent: #38BDF8;
+    --nv-accent-2: #3B82F6;
+    --nv-accent-3: #60A5FA;
+    --nv-success: #34D399;
+    --nv-warning: #FBBF24;
+    --nv-error: #F87171;
   }
 }
 

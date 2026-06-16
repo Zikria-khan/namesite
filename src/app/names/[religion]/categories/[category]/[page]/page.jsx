@@ -6,7 +6,6 @@ import { Sparkles, Moon, ChevronLeft, ChevronRight, Search, Grid3X3, BookOpen } 
 import FavoriteButton from '@/components/FavoriteButton';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 import BlogSection from '@/components/Blog/BlogSection';
-import AdBanner from '@/components/Ads/AdBanner';
 
 const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 const STATIC_CATEGORIES = ['modern', 'traditional', 'nature', 'religious', 'classical', 'unique'];
@@ -421,7 +420,6 @@ export default async function CategoryNamesPage({ params }) {
           )}
         </div>
 
-        <AdBanner />
       </section>
 
       {/* Rich Content Section - Category Specific */}

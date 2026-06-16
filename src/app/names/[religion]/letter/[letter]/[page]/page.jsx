@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Script from 'next/script';
 import FavoriteButton from '@/components/FavoriteButton';
 import BlogSection from '@/components/Blog/BlogSection';
-import AdBanner from '@/components/Ads/AdBanner';
 
 const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz#'.split('');
@@ -646,7 +645,6 @@ export default async function LetterNamesPage({ params }) {
         )}
       </section>
 
-        <AdBanner />
 
       {/* FAQ Section */}
       <FAQSection 

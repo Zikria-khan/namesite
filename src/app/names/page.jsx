@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import FAQAccordion from '@/components/names/FAQAccordion'
-import AdBanner from '@/components/Ads/AdBanner'
 import { getSiteUrl } from '@/lib/seo/site'
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers'
 
@@ -368,7 +367,6 @@ export default function Page() {
         </div>
       </section>
 
-      <AdBanner />
 
       {/* ── FAQ Section ── */}
       <section className="max-w-3xl mx-auto px-4 mb-20">

@@ -1,72 +1,143 @@
-import Link from 'next/link';
-import { BookOpen, Heart, Clock, ArrowRight, Calendar, Award, TrendingUp, User } from 'lucide-react';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import Link from 'next/link';
+import {
+  ArrowRight,
+  BookOpen,
+  Calendar,
+  CheckCircle2,
+  Clock,
+  Eye,
+  Globe,
+  Hash,
+  Library,
+  Search,
+  Sparkles,
+  TrendingUp,
+  User,
+} from 'lucide-react';
 import StructuredData from '@/components/SEO/StructuredData';
-import BlogImageWithFallback from '@/components/Blog/BlogImageWithFallback';
+import NewsletterSignup from '@/components/Blog/NewsletterSignup';
+import BlogCard, { BlogFeedItem, formatViews, getEstimatedViews } from '@/components/Blog/BlogCard';
+import BlogSidebar, { BlogMiniCardStack } from '@/components/Blog/BlogSidebar';
+import { BlogVisual } from '@/components/Blog/BlogVisual';
 import { getSiteUrl } from '@/lib/seo/site';
-import SitePage from '@/components/Layout/SitePage';
 
-// ISR with 90-day cache for blog index — keep content stable
-export const revalidate = 7776000; // 90 days
+export const revalidate = 7776000;
 
-const blogPostsData = JSON.parse(
-  readFileSync(join(process.cwd(), 'public', 'data', 'blog-posts.json'), 'utf8')
-);
+const blogPostsData = JSON.parse(readFileSync(join(process.cwd(), 'public', 'data', 'blog-posts.json'), 'utf8'));
+const sortedPosts = [...blogPostsData].sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+const featuredPosts = blogPostsData.filter((post) => post.featured);
+const latestPosts = sortedPosts.slice(0, 6);
+const trendingPosts = sortedPosts.slice(0, 6);
+const popularGuides = blogPostsData.filter((post) => post.category.includes('Guides') || post.tags?.some((tag) => tag.toLowerCase().includes('guide'))).slice(0, 4);
+const editorsPicks = [...featuredPosts, ...sortedPosts.filter((post) => !post.featured)].slice(0, 4);
 
 const blogFaq = [
-  { question: 'How do I choose the perfect baby name?', answer: 'Choose a baby name by balancing meaning, cultural relevance, pronunciation, and family tradition. Our guides help you compare Islamic, Christian, Hindu, and global name choices with trusted origin notes.' },
-  { question: 'What are the most popular Islamic baby names?', answer: 'The most popular Islamic baby names include Muhammad, Ali, Yusuf, Aisha, Fatima, Zainab and Maryam — names with Quranic meaning and modern appeal.' },
-  { question: 'What baby names are trending in 2026?', answer: 'Trending baby names for 2026 include names with spiritual meaning, short modern forms, and cross-cultural appeal such as Rayan, Noor, Elias, Leila, Vihaan, and Zara.' },
-  { question: 'How important is name meaning?', answer: 'Name meaning is very important for cultural identity and long-term satisfaction; choose a name with a positive meaning that reflects your family values and heritage.' }
+  { question: 'How do I choose the perfect baby name?', answer: 'Choose a baby name by balancing meaning, cultural relevance, pronunciation, family tradition and long-term fit. NameVerse guides help you compare Islamic, Christian, Hindu and global name choices with trusted origin notes.' },
+  { question: 'What are the most popular Islamic baby names?', answer: 'Popular Islamic baby names include Muhammad, Ali, Yusuf, Aisha, Fatima, Zainab and Maryam — names with Quranic meaning, strong heritage and modern appeal.' },
+  { question: 'What baby names are trending in 2026?', answer: 'Trending baby names for 2026 include names with spiritual meaning, short modern forms and cross-cultural appeal such as Rayan, Noor, Elias, Leila, Vihaan and Zara.' },
+  { question: 'How important is name meaning?', answer: 'Name meaning is important for cultural identity and long-term satisfaction. Choose a name with a positive meaning that reflects your family values, heritage and pronunciation needs.' }
+];
+
+const categoryCards = [
+  { label: 'Islamic Names', href: '/names/religion/islamic/1', description: 'Quranic, Arabic and Urdu name meanings.', meta: '25K+ names', icon: BookOpen },
+  { label: 'Christian Names', href: '/names/religion/christian/1', description: 'Biblical, Hebrew, Greek and modern names.', meta: '15K+ names', icon: Library },
+  { label: 'Hindu Names', href: '/names/religion/hindu/1', description: 'Sanskrit, Vedic and regional traditions.', meta: '20K+ names', icon: Sparkles },
+  { label: 'Arabic Names', href: '/names/islamic/origin/arabic/1', description: 'Classical roots, pronunciation and heritage.', meta: 'Origin hub', icon: Globe },
+  { label: 'Urdu Names', href: '/names/islamic/origin/urdu/1', description: 'South Asian Muslim names with poetic roots.', meta: 'Origin hub', icon: Hash },
+  { label: 'Baby Names', href: '/search?q=baby%20names', description: 'Modern, classic, unique and trending choices.', meta: 'Search hub', icon: Search },
+  { label: 'Unique Names', href: '/unique-names', description: 'Distinctive names with meaning and context.', meta: 'Discovery', icon: Sparkles },
+  { label: 'Surname Guides', href: '/blog', description: 'Naming frameworks and editorial guidance.', meta: 'Guides', icon: BookOpen }
 ];
 
 const blogCollection = {
-  name: 'NameVerse Blog: Baby Names & Guides',
-  description: 'Explore expert baby naming advice, trends, and naming traditions for Islamic, Christian, Hindu, and global names.',
+  name: 'NameVerse Blog: Expert Baby Names & Naming Guides',
+  description: 'Expert guides, naming traditions, baby name trends, cultural origins and decision frameworks for modern parents.',
   url: `${getSiteUrl()}/blog`,
-  items: [
-    { name: 'Islamic Boy Names', path: 'islamic/boy-names' },
-    { name: 'Islamic Girl Names', path: 'islamic/girl-names' },
-    { name: 'Christian Boy Names', path: 'christian/boy-names' },
-    { name: 'Christian Girl Names', path: 'christian/girl-names' },
-    { name: 'Hindu Boy Names', path: 'hindu/boy-names' },
-    { name: 'Hindu Girl Names', path: 'hindu/girl-names' }
-  ]
+  items: categoryCards.slice(0, 6).map((item) => ({ name: item.label, path: item.href.replace(/^\//, '') }))
 };
 
+function formatDate(date) {
+  return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function SectionHeading({ eyebrow, title, description, action }) {
+  return (
+    <div className="mb-8 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+      <div className="max-w-3xl">
+        <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-slate-500 shadow-sm">
+          <Sparkles className="h-3.5 w-3.5 text-blue-700" />
+          {eyebrow}
+        </div>
+        <h2 className="nv-display mt-5 text-3xl font-semibold leading-tight text-slate-950 sm:text-4xl md:text-5xl">
+          {title}
+        </h2>
+        {description && <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">{description}</p>}
+      </div>
+      {action}
+    </div>
+  );
+}
+
+function HeroArticleCard({ post, tone = 'featured' }) {
+  const views = formatViews(getEstimatedViews(post));
+  const isFeatured = tone === 'featured';
+
+  return (
+    <Link href={`/blog/${post.id}`} className={`group overflow-hidden rounded-[2rem] border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${isFeatured ? 'border-blue-100 lg:col-span-2' : 'border-slate-200'}`}>
+      <BlogVisual title={post.title} category={post.category} compact={!isFeatured} />
+      <div className="p-5">
+        <div className="mb-4 flex flex-wrap items-center gap-2 text-xs font-bold text-slate-500">
+          <span className="rounded-full bg-blue-50 px-3 py-1 text-blue-700">{post.category}</span>
+          <span className="inline-flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{formatDate(post.publishDate)}</span>
+          <span className="inline-flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{post.readTime}</span>
+          <span className="inline-flex items-center gap-1"><Eye className="h-3.5 w-3.5" />{views} views</span>
+        </div>
+        <h3 className={`font-bold leading-tight text-slate-950 group-hover:text-blue-700 ${isFeatured ? 'nv-display text-3xl sm:text-4xl' : 'text-xl'}`}>
+          {post.title}
+        </h3>
+        <p className="mt-3 text-sm leading-relaxed text-slate-600 line-clamp-3">{post.excerpt}</p>
+        <div className="mt-5 flex items-center justify-between gap-3 text-sm font-bold text-blue-700">
+          <span>Read guide</span>
+          <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export const metadata = {
-  title: 'Baby Names Blog & Expert Guides | Naming Tips, Trends & Advice | NameVerse',
-  description: 'Expert guides and articles on choosing the perfect baby name. Learn about Islamic, Christian, and Hindu naming traditions, 2026 baby name trends, and expert naming tips.',
+  title: 'Expert Name Meanings, Origins & Naming Guides | NameVerse Blog',
+  description: 'Read expert baby naming guides, name meanings, cultural origins, 2026 trends and decision frameworks for Islamic, Christian, Hindu and global names.',
   keywords: 'baby names blog, naming guides, baby name trends 2026, Islamic naming guide, Christian naming guide, Hindu naming guide, how to choose baby name, baby naming tips',
-  alternates: {
-    canonical: `${getSiteUrl()}/blog`,
-  },
+  alternates: { canonical: `${getSiteUrl()}/blog` },
   robots: { index: true, follow: true },
   openGraph: {
-    title: 'Baby Names Blog & Expert Guides | Naming Tips, Trends & Advice | NameVerse',
-    description: 'Expert guides and articles on choosing the perfect baby name. Learn about Islamic, Christian, and Hindu naming traditions, 2026 baby name trends, and expert naming tips.',
+    title: 'Expert Name Meanings, Origins & Naming Guides | NameVerse Blog',
+    description: 'Read expert baby naming guides, name meanings, cultural origins, 2026 trends and decision frameworks for Islamic, Christian, Hindu and global names.',
     type: 'website',
     url: `${getSiteUrl()}/blog`,
-    images: [`${getSiteUrl()}/api/og?section=blog&page=1`],
+    images: [{ url: `${getSiteUrl()}/api/og?section=blog&page=1`, width: 1200, height: 630, alt: 'NameVerse Blog' }]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Baby Names Blog & Expert Guides | Naming Tips, Trends & Advice | NameVerse',
-    description: 'Expert guides and articles on choosing the perfect baby name. Learn about Islamic, Christian, and Hindu naming traditions, 2026 baby name trends, and expert naming tips.',
-    images: [`${getSiteUrl()}/api/og?section=blog&page=1`],
-  },
+    title: 'Expert Name Meanings, Origins & Naming Guides | NameVerse Blog',
+    description: 'Read expert baby naming guides, name meanings, cultural origins, 2026 trends and decision frameworks for Islamic, Christian, Hindu and global names.',
+    images: [`${getSiteUrl()}/api/og?section=blog&page=1`]
+  }
 };
 
 export default function BlogPage() {
-  const featuredPosts = blogPostsData.filter(p => p.featured);
-  const recentPosts = blogPostsData.filter(p => !p.featured);
+  const featuredPost = featuredPosts[0] || sortedPosts[0];
+  const trendingPost = sortedPosts[1] || featuredPost;
+  const latestPost = sortedPosts[0] || featuredPost;
 
   return (
-    <SitePage className="bg-white" containerClassName="max-w-none px-0 py-0">
+    <main className="min-h-screen bg-[#F8FAFC] font-sans text-slate-950">
       <StructuredData
-        organization={true}
-        website={true}
+        organization
+        website
         breadcrumbs={[
           { name: 'Home', url: getSiteUrl() },
           { name: 'Blog', url: `${getSiteUrl()}/blog` }
@@ -75,260 +146,159 @@ export default function BlogPage() {
         faq={blogFaq}
       />
 
-       {/* Hero Section - Clean & Professional */}
-       <section className="py-16 px-4 bg-white border-b border-gray-200">
-         <div className="max-w-6xl mx-auto">
-           <nav className="mb-6 text-sm text-gray-500">
-             <Link href="/" className="hover:text-gray-700">Home</Link>
-             <span className="mx-2">/</span>
-             <span className="text-gray-900 font-medium">Blog</span>
-           </nav>
-           
-           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-             Baby Names Blog & Expert Guides
-           </h1>
-           <p className="text-xl text-gray-600 max-w-2xl">
-             Expert advice, naming traditions, cultural insights, and the latest trends 
-             to help you choose the perfect name for your baby.
-           </p>
-         </div>
-       </section>
-       
-      {/* Blog internal links */}
-      <section className="py-10 px-4 bg-gradient-to-r from-indigo-50 via-white to-cyan-50 border-b border-gray-200">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">Explore name collections from every tradition</h2>
-          <p className="text-gray-600 mb-6 max-w-3xl">Jump directly to curated baby name collections for Islamic, Christian, Hindu and global naming guidance. These links help readers and search engines discover key category pages quickly.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Link href="/islamic/boy-names" className="block rounded-2xl border border-indigo-200 bg-white p-5 hover:border-indigo-300 hover:shadow-sm transition">
-              <h3 className="font-semibold text-gray-900">Islamic Boy Names</h3>
-              <p className="mt-2 text-sm text-gray-600">Explore Quranic, Arabic, and modern Muslim boy names with meaning and pronunciation.</p>
-            </Link>
-            <Link href="/islamic/girl-names" className="block rounded-2xl border border-indigo-200 bg-white p-5 hover:border-indigo-300 hover:shadow-sm transition">
-              <h3 className="font-semibold text-gray-900">Islamic Girl Names</h3>
-              <p className="mt-2 text-sm text-gray-600">Discover meaningful Islamic girl names with cultural context and modern appeal.</p>
-            </Link>
-            <Link href="/christian/boy-names" className="block rounded-2xl border border-sky-200 bg-white p-5 hover:border-sky-300 hover:shadow-sm transition">
-              <h3 className="font-semibold text-gray-900">Christian Boy Names</h3>
-              <p className="mt-2 text-sm text-gray-600">Browse biblical and contemporary Christian boy names with strong spiritual meaning.</p>
-            </Link>
-            <Link href="/christian/girl-names" className="block rounded-2xl border border-sky-200 bg-white p-5 hover:border-sky-300 hover:shadow-sm transition">
-              <h3 className="font-semibold text-gray-900">Christian Girl Names</h3>
-              <p className="mt-2 text-sm text-gray-600">Find popular and timeless Christian girl names that honor faith and family heritage.</p>
-            </Link>
-            <Link href="/hindu/boy-names" className="block rounded-2xl border border-amber-200 bg-white p-5 hover:border-amber-300 hover:shadow-sm transition">
-              <h3 className="font-semibold text-gray-900">Hindu Boy Names</h3>
-              <p className="mt-2 text-sm text-gray-600">Explore Sanskrit, Vedic, and devotional boy names for modern Hindu families.</p>
-            </Link>
-            <Link href="/hindu/girl-names" className="block rounded-2xl border border-amber-200 bg-white p-5 hover:border-amber-300 hover:shadow-sm transition">
-              <h3 className="font-semibold text-gray-900">Hindu Girl Names</h3>
-              <p className="mt-2 text-sm text-gray-600">Discover beautiful Hindu girl names with meanings rooted in myth, nature, and virtue.</p>
-            </Link>
-            <Link href="/names/religion/islamic/1" className="block rounded-2xl border border-gray-200 bg-white p-5 hover:border-gray-300 hover:shadow-sm transition">
-              <h3 className="font-semibold text-gray-900">All Islamic Names</h3>
-              <p className="mt-2 text-sm text-gray-600">Browse the complete Islamic names collection, all paginated and fully searchable.</p>
-            </Link>
-            <Link href="/names/religion/christian/1" className="block rounded-2xl border border-gray-200 bg-white p-5 hover:border-gray-300 hover:shadow-sm transition">
-              <h3 className="font-semibold text-gray-900">All Christian Names</h3>
-              <p className="mt-2 text-sm text-gray-600">Access the full Christian names directory with meanings, origins, and filters.</p>
-            </Link>
-            <Link href="/names/religion/hindu/1" className="block rounded-2xl border border-gray-200 bg-white p-5 hover:border-gray-300 hover:shadow-sm transition">
-              <h3 className="font-semibold text-gray-900">All Hindu Names</h3>
-              <p className="mt-2 text-sm text-gray-600">Explore the full Hindu names collection, searchable by origin, gender, and letter.</p>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Articles */}
-      <section className="py-12 px-4 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Featured Guides</h2>
-          
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {featuredPosts.map((post) => {
-              const imageUrl = post.featuredImage ? (post.featuredImage.startsWith('http') ? post.featuredImage : `${getSiteUrl()}${post.featuredImage}`) : `${getSiteUrl()}/api/og?title=${encodeURIComponent(post.title)}`;
-              return (
-                <article
-                  key={post.id}
-                  className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-200 overflow-hidden"
-                >
-                  <div className="relative h-48 overflow-hidden">
-                    <BlogImageWithFallback
-                      src={imageUrl}
-                      alt={post.title}
-                      fill
-                      className="object-cover transition-transform duration-300 hover:scale-105"
-                      containerClassName="h-full w-full"
-                    >
-                      <div className="absolute top-3 left-3 flex gap-2">
-                        <span className="bg-blue-100 text-blue-700 px-2.5 py-1 rounded text-xs font-medium">
-                          {post.category}
-                        </span>
-                        <span className="bg-amber-100 text-amber-700 px-2.5 py-1 rounded text-xs font-medium">
-                          Featured
-                        </span>
-                      </div>
-                    </BlogImageWithFallback>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                    
-                    <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                      <span>{post.author}</span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {post.readTime}
-                      </span>
-                    </div>
-                    
-                    <Link 
-                      href={`/blog/${post.id}`}
-                      className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium text-sm"
-                    >
-                      Read article
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </div>
-                </article>
-              );
-            })}
+      <section className="overflow-hidden border-b border-slate-200 bg-white">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-16">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-bold text-blue-700">
+              <CheckCircle2 className="h-4 w-4" />
+              Expert-reviewed naming guidance
+            </div>
+            <h1 className="nv-display mt-6 max-w-4xl text-4xl font-semibold leading-tight tracking-tight text-slate-950 sm:text-5xl lg:text-7xl">
+              Expert Name Meanings, Origins & Naming Guides
+            </h1>
+            <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+              Professional guides for parents who want names with meaning, cultural context, strong pronunciation and long-term confidence.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link href="/search" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-700">
+                Search names
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href="#latest-articles" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:bg-blue-50">
+                Browse latest guides
+              </Link>
+            </div>
+            <div className="mt-8 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                <div className="text-2xl font-bold text-slate-950">{blogPostsData.length}+</div>
+                <div className="mt-1 text-xs font-semibold text-slate-500">Expert guides</div>
+              </div>
+              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                <div className="text-2xl font-bold text-slate-950">8</div>
+                <div className="mt-1 text-xs font-semibold text-slate-500">Core categories</div>
+              </div>
+              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                <div className="text-2xl font-bold text-slate-950">2026</div>
+                <div className="mt-1 text-xs font-semibold text-slate-500">Trend coverage</div>
+              </div>
             </div>
           </div>
-        </section>
 
-      {/* Browse Names Section */}
-      <section className="py-12 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Browse Names by Category</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Link 
-              href="/islamic/boy-names"
-              className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
-            >
-              <h3 className="font-semibold text-gray-900 mb-1">Islamic Boy Names</h3>
-              <p className="text-sm text-gray-500">150+ names</p>
-            </Link>
-            <Link 
-              href="/islamic/girl-names"
-              className="p-4 border border-gray-200 rounded-lg hover:border-pink-300 hover:bg-pink-50 transition-colors"
-            >
-              <h3 className="font-semibold text-gray-900 mb-1">Islamic Girl Names</h3>
-              <p className="text-sm text-gray-500">200+ names</p>
-            </Link>
-            <Link 
-              href="/christian/boy-names"
-              className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
-            >
-              <h3 className="font-semibold text-gray-900 mb-1">Christian Boy Names</h3>
-              <p className="text-sm text-gray-500">100+ names</p>
-            </Link>
-            <Link 
-              href="/christian/girl-names"
-              className="p-4 border border-gray-200 rounded-lg hover:border-purple-300 hover:bg-purple-50 transition-colors"
-            >
-              <h3 className="font-semibold text-gray-900 mb-1">Christian Girl Names</h3>
-              <p className="text-sm text-gray-500">100+ names</p>
-            </Link>
+          <div className="grid gap-4 lg:grid-cols-2">
+            {featuredPost && <HeroArticleCard post={featuredPost} tone="featured" />}
+            {trendingPost && <HeroArticleCard post={trendingPost} tone="trending" />}
+            {latestPost && <HeroArticleCard post={latestPost} tone="latest" />}
           </div>
         </div>
       </section>
 
-      {/* More Articles */}
-      <section className="py-12 px-4 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">More Articles</h2>
-          
-           <div className="space-y-4">
-            {recentPosts.map((post) => {
-              const imageUrl = post.featuredImage ? (post.featuredImage.startsWith('http') ? post.featuredImage : `${getSiteUrl()}${post.featuredImage}`) : `${getSiteUrl()}/api/og?title=${encodeURIComponent(post.title)}`;
+      <section className="border-b border-slate-200 bg-white py-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-slate-500">Featured categories</p>
+              <h2 className="nv-display mt-2 text-3xl font-semibold text-slate-950">Browse by naming intent</h2>
+            </div>
+            <Link href="/names" className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 sm:inline-flex">
+              Full directory
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {categoryCards.map((category) => {
+              const Icon = category.icon;
               return (
-                <article
-                  key={post.id}
-                  className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow"
-                >
-                  <div className="flex flex-col md:flex-row md:items-center gap-4">
-                    <div className="relative w-full md:w-48 h-32 flex-shrink-0 overflow-hidden rounded-lg">
-                      <BlogImageWithFallback
-                        src={imageUrl}
-                        alt={post.title}
-                        fill
-                        className="object-cover"
-                        containerClassName="w-full h-full"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <span className="bg-gray-100 text-gray-700 px-2.5 py-1 rounded text-xs font-medium">
-                        {post.category}
-                      </span>
-                      <h3 className="text-lg font-bold text-gray-900 mt-2 mb-2">
-                        {post.title}
-                      </h3>
-                      <p className="text-gray-600 text-sm mb-3">
-                        {post.excerpt}
-                      </p>
-                      <div className="flex items-center gap-4 text-xs text-gray-500">
-                        <span>By {post.author}</span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {post.readTime}
-                        </span>
-                      </div>
-                    </div>
-                    <Link 
-                      href={`/blog/${post.id}`}
-                      className="flex-shrink-0 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
-                      aria-label={`Read more about ${post.title}`}
-                    >
-                      Read more
-                    </Link>
+                <Link key={category.href} href={category.href} className="group rounded-[1.75rem] border border-slate-200 bg-slate-50 p-5 transition hover:-translate-y-1 hover:border-blue-200 hover:bg-white hover:shadow-lg">
+                  <div className="mb-5 grid h-11 w-11 place-items-center rounded-2xl bg-white text-blue-700 shadow-sm">
+                    <Icon className="h-5 w-5" />
                   </div>
-                </article>
+                  <h3 className="text-lg font-bold text-slate-950 group-hover:text-blue-700">{category.label}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">{category.description}</p>
+                  <div className="mt-4 text-xs font-bold text-blue-700">{category.meta}</div>
+                </Link>
               );
             })}
           </div>
         </div>
-       </section>
- 
-        {/* FAQ Section */}
-        <section className="py-16 px-4 bg-slate-50">
-         <div className="max-w-6xl mx-auto">
-           <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-             {blogFaq.map((item, index) => (
-               <div key={index} className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
-                 <h3 className="text-lg font-semibold text-gray-900 mb-3">{item.question}</h3>
-                 <p className="text-gray-600 leading-relaxed">{item.answer}</p>
-               </div>
-             ))}
-           </div>
+      </section>
+
+      <section className="bg-slate-50 py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow="Editor's Picks"
+            title="Guides selected for deeper research."
+            description="High-signal articles for parents comparing faith traditions, origins, trends and naming frameworks."
+            action={
+              <Link href="/blog" className="inline-flex w-fit items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:bg-blue-50">
+                View all picks
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            }
+          />
+          <div className="grid gap-5 lg:grid-cols-2">
+            {editorsPicks.slice(0, 4).map((post) => (
+              <BlogCard key={post.id} post={post} variant="hero" />
+            ))}
           </div>
-        </section>
-  
- 
-       {/* CTA Section */}
-       <section className="py-16 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Ready to Find the Perfect Name?
-          </h2>
-          <p className="text-gray-600 mb-8">
-            Explore our database of 60,000+ baby names with detailed meanings and origins.
-          </p>
-          <Link
-            href="/names/religion/islamic/1"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Heart className="w-5 h-5" />
-            Browse All Names
-          </Link>
         </div>
       </section>
-    </SitePage>
+
+      <section className="border-y border-slate-200 bg-white py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow="Trending Articles"
+            title="What parents are reading now."
+            description="Trending articles include read time, views, published date and category metadata for fast scanning."
+          />
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {trendingPosts.map((post) => (
+              <BlogCard key={post.id} post={post} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="latest-articles" className="bg-slate-50 py-14">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1fr_340px] lg:px-8">
+          <div>
+            <SectionHeading
+              eyebrow="Latest Articles"
+              title="Fresh naming research and editorial guidance."
+              description="A professional article feed designed for fast scanning, strong internal links and long-form reading."
+            />
+            <div className="space-y-5">
+              {latestPosts.map((post) => (
+                <BlogFeedItem key={post.id} post={post} />
+              ))}
+            </div>
+          </div>
+          <BlogSidebar posts={sortedPosts} />
+        </div>
+      </section>
+
+      <section className="bg-white py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow="Popular Guides"
+            title="Evergreen resources for confident decisions."
+            description="Core guides that support parent research, internal linking and long-tail SEO discovery."
+          />
+          <BlogMiniCardStack posts={popularGuides.length ? popularGuides : sortedPosts} />
+        </div>
+      </section>
+
+      <section className="border-y border-slate-200 bg-slate-950 py-14 text-white">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <div className="mx-auto mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-white/10">
+            <Sparkles className="h-6 w-6 text-blue-300" />
+          </div>
+          <h2 className="nv-display text-3xl font-semibold leading-tight sm:text-5xl">Get the NameVerse naming brief.</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-300 sm:text-base">
+            Receive practical naming frameworks, trend summaries and cultural origin notes without visual clutter or hype.
+          </p>
+          <NewsletterSignup />
+        </div>
+      </section>
+    </main>
   );
 }

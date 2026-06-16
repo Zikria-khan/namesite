@@ -4,7 +4,6 @@ import { TrendingUp, Sparkles, Zap, Star, Flame, Rocket, ChevronRight } from 'lu
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
 import SitePage from '@/components/Layout/SitePage';
-import AdBanner from '@/components/Ads/AdBanner';
 
 // ISR: 30-day cache — static content
 export const revalidate = 2592000; // 30 days
@@ -207,7 +206,6 @@ export default async function TrendingNamesPage() {
           </div>
         </section>
 
-        <AdBanner />
 
         {/* Social Media Analysis */}
         <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-fuchsia-50 to-purple-50/30">

@@ -4,7 +4,6 @@ import { Heart, Shield, Brain, Sparkles, Moon, ChevronRight, Leaf, Star } from '
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
 import SitePage from '@/components/Layout/SitePage';
-import AdBanner from '@/components/Ads/AdBanner';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 
 // ISR: 30-day cache — static content
@@ -426,7 +425,6 @@ export default async function NamesByMeaningPage() {
           </div>
         </section>
 
-        <AdBanner />
 
         {/* FAQ Section with Schema */}
         <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-rose-50 to-pink-50/30">

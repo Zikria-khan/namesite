@@ -4,7 +4,6 @@ import FAQ from './FAQ';
 import RelatedNames from './RelatedNames';
 import SitePage from '@/components/Layout/SitePage';
 import BlogSection from '@/components/Blog/BlogSection';
-import AdBanner from '@/components/Ads/AdBanner';
 import Link from 'next/link';
 import { ArrowRight, Search, Grid3X3, Sparkles, TrendingUp } from 'lucide-react';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
@@ -94,7 +93,6 @@ export default function CulturalNameAnalysisCard({ data, faqData = [], pageUrl, 
         <RelatedNames data={data} />
       </div>
 
-      <AdBanner />
 
       <div className="nv-stack">
         <section className="nv-card-solid">

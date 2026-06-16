@@ -642,4 +642,105 @@ Current: `/names-by-meaning` is a flat static page with no dynamic expansion.
 
 ---
 
+# SECTION 14: HOMEPAGE REDESIGN SEO REPORT
+
+## 14.1 Objective
+
+Redesign the NameVerse homepage to compete with leading baby-name destinations while preserving NameVerse's cultural-name positioning. The new homepage prioritizes fast search, topical authority hubs, trending discovery, E-E-A-T signals, internal links, FAQ schema and metadata built for parent search intent.
+
+## 14.2 Audit Summary
+
+| Area | Previous State | Redesigned State |
+|---|---|---|
+| Homepage positioning | Academic onomastics language | Parent-friendly baby names with meanings, origins and cultural roots |
+| Primary action | Generic hero plus older sections | Search-first hero with instant suggestions and popular intents |
+| Topical structure | Broad content blocks | Religion, origin, theme, gender, meaning and trend hubs |
+| Schema | Basic site/org/FAQ | WebSite, Organization, WebPage, FAQPage, BreadcrumbList and ItemList |
+| Internal linking | Limited homepage pathways | 30+ curated links to search, hubs, trends, meaning index and articles |
+| E-E-A-T | General trust claims | Verified meanings, multi-tradition coverage and parent-first UX |
+| Crawlability | Static section links only | Hubs, chips, trending cards, FAQ and article links all crawlable |
+
+## 14.3 Competitor Comparison
+
+| Competitor | Observed Strength | NameVerse Response |
+|---|---|---|
+| Namylab | Search-first homepage, tools, trending and top lists | New hero search, trending cards, meaning chips and browse hubs |
+| Nameberry | Editorial authority, navigation depth and expert content | Metadata, article section, FAQ and topical authority hubs |
+| BehindTheName | Browse, A-Z, advanced search and tools | Religion/origin hubs, search intent chips and directory CTA |
+| BabyNames.com | Meaning search, gender lists and origin navigation | Meaning-led section, boy/girl chips and origin cards |
+| MomJunction | Large multilingual and religion coverage | Islamic, Hindu, Christian, Arabic, Urdu, Persian and Sanskrit hubs |
+| The Bump | Category-rich browsing by style and season | Trend, meaning, origin and curated popular-search pathways |
+| Pampers | Parent trust and practical guidance | E-E-A-T section, FAQ and parent-first copy |
+
+## 14.4 Keyword and Autocomplete Gap
+
+Autocomplete and PAA-style intent clusters used for the redesign:
+
+- Core: `baby names`, `baby names with meanings`, `baby name meanings`
+- Religion: `islamic names`, `muslim names`, `hindu names`, `christian names`
+- Origin: `arabic names`, `urdu names`, `persian names`, `sanskrit names`
+- Gender: `boy names`, `girl names`, `unisex names`
+- Meaning: `names that mean light`, `names that mean love`, `names that mean strength`
+- Discovery: `unique baby names`, `modern baby names`, `popular baby names`, `trending baby names`
+
+Homepage sections now map these clusters to crawlable internal links instead of relying only on client-side suggestions.
+
+## 14.5 Wireframe
+
+1. Premium hero: brand label, H1, search-first interface, trust cards, stats.
+2. Sponsored ad placement after hero to preserve above-the-fold content quality.
+3. Popular search intent chips for fast long-tail discovery.
+4. Topical authority hub grid for religion, origin and theme pages.
+5. Trending names grid with Islamic, Christian and Hindu examples.
+6. E-E-A-T trust section with verified meanings, coverage and free tools.
+7. Meaning-led discovery block for semantic search terms.
+8. FAQ section with visible questions and matching FAQPage schema.
+9. Latest articles section for editorial authority.
+10. Final CTA to search and browse Islamic names.
+
+## 14.6 Component Structure
+
+- `src/app/page.js`: homepage metadata, JSON-LD, latest article loading.
+- `src/components/HomePage/Homepage.jsx`: redesigned premium homepage shell.
+- `src/components/HomePage/HomePageSearch.jsx`: search-first UX with local JSON suggestions.
+- `src/components/SEO/StructuredData.jsx`: global SearchAction target aligned with `/search?q=...`.
+- `src/components/Ads/AdBanner.jsx`: delayed ad render after hero.
+- `src/components/HomePage/LatestArticles.jsx`: article grid for authority content.
+
+## 14.7 Internal Linking Strategy
+
+The homepage now links to:
+
+- Search entry points: `/search`, `/search?q=...`
+- Religion hubs: `/names/religion/islamic/1`, `/names/religion/hindu/1`, `/names/religion/christian/1`
+- Origin hubs: Arabic, Urdu, Persian and Sanskrit origin pages
+- Trending: `/trending-names`
+- Unique names: `/unique-names`
+- Popular: `/popular-by-state`
+- Meaning index: `/names-by-meaning`
+- Origin explorer: `/name-meanings`
+- Article hub: `/blog`
+- Name detail pages for curated trending names
+
+## 14.8 E-E-A-T Improvements
+
+- Clear trust language around verified meanings and cultural context.
+- Explicit coverage of Islamic, Hindu, Christian and global naming traditions.
+- FAQ content answers parent decision questions.
+- Article section surfaces expert guidance.
+- Structured data identifies organization, website, page, FAQ and trending items.
+- Metadata is rewritten for parent-facing search intent while retaining NameVerse brand authority.
+
+## 14.9 Ranking Strategy
+
+1. Target high-volume parent queries with the homepage title and description.
+2. Use internal links to push authority into religion, origin, meaning and trend hubs.
+3. Keep search UX fast by loading local JSON only on focus.
+4. Expand meaning pages over time for light, love, strength, peace, blessing, wisdom and courage.
+5. Add editorial articles that support long-tail queries around 2026 trends, Islamic names, Hindu names, Christian names, unique names and modern names.
+6. Monitor homepage CTR after metadata refresh and iterate title/description based on GSC impressions.
+7. Keep FAQ visible and schema-matched to improve eligibility for answer-style SERP features.
+
+---
+
 [← Back to main report](SEO-AUDIT-REPORT-V2.md)
