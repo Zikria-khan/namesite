@@ -159,6 +159,13 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
         />
 
+        {/* Popunder Ad Script */}
+        <Script
+          id="popunder-ad"
+          src="https://revolthem.com/15/fc/e7/15fce756a2be02e450ad8ee3543b0575.js"
+          strategy="afterInteractive"
+        />
+
         {/* Enhanced crawl hints */}
         <GoogleBotMeta siteUrl={siteUrl} />
 
