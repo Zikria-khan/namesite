@@ -80,6 +80,30 @@ export default function FixedBottomBanner() {
     if (containerRef.current) {
       containerRef.current.appendChild(wrapper);
     }
+
+    // Extra ad container
+    const extraWrapper = document.createElement('div');
+    extraWrapper.id = `extra-bottom-ad`;
+    extraWrapper.style.width = '320px';
+    extraWrapper.style.overflow = 'hidden';
+
+    const extraScript = document.createElement('script');
+    extraScript.async = true;
+    extraScript.setAttribute('data-cfasync', 'false');
+    extraScript.src = 'https://revolthem.com/1606e7870f004d67136f85f2b1698cd3/invoke.js';
+
+    extraScript.onerror = () => {
+      console.warn('Extra bottom ad script failed to load');
+    };
+    extraWrapper.appendChild(extraScript);
+
+    const extraContainer = document.createElement('div');
+    extraContainer.id = 'container-1606e7870f004d67136f85f2b1698cd3';
+    extraWrapper.appendChild(extraContainer);
+
+    if (containerRef.current) {
+      containerRef.current.appendChild(extraWrapper);
+    }
   };
 
   // ⚡ Impression: track when ad becomes visible to user
