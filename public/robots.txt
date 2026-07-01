@@ -1,18 +1,25 @@
+# robots.txt for NameVerse
+# Compliant with Google's robots.txt documentation
+# https://developers.google.com/search/docs/crawling-indexing/robots/intro
+
 User-agent: *
 Allow: /
 
-Sitemap: https://nameverse.vercel.app/sitemap.xml
+# Allow Googlebot access to all rendering resources
+# CSS, JS, and fonts must be accessible for mobile-friendliness evaluation
+Allow: /_next/static/
+Allow: /_next/static/chunks/
+Allow: /_next/static/webpack/
+Allow: /_next/static/css/
+Allow: /_next/static/media/
 
-# Block only truly useless endpoints
-Disallow: /api/
-Disallow: /api/og/
+# Allow OG image generation (needed for social previews)
+Allow: /api/og/
 
-# Block internal build files ONLY (NOT full _next)
-Disallow: /_next/static/webpack/
-Disallow: /_next/static/chunks/
-
-# Keep _next/data ALLOWED (IMPORTANT FOR SEO)
-Allow: /_next/data/
+# Block only sensitive/private API endpoints
+Disallow: /api/admin/
+Disallow: /api/internal/
+Disallow: /api/auth/
 
 # Block admin/system pages
 Disallow: /performance
@@ -23,3 +30,6 @@ Disallow: /*?utm_
 Disallow: /*?ref=
 Disallow: /*?source=
 Disallow: /*?page=
+
+# Sitemap
+Sitemap: https://nameverse.vercel.app/sitemap.xml

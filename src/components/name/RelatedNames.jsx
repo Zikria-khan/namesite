@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { Link as LinkIcon } from 'lucide-react';
-import { createSafeSlug } from '@/lib/utils/createSafeSlug';
+import { createSlug, isValidSlug } from '@/lib/seo/url-builder';
 
 const normalizeLink = (name, religion) => {
   if (!name || typeof name !== 'string') return null;
   const cleaned = name.trim();
   if (cleaned.length < 2) return null;
-  const segment = createSafeSlug(cleaned);
-  if (!segment || segment.length < 2) return null;
+  const segment = createSlug(cleaned);
+  if (!segment || !isValidSlug(segment)) return null;
   if (/^\d+$/.test(segment)) return null;
   const rel = (religion || 'islamic').toLowerCase();
   return `/names/${rel}/${segment}`;
@@ -50,6 +50,7 @@ export default function RelatedNames({ data }) {
             <div className="flex flex-wrap gap-2">
               {similarNames.slice(0, 12).map((name) => {
                 const link = normalizeLink(name, religionKey);
+                // Only render link if slug is valid (prevents broken internal links)
                 if (!link) return null;
                 return (
                   <Link

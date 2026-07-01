@@ -1,3 +1,19 @@
+/**
+ * SITEMAP DATA BUILDER — Enterprise Grade
+ * 
+ * RULES:
+ * 1. NEVER include URLs that return 404
+ * 2. NEVER include redirects
+ * 3. NEVER include pages with noindex
+ * 4. NEVER include duplicate URLs
+ * 5. NEVER include invalid slugs
+ * 6. NEVER include routes that don't exist
+ * 7. Validate every generated URL
+ * 8. Use accurate lastmod values
+ * 9. Limit paginated collections to prevent thin pages
+ * 10. Split sitemap intelligently by type
+ */
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,20 +25,27 @@ const publicDir = path.join(rootDir, 'public');
 const dataDir = path.join(publicDir, 'data');
 const today = new Date().toISOString().split('T')[0];
 const RELIGIONS = ['islamic', 'christian', 'hindu'];
-const RELIGION_LABELS = { islamic: 'Islamic', christian: 'Christian', hindu: 'Hindu' };
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const STATIC_CATEGORIES = ['modern', 'traditional', 'nature', 'religious', 'classical', 'unique'];
 const STATIC_ORIGINS = ['arabic', 'persian', 'turkish', 'indian', 'english', 'other'];
-const STATIC_ROUTES = [
-  '/', '/names', '/search', '/blog', '/about', '/privacy', '/terms', '/languages',
-  '/popularity', '/name-meanings', '/names-by-meaning', '/unique-names',
-  '/trending-names', '/advanced-search', '/my-names', '/popular-by-state',
-  '/viral-names', '/guides/expert-naming-guide', '/top-islamic-names',
-  '/top-christian-names', '/top-hindu-names', '/popular-baby-names',
-  '/names-by-origin', '/names-by-letter'
-];
 const MAX_SITEMAP_URLS = 45000;
+const MAX_COLLECTION_PAGES = 50; // Prevent thin pages beyond page 50
 const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || 'https://name-meaning-site-backend.vercel.app').replace(/\/+$/, '');
+
+// Reserved slugs that should never appear in sitemap
+const RESERVED_SLUGS = new Set([
+  'admin', 'api', 'blog', 'category', 'categories', 'guide', 'guides',
+  'letter', 'letters', 'name', 'names', 'origin', 'origins', 'page',
+  'pages', 'religion', 'religions', 'search', 'tag', 'tags',
+]);
+
+// Only include static routes that have corresponding app routes
+const STATIC_ROUTES = [
+  '/', '/names', '/search', '/blog', '/about', '/privacy', '/terms',
+  '/languages', '/popularity', '/name-meanings', '/names-by-meaning', 
+  '/unique-names', '/trending-names', '/advanced-search', '/my-names',
+  '/guides/expert-naming-guide',
+];
 
 function readJson(file, fallback) {
   try {
@@ -37,20 +60,18 @@ function writeJson(file, data) {
   fs.writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`);
 }
 
-function lastmodFor(file) {
-  try {
-    return new Date(fs.statSync(file).mtimeMs).toISOString().split('T')[0];
-  } catch {
-    return today;
-  }
-}
-
 function cleanText(value = '') {
   return String(value || '').replace(/\s+/g, ' ').trim();
 }
 
+/**
+ * Create a safe lowercase URL slug from any string.
+ * Returns empty string for invalid inputs.
+ */
 function createSlug(input = '') {
-  return cleanText(input)
+  if (!input || typeof input !== 'string') return '';
+  
+  const cleaned = String(input)
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-zA-Z0-9\s-]/g, '')
@@ -59,6 +80,25 @@ function createSlug(input = '') {
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
+
+  // Reject invalid slugs
+  if (cleaned.length < 2) return '';
+  if (/^\d+$/.test(cleaned)) return '';
+  if (RESERVED_SLUGS.has(cleaned)) return '';
+
+  return cleaned;
+}
+
+/**
+ * Validate a slug follows canonical format
+ */
+function isValidSlug(slug) {
+  if (!slug || typeof slug !== 'string') return false;
+  const cleaned = slug.toLowerCase().trim();
+  if (cleaned.length < 2 || cleaned.length > 100) return false;
+  if (/^\d+$/.test(cleaned)) return false;
+  if (RESERVED_SLUGS.has(cleaned)) return false;
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(cleaned);
 }
 
 function normalizeReligion(value) {
@@ -83,11 +123,15 @@ function normalizeOrigin(value) {
 }
 
 function normalizeName(item, religion) {
-  if (typeof item === 'string') return { name: item, religion, origin: 'Unknown', short_meaning: '', slug: createSlug(item) };
+  if (typeof item === 'string') {
+    const slug = createSlug(item);
+    if (!slug) return null;
+    return { name: item, religion, origin: 'Unknown', short_meaning: '', slug };
+  }
   const name = cleanText(item.name || item.title);
   if (!name) return null;
   const slug = cleanText(item.slug) || createSlug(name);
-  if (!slug) return null;
+  if (!slug || !isValidSlug(slug)) return null;
   return {
     name,
     slug,
@@ -177,71 +221,6 @@ function addEntry(entries, seen, pathname, type, lastmod, changefreq, priority) 
   entries.push(getEntry(clean, type, lastmod, changefreq, priority));
 }
 
-function splitMeaning(value) {
-  return cleanText(value)
-    .split(/[,;·|]/)
-    .map((part) => cleanText(part).replace(/^(and|or)\s+/i, '').replace(/[.]+$/, ''))
-    .filter(Boolean)
-    .slice(0, 4);
-}
-
-function buildMeaningContent(names) {
-  const map = new Map();
-  for (const name of names) {
-    const meaning = cleanText(name.short_meaning || name.meaning);
-    if (!meaning || meaning.length < 3) continue;
-    for (const part of splitMeaning(meaning)) {
-      if (part.length < 3 || part.length > 80) continue;
-      const slug = createSlug(part);
-      if (!slug) continue;
-      if (!map.has(slug)) {
-        map.set(slug, {
-          slug,
-          title: part.charAt(0).toUpperCase() + part.slice(1),
-          description: '',
-          faq: [],
-          relatedMeanings: [],
-          seo: { title: '', description: '' },
-          schema: {},
-          names: [],
-        });
-      }
-      map.get(slug).names.push(name);
-    }
-  }
-  const allSlugs = Array.from(map.keys());
-  return Array.from(map.values())
-    .map((meaning) => {
-      const relatedMeanings = allSlugs
-        .filter((slug) => slug !== meaning.slug)
-        .slice(0, 8);
-      const nameCount = meaning.names.length;
-      const religions = RELIGIONS
-        .map((religion) => ({ religion, count: meaning.names.filter((name) => name.religion === religion).length }))
-        .filter((item) => item.count > 0);
-      const topNames = meaning.names.slice(0, 12).map((name) => ({
-        name: name.name,
-        slug: name.slug,
-        religion: name.religion,
-        origin: name.origin,
-        meaning: name.short_meaning || name.meaning,
-      }));
-      meaning.description = `${meaning.title} is a meaningful name theme found across ${nameCount} NameVerse entries, with ${religions.map((item) => `${item.religion} (${item.count})`).join(', ')}.`;
-      meaning.faq = [
-        { question: `What names mean ${meaning.title.toLowerCase()}?`, answer: `NameVerse lists ${nameCount} names with meanings related to ${meaning.title.toLowerCase()}, including ${topNames.slice(0, 3).map((name) => name.name).join(', ')}.` },
-        { question: `Which religions use names that mean ${meaning.title.toLowerCase()}?`, answer: `These names appear across ${religions.map((item) => item.religion).join(', ')} collections on NameVerse.` },
-        { question: `How do I choose a name that means ${meaning.title.toLowerCase()}?`, answer: `Compare pronunciation, origin, religion, gender, and cultural context before choosing a name from this meaning collection.` },
-      ];
-      meaning.seo = {
-        title: `Names That Mean ${meaning.title} | NameVerse`,
-        description: `Explore ${nameCount} names that mean ${meaning.title.toLowerCase()} across Islamic, Christian, and Hindu traditions. Browse meanings, origins, religion breakdowns, FAQs, and related meaning pages.`,
-      };
-      meaning.schema = { relatedMeanings, topNames, religions, nameCount };
-      return { ...meaning, names: undefined, relatedMeanings };
-    })
-    .sort((a, b) => b.schema.nameCount - a.schema.nameCount);
-}
-
 async function fetchJson(url) {
   const response = await fetch(url, { headers: { accept: 'application/json' } });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -270,7 +249,8 @@ async function fetchCollectionPages(religion, params) {
     const pagination = data.pagination || {};
     const total = Number(pagination.total || data.totalCount || data.total || 0);
     const pages = Number(pagination.pages || data.totalPages || Math.ceil(total / 50) || (total > 0 ? 1 : 0));
-    return Math.max(0, Math.min(pages, Number(process.env.SEO_MAX_PAGES_PER_COLLECTION || 1000)));
+    // Cap at MAX_COLLECTION_PAGES to prevent thin pages
+    return Math.max(0, Math.min(pages, MAX_COLLECTION_PAGES));
   } catch {
     return 0;
   }
@@ -291,7 +271,7 @@ function localCounts(allNames, detailedNames) {
     counts[religion] = {
       total: religionNames.length,
       letters,
-      origins: Object.fromEntries(Object.entries(origins).map(([origin, count]) => [origin, { count, pages: Math.max(1, Math.ceil(count / 50)) }])),
+      origins: Object.fromEntries(Object.entries(origins).map(([origin, count]) => [origin, { count, pages: Math.max(1, Math.min(Math.ceil(count / 50), MAX_COLLECTION_PAGES)) }])),
       categories: Object.fromEntries(STATIC_CATEGORIES.map((category) => [category, { count: Math.max(1, Math.floor(religionNames.length / STATIC_CATEGORIES.length)), pages: 1 }])),
     };
     counts[religion].detailedCount = religionDetailed.length;
@@ -307,58 +287,89 @@ export async function buildSitemapEntries() {
   const entries = [];
   const seen = new Set();
 
+  // Static pages — only routes that exist
   for (const route of STATIC_ROUTES) addEntry(entries, seen, route, 'page', today, 'weekly', 0.8);
+
+  // Gender listing pages
   for (const religion of RELIGIONS) {
-    addEntry(entries, seen, `/religions/${religion}`, 'religion', today, 'weekly', 0.9);
     addEntry(entries, seen, `/${religion}/boy-names`, 'gender', today, 'weekly', 0.8);
     addEntry(entries, seen, `/${religion}/girl-names`, 'gender', today, 'weekly', 0.8);
   }
 
-  for (const name of allNames) addEntry(entries, seen, `/names/${name.religion}/${name.slug}`, 'name', today, 'weekly', 0.8);
-
-  const meaningContent = buildMeaningContent(detailedNames);
-  for (const meaning of meaningContent) addEntry(entries, seen, `/meaning/${meaning.slug}`, 'meaning', today, 'weekly', 0.9);
-
-  for (const post of posts) {
-    addEntry(entries, seen, `/blog/${post.slug}`, 'blog', post.lastUpdated || post.publishDate || today, 'weekly', 0.8);
-    addEntry(entries, seen, `/stories/${post.slug}`, 'story', post.lastUpdated || post.publishDate || today, 'weekly', 0.7);
+  // Name pages — validate every slug before adding
+  for (const name of allNames) {
+    if (!name.slug || !isValidSlug(name.slug)) continue;
+    const lastmod = name.updated_at || today;
+    addEntry(entries, seen, `/names/${name.religion}/${name.slug}`, 'name', lastmod, 'weekly', 0.8);
   }
 
+  // Blog posts
+  for (const post of posts) {
+    addEntry(entries, seen, `/blog/${post.slug}`, 'blog', post.lastUpdated || post.publishDate || today, 'weekly', 0.8);
+  }
+
+  // Collection pages — limited to MAX_COLLECTION_PAGES
   for (const religion of RELIGIONS) {
     const filters = await fetchFilters(religion).catch(() => null);
     const religionCounts = counts[religion] || {};
     const total = filters?.totalNames || religionCounts.total || 0;
-    const popularityPages = filters?.totalNames ? Math.min(Math.ceil(total / 50), Number(process.env.SEO_MAX_PAGES_PER_COLLECTION || 1000)) : Math.max(1, Math.ceil((religionCounts.total || 0) / 50));
-    for (let page = 1; page <= popularityPages; page += 1) addEntry(entries, seen, `/names/religion/${religion}/${page}`, 'popularity', today, 'weekly', page === 1 ? 0.9 : 0.5);
+    
+    // Religion listing pages
+    const popularityPages = filters?.totalNames 
+      ? Math.min(Math.ceil(total / 50), MAX_COLLECTION_PAGES) 
+      : Math.max(1, Math.min(Math.ceil((religionCounts.total || 0) / 50), MAX_COLLECTION_PAGES));
+    for (let page = 1; page <= popularityPages; page += 1) {
+      addEntry(entries, seen, `/names/religion/${religion}/${page}`, 'popularity', today, 'weekly', page === 1 ? 0.9 : 0.5);
+    }
 
+    // Letter pages
     const letters = filters?.letters?.length ? filters.letters : LETTERS;
     for (const letter of letters) {
       const letterCount = religionCounts.letters?.[letter] || 0;
-      const pages = filters ? await fetchCollectionPages(religion, { alphabet: letter.toLowerCase() }) : Math.max(1, Math.ceil(letterCount / 50));
-      const safePages = Math.max(1, Math.min(pages || 1, Number(process.env.SEO_MAX_PAGES_PER_COLLECTION || 1000)));
-      for (let page = 1; page <= safePages; page += 1) addEntry(entries, seen, `/names/${religion}/letter/${letter}/${page}`, 'letter', today, 'weekly', page === 1 ? 0.8 : 0.5);
+      const pages = filters 
+        ? await fetchCollectionPages(religion, { alphabet: letter.toLowerCase() })
+        : Math.max(1, Math.min(Math.ceil(letterCount / 50), MAX_COLLECTION_PAGES));
+      const safePages = Math.max(1, Math.min(pages || 1, MAX_COLLECTION_PAGES));
+      for (let page = 1; page <= safePages; page += 1) {
+        addEntry(entries, seen, `/names/${religion}/letter/${letter}/${page}`, 'letter', today, 'weekly', page === 1 ? 0.8 : 0.5);
+      }
     }
 
+    // Origin pages
     const origins = filters?.origins?.length ? Array.from(new Set(filters.origins)) : Object.keys(religionCounts.origins || {});
     for (const origin of origins) {
-      const pages = filters ? await fetchCollectionPages(religion, { origin }) : (religionCounts.origins?.[origin]?.pages || 1);
-      const safePages = Math.max(1, Math.min(pages || 1, Number(process.env.SEO_MAX_PAGES_PER_COLLECTION || 1000)));
-      for (let page = 1; page <= safePages; page += 1) addEntry(entries, seen, `/names/${religion}/origin/${origin}/${page}`, 'origin', today, 'weekly', page === 1 ? 0.8 : 0.5);
+      const pages = filters 
+        ? await fetchCollectionPages(religion, { origin })
+        : (religionCounts.origins?.[origin]?.pages || 1);
+      const safePages = Math.max(1, Math.min(pages || 1, MAX_COLLECTION_PAGES));
+      for (let page = 1; page <= safePages; page += 1) {
+        addEntry(entries, seen, `/names/${religion}/origin/${origin}/${page}`, 'origin', today, 'weekly', page === 1 ? 0.8 : 0.5);
+      }
     }
 
-    const categories = filters?.categories?.length ? Array.from(new Set(filters.categories.map((category) => createSlug(category)).filter(Boolean))) : STATIC_CATEGORIES;
+    // Category pages
+    const categories = filters?.categories?.length 
+      ? Array.from(new Set(filters.categories.map((category) => createSlug(category)).filter(Boolean)))
+      : STATIC_CATEGORIES;
     for (const category of categories) {
-      const pages = filters ? await fetchCollectionPages(religion, { category }) : (religionCounts.categories?.[category]?.pages || 1);
-      const safePages = Math.max(1, Math.min(pages || 1, Number(process.env.SEO_MAX_PAGES_PER_COLLECTION || 1000)));
-      for (let page = 1; page <= safePages; page += 1) addEntry(entries, seen, `/names/${religion}/categories/${category}/${page}`, 'category', today, 'weekly', page === 1 ? 0.8 : 0.5);
+      const pages = filters 
+        ? await fetchCollectionPages(religion, { category })
+        : (religionCounts.categories?.[category]?.pages || 1);
+      const safePages = Math.max(1, Math.min(pages || 1, MAX_COLLECTION_PAGES));
+      for (let page = 1; page <= safePages; page += 1) {
+        addEntry(entries, seen, `/names/${religion}/categories/${category}/${page}`, 'category', today, 'weekly', page === 1 ? 0.8 : 0.5);
+      }
     }
   }
 
-  return { entries, allNames, detailedNames, posts, meaningContent, counts };
+  return { entries, allNames, detailedNames, posts, counts };
 }
 
 export function groupEntries(entries) {
-  const groups = { pages: [], names: [], blog: [], story: [], meaning: [], religion: [], gender: [], popularity: [], letter: [], origin: [], category: [] };
+  const groups = { 
+    pages: [], names: [], blog: [], 
+    popularity: [], letter: [], origin: [], category: [], gender: [] 
+  };
   for (const entry of entries) {
     if (groups[entry.type]) groups[entry.type].push(entry);
     else groups.pages.push(entry);
@@ -384,6 +395,7 @@ export async function writeSitemapFiles() {
   const { entries } = await buildSitemapEntries();
   const groups = groupEntries(entries);
   const sitemapLocs = [];
+  
   const writeGroup = async (name, items) => {
     const chunksOfItems = chunk(items, MAX_SITEMAP_URLS);
     for (let i = 0; i < chunksOfItems.length; i += 1) {
@@ -392,10 +404,20 @@ export async function writeSitemapFiles() {
       sitemapLocs.push(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://nameverse.vercel.app'}/${file}`);
     }
   };
-  for (const [name, items] of Object.entries(groups)) if (items.length) await writeGroup(name, items);
+  
+  for (const [name, items] of Object.entries(groups)) {
+    if (items.length) await writeGroup(name, items);
+  }
+  
   const useIndex = entries.length > MAX_SITEMAP_URLS || sitemapLocs.length > 1;
   writeJson(path.join(publicDir, 'sitemap.xml'), useIndex ? indexXml(sitemapLocs) : sitemapXml(entries));
-  writeJson(path.join(publicDir, 'seo-sitemap-manifest.json'), { generatedAt: new Date().toISOString(), totalUrls: entries.length, sitemapCount: sitemapLocs.length, sitemaps: sitemapLocs });
+  writeJson(path.join(publicDir, 'seo-sitemap-manifest.json'), { 
+    generatedAt: new Date().toISOString(), 
+    totalUrls: entries.length, 
+    sitemapCount: sitemapLocs.length, 
+    sitemaps: sitemapLocs 
+  });
+  
   return { totalUrls: entries.length, sitemapCount: sitemapLocs.length, sitemaps: sitemapLocs };
 }
 
@@ -407,18 +429,22 @@ export function buildExpectedUrls() {
   const detailedNames = loadDetailedNames();
   const allNames = loadMixedNames();
   const posts = loadBlogPosts();
-  const meanings = buildMeaningContent(detailedNames);
   const urls = new Set(STATIC_ROUTES);
+  
   for (const religion of RELIGIONS) {
-    urls.add(`/religions/${religion}`);
     urls.add(`/${religion}/boy-names`);
     urls.add(`/${religion}/girl-names`);
   }
-  for (const name of allNames) urls.add(`/names/${name.religion}/${name.slug}`);
-  for (const meaning of meanings) urls.add(`/meaning/${meaning.slug}`);
+  
+  for (const name of allNames) {
+    if (name.slug && isValidSlug(name.slug)) {
+      urls.add(`/names/${name.religion}/${name.slug}`);
+    }
+  }
+  
   for (const post of posts) {
     urls.add(`/blog/${post.slug}`);
-    urls.add(`/stories/${post.slug}`);
   }
+  
   return Array.from(urls).sort();
 }

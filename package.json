@@ -8,12 +8,14 @@
     "start": "next start -H 0.0.0.0 -p 3000",
     "lint": "next lint",
     "ci:validate-slugs": "node scripts/ci-validate-slugs.js",
+    "seo:validate": "node src/lib/seo/validation-suite.mjs",
+    "sitemap:build": "node scripts/build-sitemap.js",
+    "seo:audit": "npm run seo:validate && npm run sitemap:build",
     "clear-next-cache": "rimraf .next",
     "clear-all-cache": "rimraf .next node_modules/.cache",
     "dev:clean": "npm run clear-all-cache && next dev",
     "rebuild": "npm run clear-all-cache && next build",
-    "reset": "npm run clear-all-cache && npm run dev",
-    "build-sitemap": "node scripts/build-sitemap.js"
+    "reset": "npm run clear-all-cache && npm run dev"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

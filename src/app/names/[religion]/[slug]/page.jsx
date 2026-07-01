@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { createSlug, nameAbsoluteUrl } from '@/lib/seo/url-builder';
+import { createSlug, nameAbsoluteUrl, isValidSlug } from '@/lib/seo/url-builder';
 import { generateNamePageMetadata, generateNamePageSchemas } from '@/lib/seo/name-page-seo';
 import { serverFetchNameDetail, serverFetchTrendingNames } from '@/lib/api/server-fetch';
 import { sanitizeNameData } from '@/lib/utils/sanitizeNameData';
@@ -10,15 +10,10 @@ import path from 'path';
 
 const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 
-// Allow dynamic slugs beyond generateStaticParams() — only 28 per religion are pre-rendered
-// This does NOT make every page call a serverless function.
-// Pages are rendered once and cached for revalidate seconds.
-// Only the FIRST visit triggers a function call; subsequent visits use cache.
+// Allow dynamic slugs beyond generateStaticParams()
 export const dynamicParams = true;
 
 // 30-day cache: pages are generated once and cached for 30 days.
-// Free tier friendly: 100 function calls/day, each cached for 30 days.
-// Over 30 days, you can serve 3,000 unique page visits without extra cost.
 export const revalidate = 2592000;
 
 // Load local name data as fallback
@@ -94,7 +89,7 @@ export async function generateStaticParams() {
     JSON.parse(islamicBoysRaw).forEach((n) => {
       if (n.name) {
         const slug = createSlug(n.name);
-        if (slug) staticNames.push({ religion: 'islamic', slug });
+        if (slug && isValidSlug(slug)) staticNames.push({ religion: 'islamic', slug });
       }
     });
 
@@ -102,7 +97,7 @@ export async function generateStaticParams() {
     JSON.parse(islamicGirlsRaw).forEach((n) => {
       if (n.name) {
         const slug = createSlug(n.name);
-        if (slug) staticNames.push({ religion: 'islamic', slug });
+        if (slug && isValidSlug(slug)) staticNames.push({ religion: 'islamic', slug });
       }
     });
 
@@ -111,7 +106,7 @@ export async function generateStaticParams() {
       JSON.parse(islamicMixedRaw).forEach((n) => {
         if (n.name) {
           const slug = createSlug(n.name);
-          if (slug) staticNames.push({ religion: 'islamic', slug });
+          if (slug && isValidSlug(slug)) staticNames.push({ religion: 'islamic', slug });
         }
       });
     } catch { /* skip */ }
@@ -121,7 +116,7 @@ export async function generateStaticParams() {
       JSON.parse(christianBoysRaw).forEach((n) => {
         if (n.name) {
           const slug = createSlug(n.name);
-          if (slug) staticNames.push({ religion: 'christian', slug });
+          if (slug && isValidSlug(slug)) staticNames.push({ religion: 'christian', slug });
         }
       });
     } catch { /* skip */ }
@@ -131,7 +126,7 @@ export async function generateStaticParams() {
       JSON.parse(christianGirlsRaw).forEach((n) => {
         if (n.name) {
           const slug = createSlug(n.name);
-          if (slug) staticNames.push({ religion: 'christian', slug });
+          if (slug && isValidSlug(slug)) staticNames.push({ religion: 'christian', slug });
         }
       });
     } catch { /* skip */ }
@@ -141,7 +136,7 @@ export async function generateStaticParams() {
       JSON.parse(hinduBoysRaw).forEach((n) => {
         if (n.name) {
           const slug = createSlug(n.name);
-          if (slug) staticNames.push({ religion: 'hindu', slug });
+          if (slug && isValidSlug(slug)) staticNames.push({ religion: 'hindu', slug });
         }
       });
     } catch { /* skip */ }
@@ -151,7 +146,7 @@ export async function generateStaticParams() {
       JSON.parse(hinduGirlsRaw).forEach((n) => {
         if (n.name) {
           const slug = createSlug(n.name);
-          if (slug) staticNames.push({ religion: 'hindu', slug });
+          if (slug && isValidSlug(slug)) staticNames.push({ religion: 'hindu', slug });
         }
       });
     } catch { /* skip */ }
@@ -184,7 +179,7 @@ export async function generateMetadata({ params }) {
   const religion = normalizeReligion(resolvedParams?.religion);
   const slug = createSlug(resolvedParams?.slug);
 
-  if (!religion || !slug) {
+  if (!religion || !slug || !isValidSlug(slug)) {
     return {
       title: 'Name Not Found | NameVerse',
       description: 'The requested linguistic analysis page could not be found on NameVerse.',
@@ -210,7 +205,7 @@ export async function generateMetadata({ params }) {
     nameData = loadLocalNameData(religion, slug);
   }
 
-  // If no data found anywhere, return 404 - DB confirmed missing
+  // If no data found anywhere, return 404
   if (!nameData) {
     return {
       title: 'Name Not Found | NameVerse',
@@ -236,7 +231,7 @@ export default async function NameDetailPage({ params }) {
   const religion = normalizeReligion(resolvedParams?.religion);
   const slug = createSlug(resolvedParams?.slug);
 
-  if (!religion || !slug) {
+  if (!religion || !slug || !isValidSlug(slug)) {
     return notFound();
   }
 
@@ -255,10 +250,7 @@ export default async function NameDetailPage({ params }) {
   }
 
   // If still no data, check if this is a truly missing entry or degraded state
-  // Only DB-confirmed missing entries should return 404
   if (!nameData) {
-    // Degraded state: no data but no explicit 404
-    // Return error UI instead of 404 to prevent false positives to crawlers
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 via-white to-gray-50">
         <div className="text-center max-w-md mx-auto px-4">
@@ -292,7 +284,7 @@ export default async function NameDetailPage({ params }) {
       const safeSlug = slugValue || createSlug(name);
       return { name, slug: safeSlug };
     })
-    .filter((item) => item.name && item.slug && item.slug.length >= 2);
+    .filter((item) => item.name && item.slug && item.slug.length >= 2 && isValidSlug(item.slug));
   const fallbackTrendingNames = apiTrendingNames.length > 0
     ? apiTrendingNames
     : loadLocalNameList(religion, 8, slug);
@@ -300,6 +292,31 @@ export default async function NameDetailPage({ params }) {
 
   return (
     <>
+      {/* Canonical tag */}
+      <link rel="canonical" href={pageUrl} />
+      
+      {/* hreflang tags for multilingual support */}
+      <link rel="alternate" hrefLang="en" href={pageUrl} />
+      <link rel="alternate" hrefLang="x-default" href={pageUrl} />
+      {nameData.in_urdu && (
+        <link rel="alternate" hrefLang="ur" href={pageUrl} />
+      )}
+      {nameData.in_arabic && (
+        <link rel="alternate" hrefLang="ar" href={pageUrl} />
+      )}
+      {nameData.in_hindi && (
+        <link rel="alternate" hrefLang="hi" href={pageUrl} />
+      )}
+      {nameData.in_bengali && (
+        <link rel="alternate" hrefLang="bn" href={pageUrl} />
+      )}
+      {nameData.in_turkish && (
+        <link rel="alternate" hrefLang="tr" href={pageUrl} />
+      )}
+      {nameData.in_persian && (
+        <link rel="alternate" hrefLang="fa" href={pageUrl} />
+      )}
+
       {schemas.dataset && (
         <Script
           id="dataset-schema"

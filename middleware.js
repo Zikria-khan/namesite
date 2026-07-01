@@ -1,21 +1,22 @@
-import { NextResponse } from 'next/server';
-
 /**
  * SEO FIREWALL MIDDLEWARE — Vercel Edge
  *
- * This is the FIRST line of defense for URL quality.
+ * SINGLE-HOP REDIRECT ARCHITECTURE:
+ * Every URL is normalized in ONE redirect, never multiple.
+ * This eliminates redirect chains and redirect errors in GSC.
  *
  * Responsibilities:
- * 1. Reject malformed URLs (IPA, Unicode, encoded chars) → 410 Gone
+ * 1. Normalize ALL URL issues in ONE pass (uppercase, trailing slash, etc.)
  * 2. Redirect non-canonical religion URLs → 301 to canonical
- * 3. Validate route patterns against whitelist → 410 for invalid
- * 4. Strip trailing slashes → 301 redirect
- * 5. Normalize double slashes → 301 redirect
- * 6. Allow system routes (API, assets) → pass through
- * 7. Allow valid application routes → pass through
+ * 3. Redirect old URL patterns → 301 to new canonical
+ * 4. Validate route patterns against whitelist → 410 for invalid
+ * 5. Allow system routes (API, assets) → pass through
+ * 6. Allow valid application routes → pass through
  *
  * Page-level validation (dataset checks) happens in individual route handlers.
  */
+
+import { NextResponse } from 'next/server';
 
 const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 
@@ -36,8 +37,6 @@ const VALID_STATIC_ROUTES = new Set([
   '/trending-names',
   '/advanced-search',
   '/my-names',
-  '/popular-by-state',
-  '/viral-names',
   '/guides/expert-naming-guide',
 ]);
 
@@ -50,6 +49,18 @@ const VALID_GENDER_PAGES = new Set([
   '/hindu/boy-names',
   '/hindu/girl-names',
 ]);
+
+// Old URL patterns that need 301 redirects to new locations
+const OLD_URL_REDIRECTS = [
+  // Old meaning pages → name-meanings listing
+  { pattern: /^\/meaning\//, replacement: '/name-meanings' },
+  // Old story pages → blog
+  { pattern: /^\/stories\//, replacement: '/blog' },
+  // Old religion pages → names listing
+  { pattern: /^\/religions\//, replacement: '/names' },
+  // Old API-based name pages → new canonical
+  { pattern: /^\/api\/names\//, replacement: '/names' },
+];
 
 /**
  * Normalize religion name to canonical form
@@ -69,7 +80,8 @@ function normalizeReligion(religion) {
 function isValidSlug(slug) {
   if (!slug || typeof slug !== 'string') return false;
   const trimmed = slug.trim();
-  if (trimmed.length < 1 || trimmed.length > 100) return false;
+  if (trimmed.length < 2 || trimmed.length > 100) return false;
+  if (/^\d+$/.test(trimmed)) return false;
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(trimmed);
 }
 
@@ -98,6 +110,7 @@ function isSystemRoute(pathname) {
     pathname.startsWith('/api/') ||
     pathname === '/feed.xml' ||
     pathname === '/sitemap.xml' ||
+    pathname.startsWith('/sitemap-') ||
     pathname === '/manifest.json' ||
     pathname === '/ads.txt' ||
     pathname === '/robots.txt' ||
@@ -106,38 +119,54 @@ function isSystemRoute(pathname) {
   );
 }
 
+/**
+ * Normalize a URL path in a single pass.
+ * Returns the normalized path or null if no normalization needed.
+ */
+function normalizePath(pathname) {
+  let normalized = pathname;
+
+  // Step 1: Lowercase
+  normalized = normalized.toLowerCase();
+
+  // Step 2: Remove trailing slash (except for root)
+  if (normalized.length > 1 && normalized.endsWith('/')) {
+    normalized = normalized.slice(0, -1);
+  }
+
+  // Step 3: Collapse double slashes
+  normalized = normalized.replace(/\/+/g, '/');
+
+  // Step 4: Check if any normalization happened
+  if (normalized !== pathname.toLowerCase()) {
+    return normalized;
+  }
+
+  return null; // No normalization needed
+}
+
+/**
+ * Handle old URL pattern redirects
+ */
+function handleOldUrlRedirect(path) {
+  for (const { pattern, replacement } of OLD_URL_REDIRECTS) {
+    if (pattern.test(path)) {
+      return replacement;
+    }
+  }
+  return null;
+}
+
 export function middleware(request) {
   const { pathname } = request.nextUrl;
-  const path = pathname.toLowerCase();
+  const path = pathname;
 
   // ── SYSTEM ROUTES: Pass through immediately ──
   if (isSystemRoute(path)) {
     return NextResponse.next();
   }
 
-  // ── CASE NORMALIZATION: Redirect uppercase URLs to lowercase ──
-  // This ensures crawlers always get 200 for valid lowercase URLs
-  if (pathname !== path) {
-    // Preserve query string when redirecting
-    const search = request.nextUrl.search || '';
-    return NextResponse.redirect(new URL(path + search, request.url), 301);
-  }
-
-  // ── TRAILING SLASH: Redirect to non-slash version ──
-  if (path.length > 1 && path.endsWith('/')) {
-    const clean = path.slice(0, -1);
-    return NextResponse.redirect(new URL(clean, request.url), 301);
-  }
-
-  // ── DOUBLE SLASHES: Normalize ──
-  if (path.includes('//') && path !== '/') {
-    const normalized = path.replace(/\/+/g, '/');
-    return NextResponse.redirect(new URL(normalized, request.url), 301);
-  }
-
   // ── NON-ASCII / IPA / ENCODED CHARACTERS: 410 Gone ──
-  // This catches ALL IPA characters (ˈ ɑː ɪ ɔː ɛ ə ʃ ʒ etc.)
-  // and any percent-encoded sequences (%XX)
   if (/[^\x00-\x7F]/.test(path)) {
     return new NextResponse('Gone — This URL contains invalid characters and has been permanently removed.', {
       status: 410,
@@ -150,7 +179,6 @@ export function middleware(request) {
   }
 
   // ── PERCENT-ENCODED SEQUENCES: 410 Gone ──
-  // Catches URLs like /%CB%88d%CA%92u%CB%90k%C9%99r/
   if (/%[0-9A-Fa-f]{2}/.test(path)) {
     return new NextResponse('Gone — This URL contains encoded invalid characters and has been permanently removed.', {
       status: 410,
@@ -162,29 +190,31 @@ export function middleware(request) {
     });
   }
 
+  // ── SINGLE-PASS URL NORMALIZATION ──
+  // This handles: uppercase, trailing slash, double slashes ALL AT ONCE
+  const normalizedPath = normalizePath(path);
+  if (normalizedPath) {
+    const search = request.nextUrl.search || '';
+    return NextResponse.redirect(new URL(normalizedPath + search, request.url), 301);
+  }
+
+  // ── OLD URL PATTERN REDIRECTS ──
+  const oldUrlRedirect = handleOldUrlRedirect(path);
+  if (oldUrlRedirect) {
+    return NextResponse.redirect(new URL(oldUrlRedirect, request.url), 301);
+  }
+
   // ── RELIGION NORMALIZATION REDIRECTS ──
   // /names/islam/... → /names/islamic/...
   // /names/muslim/... → /names/islamic/...
   // /names/christianity/... → /names/christian/...
   // /names/hinduism/... → /names/hindu/...
-  const islamMatch = path.match(/^\/names\/(islam|muslim)(\/.+)$/);
-  if (islamMatch) {
+  const religionMatch = path.match(/^\/names\/(islam|muslim|christianity|hinduism)(\/.*)?$/);
+  if (religionMatch) {
+    const canonicalReligion = normalizeReligion(religionMatch[1]);
+    const rest = religionMatch[2] || '';
     return NextResponse.redirect(
-      new URL(`/names/islamic${islamMatch[2]}`, request.url),
-      301
-    );
-  }
-  const christianMatch = path.match(/^\/names\/christianity(\/.+)$/);
-  if (christianMatch) {
-    return NextResponse.redirect(
-      new URL(`/names/christian${christianMatch[1]}`, request.url),
-      301
-    );
-  }
-  const hinduMatch = path.match(/^\/names\/hinduism(\/.+)$/);
-  if (hinduMatch) {
-    return NextResponse.redirect(
-      new URL(`/names/hindu${hinduMatch[1]}`, request.url),
+      new URL(`/names/${canonicalReligion}${rest}`, request.url),
       301
     );
   }
