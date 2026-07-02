@@ -295,27 +295,9 @@ export default async function NameDetailPage({ params }) {
       {/* Canonical tag */}
       <link rel="canonical" href={pageUrl} />
       
-      {/* hreflang tags for multilingual support */}
+      {/* hreflang tags — only en and x-default until translation routes exist */}
       <link rel="alternate" hrefLang="en" href={pageUrl} />
       <link rel="alternate" hrefLang="x-default" href={pageUrl} />
-      {nameData.in_urdu && (
-        <link rel="alternate" hrefLang="ur" href={pageUrl} />
-      )}
-      {nameData.in_arabic && (
-        <link rel="alternate" hrefLang="ar" href={pageUrl} />
-      )}
-      {nameData.in_hindi && (
-        <link rel="alternate" hrefLang="hi" href={pageUrl} />
-      )}
-      {nameData.in_bengali && (
-        <link rel="alternate" hrefLang="bn" href={pageUrl} />
-      )}
-      {nameData.in_turkish && (
-        <link rel="alternate" hrefLang="tr" href={pageUrl} />
-      )}
-      {nameData.in_persian && (
-        <link rel="alternate" hrefLang="fa" href={pageUrl} />
-      )}
 
       {schemas.dataset && (
         <Script

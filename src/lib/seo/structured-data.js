@@ -143,6 +143,7 @@ function getAlternateNames(nameData) {
 function getPublisher(baseUrl) {
   return {
     '@type': 'Organization',
+    '@id': `${baseUrl}/#organization`,
     name: SITE_NAME,
     description: 'NameVerse is a cultural name knowledge base for name meanings, origins, pronunciation, lucky numbers, and naming context.',
     url: baseUrl,
@@ -152,14 +153,53 @@ function getPublisher(baseUrl) {
       width: 512,
       height: 512,
     },
+    sameAs: [
+      'https://twitter.com/NameVerseOfficial',
+      'https://facebook.com/NameVerse',
+      'https://instagram.com/nameverse',
+      'https://linkedin.com/company/nameverse',
+    ],
+    foundingDate: '2025',
+    numberOfEmployees: { '@type': 'QuantitativeValue', minValue: 5, maxValue: 20 },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      email: 'hello@nameverse.com',
+      url: `${baseUrl}/contact`,
+    },
   };
 }
 
 function getAuthor(baseUrl) {
   return {
     '@type': 'Organization',
+    '@id': `${baseUrl}/#organization`,
     name: SITE_NAME,
     url: baseUrl,
+  };
+}
+
+function getPersonAuthor(baseUrl, authorData) {
+  if (!authorData) return getAuthor(baseUrl);
+  return {
+    '@type': 'Person',
+    '@id': `${baseUrl}/authors/${authorData.id || 'editorial-team'}`,
+    name: authorData.name || 'NameVerse Editorial Team',
+    description: authorData.bio || 'NameVerse editorial team member specializing in name meanings, origins, and cultural context.',
+    url: `${baseUrl}/about`,
+    knowsAbout: authorData.expertise || ['Name Meanings', 'Cultural Onomastics', 'Linguistic Origins'],
+    knowsLanguage: authorData.languages || ['English'],
+    alumniOf: authorData.credentials || '',
+    sameAs: authorData.linkedin ? [authorData.linkedin] : [],
+  };
+}
+
+function getSpeakableSchema(pageUrl) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SpeakableSpecification',
+    '@id': `${pageUrl}#speakable`,
+    cssSelector: ['.name-hero-title', '.name-meaning-summary', '.name-quick-answer'],
   };
 }
 

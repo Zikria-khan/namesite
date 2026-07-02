@@ -419,6 +419,11 @@ export async function generateNamePageMetadata(data, religion, slug) {
   const religionDisplay = getReligionLabel(religion || data.religion);
   const publishedDate = data.published_date || data.created_at || data.updated_at || new Date().toISOString().split('T')[0];
   const modifiedDate = data.updated_at || data.published_date || data.created_at || new Date().toISOString().split('T')[0];
+  const gender = getGender(data);
+  const genderLabel = gender === 'boy' ? 'Boy' : gender === 'girl' ? 'Girl' : 'Baby';
+  const language = getTranslationLanguage(data, religion);
+  const luckyNumber = getLuckyNumber(data);
+  const pronunciation = getPronunciation(data);
 
   const safeMeaning = cleanText(shortMeaning).slice(0, 80);
   const title = generateOptimizedTitle(data, religion);
@@ -437,18 +442,27 @@ export async function generateNamePageMetadata(data, religion, slug) {
       url: pageUrl,
       siteName: `${SITE_NAME} — Name Meaning & Origin Guides`,
       type: 'article',
+      locale: 'en_US',
       images: [{
         url: `${siteUrl}/api/og?name=${encodeURIComponent(name)}&meaning=${encodeURIComponent(safeMeaning)}&religion=${normalizeReligion(religion)}`,
         width: 1200,
         height: 630,
         alt: `${name} name meaning, ${origin || 'origin'}, lucky number and pronunciation | ${SITE_NAME}`,
       }],
+      article: {
+        publishedTime: publishedDate,
+        modifiedTime: modifiedDate,
+        section: 'Name Meaning',
+        tag: [religionDisplay, origin, `${genderLabel} Names`, `${religionDisplay} Baby Names`],
+      },
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
       images: [`${siteUrl}/api/og?name=${encodeURIComponent(name)}&meaning=${encodeURIComponent(safeMeaning)}&religion=${normalizeReligion(religion)}`],
+      creator: '@NameVerseOfficial',
+      site: '@NameVerseOfficial',
     },
     robots: {
       index: true,
@@ -461,10 +475,13 @@ export async function generateNamePageMetadata(data, religion, slug) {
       'article:section': 'Name Meaning',
       'article:published_time': publishedDate,
       'article:modified_time': modifiedDate,
+      'article:tag': `${religionDisplay}, ${origin}, ${genderLabel} Names`,
       'citation:linguistic_origin': origin,
       'citation:cultural_context': religionDisplay,
-      'citation:pronunciation': cleanText(data.pronunciation?.english || data.pronunciation?.ipa),
-      'citation:lucky_number': getLuckyNumber(data),
+      'citation:pronunciation': pronunciation,
+      'citation:lucky_number': luckyNumber,
+      'citation:author': 'NameVerse Editorial Team',
+      'citation:publication_date': publishedDate,
     },
   };
 }

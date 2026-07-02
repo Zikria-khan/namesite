@@ -25,9 +25,9 @@ try {
 }
 
 export const metadata = {
-  title: validateMetaTitle('NameVerse — Baby Names with Meanings, Origins & Cultural Roots'),
+  title: validateMetaTitle('Baby Names, Meanings, Origins & Lucky Numbers | NameVerse'),
   description: validateMetaDescription(
-    'Search 65,000+ Islamic, Hindu, Christian and global baby names with meanings, origins, popularity, trends and cultural roots. Browse Arabic, Urdu, Persian, Sanskrit, Hebrew and Greek name traditions on NameVerse.'
+    'Discover baby names with verified meanings, origins, lucky numbers, pronunciation guides, and cultural context across Islamic, Hindu, Christian and global traditions. Browse Arabic, Urdu, Persian, Sanskrit, Hebrew and Greek name traditions on NameVerse.'
   ),
   keywords: [
     'baby names with meanings',
@@ -44,21 +44,23 @@ export const metadata = {
     'names by meaning',
     'names by origin',
     'baby name search',
-    'NameVerse'
+    'NameVerse',
+    'baby names 2026',
+    'baby name meanings',
+    'lucky numbers for names'
   ].join(', '),
   robots: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
-  authors: [{ name: 'NameVerse', url: DOMAIN }],
+  authors: [{ name: 'NameVerse Editorial Team', url: `${DOMAIN}/about` }],
   creator: 'NameVerse',
   publisher: 'NameVerse',
   metadataBase: new URL(DOMAIN),
   alternates: {
     canonical: homepageUrl,
-    languages: { en: homepageUrl, 'x-default': homepageUrl }
   },
   openGraph: {
-    title: validateMetaTitle('NameVerse — Baby Names with Meanings, Origins & Cultural Roots'),
+    title: validateMetaTitle('Baby Names, Meanings, Origins & Lucky Numbers | NameVerse'),
     description: validateMetaDescription(
-      'Find meaningful baby names across Islamic, Hindu, Christian and global traditions. NameVerse offers fast search, origin hubs, trending names and trusted cultural context.'
+      'Discover baby names with verified meanings, origins, lucky numbers, pronunciation guides, and cultural context across Islamic, Hindu, Christian and global traditions.'
     ),
     url: homepageUrl,
     type: 'website',
@@ -69,23 +71,25 @@ export const metadata = {
         width: 1200,
         height: 630,
         type: 'image/png',
-        alt: 'NameVerse baby names with meanings and origins'
+        alt: 'NameVerse — Baby Names with Meanings, Origins & Lucky Numbers'
       }
     ],
     locale: 'en_US'
   },
   twitter: {
     card: 'summary_large_image',
-    title: validateMetaTitle('NameVerse — Baby Names with Meanings & Origins'),
+    title: validateMetaTitle('Baby Names, Meanings, Origins & Lucky Numbers | NameVerse'),
     description: validateMetaDescription(
-      'Search 65,000+ baby names with meanings, origins, trends and cultural context across Islamic, Hindu, Christian and global traditions.'
+      'Discover baby names with verified meanings, origins, lucky numbers, pronunciation guides, and cultural context across Islamic, Hindu, Christian and global traditions.'
     ),
     images: [ogImage],
     creator: '@NameVerseOfficial',
     site: '@NameVerseOfficial'
   },
   other: {
-    'content-language': 'en'
+    'content-language': 'en',
+    'article:published_time': publishedDate,
+    'article:modified_time': publishedDate,
   }
 };
 

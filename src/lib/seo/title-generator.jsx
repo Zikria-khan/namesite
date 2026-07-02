@@ -21,9 +21,9 @@ const RELIGION_LABELS = {
   },
 };
 
-const TITLE_LIMIT = 60;
-const DESCRIPTION_MIN = 140;
-const DESCRIPTION_MAX = 160;
+const TITLE_LIMIT = 58;
+const DESCRIPTION_MIN = 145;
+const DESCRIPTION_MAX = 155;
 
 function cleanText(text = '') {
   return String(text || '')
@@ -129,32 +129,39 @@ function scoreTitle(title, data, religion, language) {
   const origin = getOrigin(data);
   const hasLucky = Boolean(data.lucky_number || data.luckyNumber);
   const personality = hasPersonality(data);
+  const hasPronunciation = Boolean(data.pronunciation?.english || data.pronunciation?.ipa);
 
   let score = 0;
   const lower = title.toLowerCase();
 
-  if (lower.startsWith(`${String(data.name || '').toLowerCase()} `)) score += 8;
-  if (lower.includes('name meaning')) score += 28;
-  if (lower.includes('meaning in')) score += 12;
-  if (language && lower.includes(` in ${language.toLowerCase()}`)) score += 14;
-  if (origin && title.includes(origin)) score += 10;
-  if (title.includes(religionLabel)) score += 10;
-  if (hasLucky && lower.includes('lucky')) score += 8;
+  if (lower.startsWith(`${String(data.name || '').toLowerCase()} `)) score += 10;
+  if (lower.includes('name meaning')) score += 30;
+  if (lower.includes('meaning in')) score += 15;
+  if (language && lower.includes(` in ${language.toLowerCase()}`)) score += 18;
+  if (origin && title.includes(origin)) score += 12;
+  if (title.includes(religionLabel)) score += 12;
+  if (hasLucky && lower.includes('lucky number')) score += 10;
   if (personality && lower.includes('personality')) score += 8;
-  if (lower.includes('details')) score += 4;
-  if (lower.includes('pronunciation')) score += 4;
+  if (hasPronunciation && lower.includes('pronunciation')) score += 8;
+  if (lower.includes('quran') || lower.includes('quranic')) score += 6;
+  if (lower.includes('biblical') || lower.includes('bible')) score += 6;
+  if (lower.includes('vedic') || lower.includes('sanskrit')) score += 6;
 
-  if (title.length >= 50 && title.length <= TITLE_LIMIT) score += 14;
-  else if (title.length >= 45 && title.length <= TITLE_LIMIT) score += 8;
-  else if (title.length < 45) score -= 45 - title.length;
+  // Prefer titles between 50-58 chars for optimal SERP display
+  if (title.length >= 50 && title.length <= TITLE_LIMIT) score += 18;
+  else if (title.length >= 40 && title.length <= 49) score += 10;
+  else if (title.length < 40) score -= 40 - title.length;
   else score -= (title.length - TITLE_LIMIT) * 3;
 
-  const repeated = (title.match(/\b(Name|Meaning|Origin|Lucky|Personality|Details)\b/gi) || []).length;
-  if (repeated > 4) score -= (repeated - 4) * 6;
-  if ((title.match(/,/g) || []).length > 3) score -= 4;
-  if (normalizedReligion !== 'islamic' && lower.includes('quranic')) score -= 12;
-  if (normalizedReligion !== 'hindu' && lower.includes('vedic')) score -= 12;
-  if (normalizedReligion !== 'christian' && lower.includes('biblical')) score -= 12;
+  // Penalize keyword stuffing
+  const repeated = (title.match(/\b(Name|Meaning|Origin|Lucky|Personality|Details|Pronunciation)\b/gi) || []).length;
+  if (repeated > 4) score -= (repeated - 4) * 8;
+  if ((title.match(/,/g) || []).length > 3) score -= 5;
+
+  // Religion-specific penalties
+  if (normalizedReligion !== 'islamic' && lower.includes('quranic')) score -= 15;
+  if (normalizedReligion !== 'hindu' && lower.includes('vedic')) score -= 15;
+  if (normalizedReligion !== 'christian' && lower.includes('biblical')) score -= 15;
 
   return score;
 }
@@ -167,6 +174,8 @@ function buildTitleCandidates(data, religion) {
   const hasLucky = Boolean(data.lucky_number || data.luckyNumber);
   const personality = hasPersonality(data);
   const hasPronunciation = Boolean(data.pronunciation?.english || data.pronunciation?.ipa);
+  const meaning = extractCoreMeaning(data.short_meaning || data.meaning || '');
+  const normalizedReligion = normalizeReligion(religion || data.religion);
 
   const languagePart = language ? ` in ${language}` : '';
   const originPart = origin ? `, ${origin} Origin` : '';
@@ -176,21 +185,32 @@ function buildTitleCandidates(data, religion) {
   const religionPart = religionLabel;
 
   const candidates = [
+    // Primary: Name + Meaning + Language (highest CTR)
     `${name} Name Meaning${languagePart}${originPart}${luckyPart}`,
-    `${name} Name Meaning, ${religionPart} Origin${luckyPart}${personalityPart}`,
     `${name} Meaning in ${religionPart}, ${origin || 'Origin'}${luckyPart}${personalityPart}`,
-    `${name} Name Meaning${originPart}, ${religionPart} Details${luckyPart}`,
-    `${name} Name Meaning${languagePart}, ${origin || 'Origin'} Origin & ${religionPart} Details`,
-    `${name} Name Meaning, Lucky Number & ${origin || 'Origin'} Origin`,
-    `${name} Name Meaning${languagePart}, Personality & Lucky Number`,
+    `${name} Name Meaning, ${religionPart} Origin${luckyPart}${pronunciationPart}`,
+    
+    // Language-specific variants
+    `${name} Name Meaning${languagePart}, ${origin || 'Origin'} Origin & Lucky Number`,
+    `${name} Meaning in ${language || religionPart}, ${origin || 'Origin'}${luckyPart}`,
+    
+    // Feature-specific variants
     `${name} Name Meaning${originPart}${pronunciationPart}${luckyPart}`,
-    `${name} Name Meaning, Origin, Personality & ${religionPart} Details`,
+    `${name} Name Meaning${languagePart}, Personality & Lucky Number`,
+    `${name} Name Meaning, Lucky Number & ${origin || 'Origin'} Origin`,
+    
+    // Religion-specific variants
+    `${name} Name Meaning, ${religionPart} Origin${luckyPart}${personalityPart}`,
     `${name} Meaning in ${religionPart}, ${origin || 'Origin'} Origin & Lucky Number`,
+    `${name} Name Meaning${originPart}, ${religionPart} Details${luckyPart}`,
+    `${name} Name Meaning, Origin, Personality & ${religionPart} Details`,
   ];
 
+  // Language-specific additions
   if (language === 'Urdu') {
     candidates.push(`${name} Name Meaning in Urdu, ${origin || 'Origin'} Origin & Lucky Number`);
     candidates.push(`${name} Meaning in Urdu, ${religionPart} Name & Personality`);
+    candidates.push(`${name} Meaning in Urdu, English & Arabic | NameVerse`);
   }
 
   if (language === 'Hindi') {
@@ -198,12 +218,26 @@ function buildTitleCandidates(data, religion) {
     candidates.push(`${name} Meaning in Hindi, ${religionPart} Name & Personality`);
   }
 
+  if (language === 'Arabic') {
+    candidates.push(`${name} Name Meaning in Arabic, ${origin || 'Origin'} Origin & Lucky Number`);
+    if (normalizedReligion === 'islamic') {
+      candidates.push(`${name} Meaning in Quran, Urdu & Arabic | NameVerse`);
+    }
+  }
+
   if (language === 'English') {
     candidates.push(`${name} Name Meaning in English, ${origin || 'Origin'} Origin & Christian Details`);
   }
 
+  // Pronunciation variant
   if (hasPronunciation) {
     candidates.push(`${name} Name Meaning${languagePart}, Pronunciation & ${origin || 'Origin'} Origin`);
+    candidates.push(`${name} Name Meaning, Pronunciation & Lucky Number | NameVerse`);
+  }
+
+  // Personality variant
+  if (personality) {
+    candidates.push(`${name} Name Meaning, Personality & Lucky Number | NameVerse`);
   }
 
   return Array.from(new Set(candidates.map(candidate => limitTitle(candidate))));
@@ -226,7 +260,13 @@ export function generateCTRTitle(data, religion) {
     }))
     .sort((a, b) => b.score - a.score || a.tieBreaker - b.tieBreaker);
 
-  return ranked[0]?.title || `${name} Name Meaning | NameVerse`;
+  const best = ranked[0]?.title || `${name} Name Meaning | NameVerse`;
+  
+  // Ensure no double branding
+  const brandPattern = /\| NameVerse\s*\| NameVerse/g;
+  const cleaned = best.replace(brandPattern, '| NameVerse');
+  
+  return cleaned;
 }
 
 function fitMetaDescription(text) {
@@ -250,18 +290,21 @@ function scoreDescription(description) {
   let score = 0;
   const lower = description.toLowerCase();
 
-  if (lower.includes('name meaning')) score += 18;
-  if (lower.includes('origin')) score += 10;
-  if (lower.includes('islamic') || lower.includes('christian') || lower.includes('hindu')) score += 10;
-  if (lower.includes('lucky number')) score += 10;
+  if (lower.includes('name meaning')) score += 20;
+  if (lower.includes('origin')) score += 12;
+  if (lower.includes('islamic') || lower.includes('christian') || lower.includes('hindu')) score += 12;
+  if (lower.includes('lucky number')) score += 12;
   if (lower.includes('pronunciation')) score += 10;
-  if (lower.includes('personality')) score += 8;
-  if (lower.includes('translation')) score += 8;
-  if (description.length >= DESCRIPTION_MIN && description.length <= DESCRIPTION_MAX) score += 18;
+  if (lower.includes('personality')) score += 10;
+  if (lower.includes('translation')) score += 10;
+  if (lower.includes('cultural') || lower.includes('culture')) score += 8;
+  if (lower.includes('meaningful') || lower.includes('beautiful') || lower.includes('unique')) score += 6;
+  if (description.length >= DESCRIPTION_MIN && description.length <= DESCRIPTION_MAX) score += 20;
   else if (description.length > DESCRIPTION_MAX) score -= (description.length - DESCRIPTION_MAX) * 2;
   else score -= (DESCRIPTION_MIN - description.length);
 
-  if ((description.match(/,/g) || []).length > 5) score -= 4;
+  if ((description.match(/,/g) || []).length > 5) score -= 5;
+  if (description.endsWith('...')) score -= 3;
   return score;
 }
 
@@ -279,6 +322,8 @@ export function generateCTRDescription(data, religion) {
   const pronunciation = data.pronunciation?.english || data.pronunciation?.ipa || '';
   const personality = getPersonalitySummary(data);
   const luckyNumber = data.lucky_number || data.luckyNumber || '';
+  const gender = String(data.gender || '').toLowerCase();
+  const genderLabel = gender.includes('male') ? 'boy' : gender.includes('female') ? 'girl' : 'baby';
 
   const originPhrase = origin ? `${origin} origin` : `${religionLabel.toLowerCase()} origin`;
   const languagePhrase = language ? `${language} translation` : 'translation';
@@ -288,10 +333,11 @@ export function generateCTRDescription(data, religion) {
 
   const variants = [
     `Discover ${name} name meaning in ${language || 'English'} and ${origin}, its ${religionLabel} significance, ${luckyPhrase}, ${pronunciationPhrase}, ${personalityPhrase}, origin, and cultural background.`,
-    `${name} name meaning, ${originPhrase}, ${religionLabel} significance, ${luckyPhrase}, ${pronunciationPhrase}, ${personalityPhrase}, and ${languagePhrase} for parents choosing a meaningful baby name.`,
+    `${name} name meaning, ${originPhrase}, ${religionLabel} significance, ${luckyPhrase}, ${pronunciationPhrase}, ${personalityPhrase}, and ${languagePhrase} for parents choosing a meaningful ${genderLabel} name.`,
     `Learn what ${name} means in ${language || 'English'}, where it comes from, how it is pronounced, its ${originPhrase}, ${religionLabel} context, ${luckyPhrase}, and personality traits.`,
-    `${name} is a ${originPhrase} name meaning "${meaning}". Explore its ${religionLabel} significance, ${luckyPhrase}, ${pronunciationPhrase}, ${personalityPhrase}, and ${languagePhrase} on NameVerse.`,
+    `${name} is a ${originPhrase} ${genderLabel} name meaning "${meaning}". Explore its ${religionLabel} significance, ${luckyPhrase}, ${pronunciationPhrase}, ${personalityPhrase}, and ${languagePhrase} on NameVerse.`,
     `Find ${name} name meaning, ${originPhrase}, ${religionLabel} details, ${luckyPhrase}, ${pronunciationPhrase}, personality traits, and ${languagePhrase} in one clear baby-name guide.`,
+    `${name} means "${meaning}" in ${origin || religionLabel} tradition. Discover pronunciation, lucky number ${luckyNumber || 'N/A'}, personality traits, and cultural significance.`,
   ];
 
   const ranked = variants
