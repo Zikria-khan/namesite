@@ -52,7 +52,7 @@ export default function RevolthemAds() {
       document.body.appendChild(script);
     }
 
-    // Native banner
+    // Native banner — container inserted at the top of <body> so the ad renders near the top of the page
     if (!document.getElementById('revolthem-native-banner')) {
       const script = document.createElement('script');
       script.id = 'revolthem-native-banner';
@@ -63,7 +63,17 @@ export default function RevolthemAds() {
 
       const container = document.createElement('div');
       container.id = 'container-1606e7870f004d67136f85f2b1698cd3';
-      document.body.appendChild(container);
+      container.style.width = '100%';
+      container.style.maxWidth = '100%';
+      container.style.overflow = 'hidden';
+      container.style.marginTop = '16px';
+      container.style.marginBottom = '24px';
+      // Insert as the first child of <body> so it appears at the top of the page
+      if (document.body.firstChild) {
+        document.body.insertBefore(container, document.body.firstChild);
+      } else {
+        document.body.appendChild(container);
+      }
     }
   }, []);
 
