@@ -200,10 +200,16 @@ export default function KnowledgeGraph({ data, religion }) {
           const typeLabel = getEntityTypeLabel(entity.type);
           const IconComponent = getEntityIcon(entity.type);
 
+          const label = typeof entity.label === 'string' ? entity.label : String(entity.label || '');
+          const description = typeof entity.description === 'string' ? entity.description : String(entity.description || '');
+          const href = typeof entity.url === 'string' ? entity.url : '#';
+
+          if (!label) return null;
+
           return (
             <Link
               key={entity.key}
-              href={entity.url || '#'}
+              href={href}
               className={`rounded-xl border p-4 transition-all hover:shadow-md ${colorClass}`}
             >
               <div className="flex items-start gap-3">
@@ -211,7 +217,7 @@ export default function KnowledgeGraph({ data, religion }) {
                   {typeof IconComponent === 'function' ? (
                     <IconComponent className="h-4 w-4" />
                   ) : (
-                    <span className="text-sm">{IconComponent}</span>
+                    <span className="text-sm">{String(IconComponent || '')}</span>
                   )}
                 </div>
                 <div className="min-w-0">
@@ -221,10 +227,10 @@ export default function KnowledgeGraph({ data, religion }) {
                     </span>
                   </div>
                   <span className="block text-sm font-semibold mt-0.5 truncate">
-                    {entity.label}
+                    {label}
                   </span>
                   <span className="block text-xs mt-1 opacity-75 line-clamp-2">
-                    {entity.description}
+                    {description}
                   </span>
                 </div>
               </div>

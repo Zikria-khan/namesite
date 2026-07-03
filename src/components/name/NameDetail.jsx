@@ -224,7 +224,7 @@ export default function CulturalNameAnalysisCard({ data, faqData = [], pageUrl, 
           </div>
         </section>
 
-        <FAQ faqData={faqData} name={data.name} />
+        <FAQ faqData={safeFaqData} name={data.name} />
       </div>
 
       <BlogSection religion={religion} title={`${religionLabel} Name Guides`} />
