@@ -6,7 +6,7 @@ import StructuredData from '@/components/SEO/StructuredData';
 import BlogImageWithFallback from '@/components/Blog/BlogImageWithFallback';
 import { getSiteUrl } from '@/lib/seo/site';
 import SitePage from '@/components/Layout/SitePage';
-import AdSlot from '@/components/Ads/AdSlot';
+import NativeAdBanner from '@/components/Ads/NativeAdBanner';
 
 // ISR with 90-day cache for blog index — keep content stable
 export const revalidate = 7776000; // 90 days
@@ -95,7 +95,7 @@ export default function BlogPage() {
          </div>
        </section>
        
-       <AdSlot slotId="9605048971" className="mb-8" minHeight="90px" aria-label="Blog header advertisement" />
+       <NativeAdBanner className="my-6" minHeight="90px" />
 
       {/* Blog internal links */}
       <section className="py-10 px-4 bg-gradient-to-r from-indigo-50 via-white to-cyan-50 border-b border-gray-200">
@@ -298,7 +298,7 @@ export default function BlogPage() {
         </div>
        </section>
  
-       <AdSlot slotId="9605048973" className="mb-8" minHeight="90px" aria-label="Blog lower content advertisement" />
+       <NativeAdBanner className="my-6" minHeight="90px" />
  
        {/* FAQ Section */}
        <section className="py-16 px-4 bg-slate-50">
@@ -315,7 +315,7 @@ export default function BlogPage() {
          </div>
        </section>
  
-       <AdSlot slotId="9605048974" className="mb-8" minHeight="90px" aria-label="Blog CTA advertisement" />
+       <NativeAdBanner className="my-6" minHeight="90px" />
  
        {/* CTA Section */}
        <section className="py-16 px-4">

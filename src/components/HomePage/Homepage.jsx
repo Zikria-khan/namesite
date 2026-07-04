@@ -18,6 +18,7 @@ import {
   Users,
 } from 'lucide-react';
 import HomePageSearch from '@/components/HomePage/HomePageSearch';
+import createSafeSlug from '@/lib/utils/createSafeSlug';
 
 const LatestArticles = dynamic(() => import('./LatestArticles'), {
   ssr: false,
@@ -197,9 +198,10 @@ function HubCard({ item }) {
 }
 
 function TrendingCard({ name }) {
+  const slug = name.slug || createSafeSlug(name.name);
   return (
     <Link
-      href={`/names/${name.religion}/${name.name.toLowerCase()}`}
+      href={`/names/${name.religion}/${slug}`}
       className="group rounded-[1.5rem] border border-[color:var(--nv-border)] bg-white/62 p-4 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white"
     >
       <div className="flex items-center justify-between gap-3">

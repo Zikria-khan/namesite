@@ -14,9 +14,6 @@ import { AppProvider } from "@/contexts/AppContext";
 import LoadingWrapper from "@/components/LoadingAnimation/LoadingWrapper";
 import { Suspense } from 'react';
 import RouteChrome from "@/components/Layout/RouteChrome";
-import RevolthemAds from "@/components/Ads/RevolthemAds";
-
-
 import { getSiteUrl } from '@/lib/seo/site';
 // Use environment variable or default - will be overridden client-side if needed
 const siteUrl = getSiteUrl();
@@ -185,9 +182,6 @@ export default function RootLayout({ children }) {
           </AppProvider>
         </div>
 
-        {/* Revolthem Ads — loaded globally on every page */}
-        {/* This ensures ads don't block rendering and don't affect LCP/CLS */}
-        <RevolthemAds />
       </body>
     </html>
   );

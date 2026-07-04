@@ -42,16 +42,6 @@ export default function RevolthemAds() {
       document.body.appendChild(script);
     }
 
-    // Popunder
-    if (!document.getElementById('revolthem-popunder')) {
-      const script = document.createElement('script');
-      script.id = 'revolthem-popunder';
-      script.async = true;
-      script.setAttribute('data-cfasync', 'false');
-      script.src = 'https://revolthem.com/15/fc/e7/15fce756a2be02e450ad8ee3543b0575.js';
-      document.body.appendChild(script);
-    }
-
     // Native banner — container inserted at the top of <body> so the ad renders near the top of the page
     if (!document.getElementById('revolthem-native-banner')) {
       const script = document.createElement('script');

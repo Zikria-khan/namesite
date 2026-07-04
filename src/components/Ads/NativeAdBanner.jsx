@@ -46,7 +46,7 @@ function ensureContainer(container) {
   return wrapper;
 }
 
-export default function AdBanner({ className = '', pathname }) {
+export default function NativeAdBanner({ className = '', pathname, minHeight = '90px' }) {
   const containerRef = useRef(null);
   const loaded = useRef(false);
   const [inView, setInView] = useState(false);
@@ -95,7 +95,7 @@ export default function AdBanner({ className = '', pathname }) {
         px-2 sm:px-4 overflow-hidden select-none
         ${className}
       `}
-      style={{ minHeight: '90px' }}
+      style={{ minHeight }}
     />
   );
 }
