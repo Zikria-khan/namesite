@@ -133,10 +133,15 @@ function scoreTitle(title, data, religion, language) {
 
   let score = 0;
   const lower = title.toLowerCase();
+  const coreMeaning = extractCoreMeaning(data.short_meaning || data.meaning || '').toLowerCase();
 
   if (lower.startsWith(`${String(data.name || '').toLowerCase()} `)) score += 10;
-  if (lower.includes('name meaning')) score += 30;
+  if (lower.includes('name meaning')) score += 22;
   if (lower.includes('meaning in')) score += 15;
+  // Titles that state the actual meaning (not just the word "meaning")
+  // are more unique across the site and read as more specific/trustworthy
+  // in the SERP, which is worth more than the generic phrase.
+  if (coreMeaning && lower.includes(coreMeaning.split(' ')[0])) score += 25;
   if (language && lower.includes(` in ${language.toLowerCase()}`)) score += 18;
   if (origin && title.includes(origin)) score += 12;
   if (title.includes(religionLabel)) score += 12;
@@ -157,6 +162,11 @@ function scoreTitle(title, data, religion, language) {
   const repeated = (title.match(/\b(Name|Meaning|Origin|Lucky|Personality|Details|Pronunciation)\b/gi) || []).length;
   if (repeated > 4) score -= (repeated - 4) * 8;
   if ((title.match(/,/g) || []).length > 3) score -= 5;
+
+  // Penalize ugly truncation — e.g. "...Lucky Number &..." where the cut
+  // lands right after a dangling connector. A clean, shorter title should
+  // win the tie instead of a longer one that had to be chopped mid-phrase.
+  if (/[&,]\s*\.\.\.$/.test(title)) score -= 30;
 
   // Religion-specific penalties
   if (normalizedReligion !== 'islamic' && lower.includes('quranic')) score -= 15;
@@ -205,6 +215,24 @@ function buildTitleCandidates(data, religion) {
     `${name} Name Meaning${originPart}, ${religionPart} Details${luckyPart}`,
     `${name} Name Meaning, Origin, Personality & ${religionPart} Details`,
   ];
+
+  // Meaning-led variants: state the actual meaning instead of the generic
+  // word "Meaning". This is what the strongest competitor snippets do
+  // (e.g. "Kashaf: To Reveal - Arabic Origin"). Because the meaning text
+  // differs name to name, these titles are naturally unique instead of a
+  // reshuffled formula.
+  if (meaning) {
+    // Keep the literal phrase "Name Meaning" (it's what people actually
+    // type — "faizan name meaning in urdu" was your #1 query) AND state
+    // the real meaning value, so the title matches search intent while
+    // still being genuinely unique per page.
+    candidates.push(`${name} Name Meaning: "${meaning}"${originPart}${luckyPart}`);
+    candidates.push(`${name} Name Meaning "${meaning}"${languagePart}${originPart}`);
+    candidates.push(`${name} Meaning: "${meaning}" | ${religionPart} Name${luckyPart}`);
+    if (language) {
+      candidates.push(`${name} Name Meaning "${meaning}" in ${language}${originPart}`);
+    }
+  }
 
   // Language-specific additions
   if (language === 'Urdu') {
@@ -269,12 +297,127 @@ export function generateCTRTitle(data, religion) {
   return cleaned;
 }
 
-function fitMetaDescription(text) {
+/**
+ * ===========================
+ * DESCRIPTION GENERATION
+ * ===========================
+ *
+ * WHY THIS WAS REWRITTEN:
+ * The old version built every description from one skeleton sentence with
+ * words swapped in ("Discover X name meaning in Y and Z, its W
+ * significance, lucky number N, pronunciation P, personality traits T,
+ * origin, and cultural background."). Across thousands of pages that
+ * produces near-identical structure, word order, and connector phrases —
+ * a "mail-merge" fingerprint. Google's indexing systems detect this at
+ * scale and stop trusting the tag, silently swapping in their own
+ * (often generic, less specific) snippet instead — which is exactly what
+ * was suppressing CTR even on pages ranking well.
+ *
+ * This version fixes two things at once:
+ *  1. Leads with the actual meaning, since that's the single strongest
+ *     click driver and the thing that makes every page's first ~60
+ *     characters genuinely different from every other page.
+ *  2. Varies which 2 secondary attributes get mentioned (not always all
+ *     five), so the feature-combination itself differs page to page, not
+ *     just the nouns slotted into an identical sentence.
+ */
+
+// Distinct sentence shapes (not just word substitution — different
+// grammar and emphasis) that each foreground the meaning first.
+const DESCRIPTION_OPENERS = [
+  (name, meaning) => `${name} means "${meaning}."`,
+  (name, meaning) => `"${meaning}" — that's the meaning behind the name ${name}.`,
+  (name, meaning) => `${name} carries the meaning "${meaning}."`,
+  (name, meaning) => `The name ${name} translates to "${meaning}."`,
+];
+
+// Pools of short, natural secondary-detail fragments keyed by attribute.
+// Two are picked per description (deterministically, but varying which
+// ones based on the name+attribute so the combination differs by page).
+function buildDetailPool({ origin, religionLabel, language, pronunciation, personality, luckyNumber, genderLabel }) {
+  const pool = [];
+  if (origin) pool.push(`It has ${origin} origin`);
+  if (religionLabel) pool.push(`used in ${religionLabel} naming traditions`);
+  if (language) pool.push(`with a ${language} translation available`);
+  if (pronunciation) pool.push(`pronounced ${pronunciation}`);
+  if (personality) pool.push(`often linked to traits like ${personality}`);
+  if (luckyNumber) pool.push(`lucky number ${luckyNumber}`);
+  if (genderLabel) pool.push(`a popular choice for a baby ${genderLabel}`);
+  return pool;
+}
+
+// Natural connector phrasings so the join between fragments isn't always
+// the same comma-separated list.
+const CONNECTORS = [
+  (a, b) => `${a}, and ${b}.`,
+  (a, b) => `${a}. Also ${b}.`,
+  (a, b) => `${a} — ${b}.`,
+  (a, b) => `${a}, plus ${b}.`,
+];
+
+// Varied closing fillers used only when a description needs padding to
+// reach the minimum length. Rotating these (instead of one fixed
+// sentence) avoids reintroducing a new duplicate fingerprint.
+const CLOSERS = [
+  (name) => `See full origin, pronunciation, and cultural details for ${name} on NameVerse.`,
+  (name) => `NameVerse breaks down ${name}'s full cultural and linguistic background.`,
+  (name) => `Get the complete picture on ${name}, from origin to modern usage, on NameVerse.`,
+];
+
+export function generateCTRDescription(data, religion) {
+  const name = cleanText(data.name || 'Name');
+  const origin = getOrigin(data);
+  const religionLabel = getReligionLabel(religion || data.religion);
+  const language = getTranslationLanguage(data, religion || data.religion);
+  const meaning = extractCoreMeaning(data.short_meaning || data.meaning || '') || 'a meaningful cultural name';
+  const pronunciation = data.pronunciation?.english || data.pronunciation?.ipa || '';
+  const personality = getPersonalitySummary(data);
+  const luckyNumber = data.lucky_number || data.luckyNumber || '';
+  const gender = String(data.gender || '').toLowerCase();
+  // NOTE: "female" contains the substring "male", so male must never be
+  // checked first or every girl name gets misclassified as a boy.
+  const genderLabel = gender.includes('female')
+    ? 'girl'
+    : gender.includes('unisex') || gender.includes('neutral')
+      ? ''
+      : gender.includes('male')
+        ? 'boy'
+        : '';
+
+  const seedBase = `${name}-${religionLabel}-${meaning}`;
+  const seed = getStableHash(seedBase);
+
+  const opener = DESCRIPTION_OPENERS[seed % DESCRIPTION_OPENERS.length](name, meaning);
+
+  const detailPool = buildDetailPool({ origin, religionLabel, language, pronunciation, personality, luckyNumber, genderLabel });
+
+  // Pick two distinct details, offset by the hash so different pages
+  // surface different attribute combinations rather than always
+  // front-loading the same two.
+  let body = '';
+  if (detailPool.length >= 2) {
+    const first = detailPool[seed % detailPool.length];
+    let secondIndex = (seed >>> 3) % detailPool.length;
+    if (detailPool[secondIndex] === first) secondIndex = (secondIndex + 1) % detailPool.length;
+    const second = detailPool[secondIndex];
+    const connector = CONNECTORS[seed % CONNECTORS.length];
+    body = ` ${connector(capitalize(first), second)}`;
+  } else if (detailPool.length === 1) {
+    body = ` ${capitalize(detailPool[0])}.`;
+  }
+
+  let description = fitMetaDescriptionVaried(`${opener}${body}`, name, seed);
+
+  return description;
+}
+
+function fitMetaDescriptionVaried(text, name, seed) {
   let description = cleanText(text);
   if (!description) return '';
 
   if (description.length < DESCRIPTION_MIN) {
-    description += ' Explore NameVerse for origin, lucky number, pronunciation, personality traits, and translations.';
+    const closer = CLOSERS[seed % CLOSERS.length](name);
+    description = `${description} ${closer}`;
   }
 
   if (description.length > DESCRIPTION_MAX) {
@@ -284,76 +427,6 @@ function fitMetaDescription(text) {
   }
 
   return description;
-}
-
-function scoreDescription(description) {
-  let score = 0;
-  const lower = description.toLowerCase();
-
-  if (lower.includes('name meaning')) score += 20;
-  if (lower.includes('origin')) score += 12;
-  if (lower.includes('islamic') || lower.includes('christian') || lower.includes('hindu')) score += 12;
-  if (lower.includes('lucky number')) score += 12;
-  if (lower.includes('pronunciation')) score += 10;
-  if (lower.includes('personality')) score += 10;
-  if (lower.includes('translation')) score += 10;
-  if (lower.includes('cultural') || lower.includes('culture')) score += 8;
-  if (lower.includes('meaningful') || lower.includes('beautiful') || lower.includes('unique')) score += 6;
-  if (description.length >= DESCRIPTION_MIN && description.length <= DESCRIPTION_MAX) score += 20;
-  else if (description.length > DESCRIPTION_MAX) score -= (description.length - DESCRIPTION_MAX) * 2;
-  else score -= (DESCRIPTION_MIN - description.length);
-
-  if ((description.match(/,/g) || []).length > 5) score -= 5;
-  if (description.endsWith('...')) score -= 3;
-  return score;
-}
-
-/**
- * ===========================
- * DESCRIPTION GENERATION
- * ===========================
- */
-export function generateCTRDescription(data, religion) {
-  const name = cleanText(data.name || 'Name');
-  const origin = getOrigin(data);
-  const religionLabel = getReligionLabel(religion || data.religion);
-  const language = getTranslationLanguage(data, religion || data.religion);
-  const meaning = extractCoreMeaning(data.short_meaning || data.meaning || '');
-  const pronunciation = data.pronunciation?.english || data.pronunciation?.ipa || '';
-  const personality = getPersonalitySummary(data);
-  const luckyNumber = data.lucky_number || data.luckyNumber || '';
-  const gender = String(data.gender || '').toLowerCase();
-  const genderLabel = gender.includes('male') ? 'boy' : gender.includes('female') ? 'girl' : 'baby';
-
-  const originPhrase = origin ? `${origin} origin` : `${religionLabel.toLowerCase()} origin`;
-  const languagePhrase = language ? `${language} translation` : 'translation';
-  const pronunciationPhrase = pronunciation ? `pronunciation ${pronunciation}` : 'pronunciation';
-  const personalityPhrase = personality ? `personality traits ${personality}` : 'personality traits';
-  const luckyPhrase = luckyNumber ? `lucky number ${luckyNumber}` : 'lucky number';
-
-  const variants = [
-    `Discover ${name} name meaning in ${language || 'English'} and ${origin}, its ${religionLabel} significance, ${luckyPhrase}, ${pronunciationPhrase}, ${personalityPhrase}, origin, and cultural background.`,
-    `${name} name meaning, ${originPhrase}, ${religionLabel} significance, ${luckyPhrase}, ${pronunciationPhrase}, ${personalityPhrase}, and ${languagePhrase} for parents choosing a meaningful ${genderLabel} name.`,
-    `Learn what ${name} means in ${language || 'English'}, where it comes from, how it is pronounced, its ${originPhrase}, ${religionLabel} context, ${luckyPhrase}, and personality traits.`,
-    `${name} is a ${originPhrase} ${genderLabel} name meaning "${meaning}". Explore its ${religionLabel} significance, ${luckyPhrase}, ${pronunciationPhrase}, ${personalityPhrase}, and ${languagePhrase} on NameVerse.`,
-    `Find ${name} name meaning, ${originPhrase}, ${religionLabel} details, ${luckyPhrase}, ${pronunciationPhrase}, personality traits, and ${languagePhrase} in one clear baby-name guide.`,
-    `${name} means "${meaning}" in ${origin || religionLabel} tradition. Discover pronunciation, lucky number ${luckyNumber || 'N/A'}, personality traits, and cultural significance.`,
-  ];
-
-  const ranked = variants
-    .map(description => ({
-      description: fitMetaDescription(description),
-      score: 0,
-      tieBreaker: 0,
-    }))
-    .map(item => ({
-      ...item,
-      score: scoreDescription(item.description),
-      tieBreaker: getStableHash(`${name}-${item.description}`),
-    }))
-    .sort((a, b) => b.score - a.score || a.tieBreaker - b.tieBreaker);
-
-  return ranked[0]?.description || fitMetaDescription(`Discover ${name} name meaning, origin, religion, lucky number, pronunciation, personality traits, and translations on NameVerse.`);
 }
 
 /**

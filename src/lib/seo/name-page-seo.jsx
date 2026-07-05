@@ -50,17 +50,20 @@ function getCoreMeaning(data) {
 
 function getGender(data) {
   const gender = cleanText(data.gender).toLowerCase();
-  if (gender.includes('male')) return 'boy';
+  // IMPORTANT: check 'female'/'unisex' before 'male' — the string
+  // "female" contains "male" as a substring, so checking male first
+  // silently misclassifies every girl/unisex name as a boy.
   if (gender.includes('female')) return 'girl';
   if (gender.includes('unisex') || gender.includes('neutral')) return 'unisex';
+  if (gender.includes('male')) return 'boy';
   return 'baby';
 }
 
 function getGenderLabel(data) {
   const gender = cleanText(data.gender).toLowerCase();
-  if (gender.includes('male')) return 'Male';
   if (gender.includes('female')) return 'Female';
   if (gender.includes('unisex') || gender.includes('neutral')) return 'Unisex';
+  if (gender.includes('male')) return 'Male';
   return cleanText(data.gender) || 'Unisex';
 }
 
