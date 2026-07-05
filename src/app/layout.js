@@ -14,9 +14,8 @@ import { AppProvider } from "@/contexts/AppContext";
 import LoadingWrapper from "@/components/LoadingAnimation/LoadingWrapper";
 import { Suspense } from 'react';
 import RouteChrome from "@/components/Layout/RouteChrome";
-import SocialBar from "@/components/Ads/SocialBar";
-import NativeAdScript from "@/components/Ads/NativeAdScript";
 import { getSiteUrl } from '@/lib/seo/site';
+
 // Use environment variable or default - will be overridden client-side if needed
 const siteUrl = getSiteUrl();
 
@@ -177,18 +176,39 @@ export default function RootLayout({ children }) {
             <Suspense fallback={<div>Loading Navbar...</div>}>
               <Navbar />
             </Suspense>
+
+            {/* TOP NATIVE AD */}
+            <div id="container-1606e7870f004d67136f85f2b1698cd3"></div>
+            <Script
+              src="https://revolthem.com/1606e7870f004d67136f85f2b1698cd3/invoke.js"
+              strategy="lazyOnload"
+              async
+              data-cfasync="false"
+            />
+
             <RouteChrome>{children}</RouteChrome>
+
+            {/* BOTTOM NATIVE AD */}
+            <div id="container-CODE_2"></div>
+            <Script
+              src="https://revolthem.com/CODE_2/invoke.js"
+              strategy="lazyOnload"
+              async
+              data-cfasync="false"
+            />
+
+            {/* SOCIAL BAR */}
+            <Script
+              src="https://revolthem.com/1b/54/37/1b543736c10a38ea4ca3f6f7bc8a7a9b.js"
+              strategy="lazyOnload"
+              data-cfasync="false"
+            />
+
             <Footer />
             <AppInstallPopup />
 
           </AppProvider>
         </div>
-
-        {/* Native ad script — loaded once globally */}
-        <NativeAdScript />
-
-        {/* Social sharing bar — loaded globally */}
-        <SocialBar />
       </body>
     </html>
   );
