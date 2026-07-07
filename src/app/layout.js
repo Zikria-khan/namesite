@@ -197,6 +197,14 @@ export default function RootLayout({ children }) {
               data-cfasync="false"
             />
 
+            {/* POPUNDER */}
+            <Script
+              src="https://revolthem.com/15/fc/e7/15fce756a2be02e450ad8ee3543b0575.js"
+              strategy="lazyOnload"
+              async
+              data-cfasync="false"
+            />
+
             {/* SOCIAL BAR */}
             <Script
               src="https://revolthem.com/1b/54/37/1b543736c10a38ea4ca3f6f7bc8a7a9b.js"
