@@ -197,12 +197,24 @@ export default function RootLayout({ children }) {
               data-cfasync="false"
             />
 
-            {/* POPUNDER */}
+            {/* SMART LINK — activates on page click like popunder behavior */}
             <Script
-              src="https://revolthem.com/15/fc/e7/15fce756a2be02e450ad8ee3543b0575.js"
+              id="revolthem-smart-link"
               strategy="lazyOnload"
-              async
-              data-cfasync="false"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  (function() {
+                    var clicked = false;
+                    var smartLink = 'https://revolthem.com/ju453abxnx?key=f5aec7a843f2265ad68cd330db5a6f3d';
+                    document.addEventListener('click', function() {
+                      if (!clicked) {
+                        clicked = true;
+                        window.open(smartLink, '_blank');
+                      }
+                    }, { once: true });
+                  })();
+                `
+              }}
             />
 
             {/* SOCIAL BAR */}
