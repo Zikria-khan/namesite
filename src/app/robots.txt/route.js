@@ -16,6 +16,15 @@ Disallow: /*?utm_
 Disallow: /*?ref=
 Disallow: /*?source=
 
+# Block special-character paths (IPA, Arabic, Urdu) so crawlers never index
+# the broken-404 class generated when phonetic/AR text is mistaken for a URL.
+Disallow: /*%E1%BD%
+Disallow: /*%CA%
+Disallow: /*%C9%
+Disallow: /*%D9%
+Disallow: /*%DA%
+Disallow: /*%E2%80%8C*
+
 Sitemap: ${getSiteUrl()}/sitemap.xml
 `;
 

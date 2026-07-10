@@ -76,6 +76,15 @@ const nextConfig = {
   // Headers for Performance & Edge Caching
   async headers() {
     return [
+      // DEFENSE: IPA (e.g. ˈroʊ.i, ʃaːhroːx) and Arabic/Urdu text are rendered as
+      // plain <span> content, never as links. But if a crawler ever reaches a URL
+      // whose path begins with IPA or Arabic/Urdu characters (the 190+ broken-404
+      // class from the GSC audit), noindex it so it never competes with real pages.
+      {
+        source:
+          '/:path([ˈˌæɑɒɔəɛɜɪɨɵʊʌʒθðʃŋɹɾ\\u0600-\\u06FF\\u0750-\\u077F].*)',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
+      },
       // API routes - no cache + noindex
       {
         source: '/api/:path*',
