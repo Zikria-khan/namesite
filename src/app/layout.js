@@ -125,6 +125,7 @@ export default function RootLayout({ children }) {
         <link rel="manifest" href="/manifest.json" />
         <meta name="ahrefs-site-verification" content="650afaf6635223ff618a281883a22b69b937a121e933b19907debeca67754cd4" />
         <meta name="415fb3e376dd03499e3ea3cfd086272b2330a942" content="415fb3e376dd03499e3ea3cfd086272b2330a942" />
+        <meta name="p:domain_verify" content="2182ce49319a6b4ede3da073a469ce4a" />
 
         <link rel="preconnect" href="https://revolthem.com" />
         <link rel="dns-prefetch" href="https://revolthem.com" />
