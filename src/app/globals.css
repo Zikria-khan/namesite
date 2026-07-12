@@ -114,7 +114,7 @@ body {
   font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   background: var(--nv-canvas);
   color: var(--nv-ink);
-  padding-bottom: 270px;
+  padding-bottom: 2rem;
 }
 
 ::selection {
