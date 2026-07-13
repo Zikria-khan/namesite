@@ -18,7 +18,7 @@
  */
 
 const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || 'https://name-meaning-site-backend.vercel.app').replace(/\/+$/, '');
-const ISR_TTL = 2592000; // 30 days
+const ISR_TTL = 31536000; // 365 days
 
 // Reuse the canonical slug builder so similar-name strings are normalized the
 // exact same way the rest of the app links to them.
@@ -234,9 +234,9 @@ export async function serverFetchNameDetail(religion, slug) {
   const normalizedReligion = normalizeReligion(religion);
   const safeSlug = encodeURIComponent(String(slug).trim().toLowerCase());
 
-  // Use retry + 30-day cache for name detail lookups.
+  // Use retry + 365-day cache for name detail lookups.
   // A single transient error must NOT cause a permanent 404.
-  // 30-day cache is free-tier friendly: each function call is cached for 30 days.
+  // 365-day cache is free-tier friendly: each function call is cached for 365 days.
   let result = await isrFetchWithRetry(
     `${API_BASE}/api/v1/names/${normalizedReligion}/${safeSlug}`,
     2,

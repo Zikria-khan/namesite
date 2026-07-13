@@ -14,7 +14,7 @@ const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 export const dynamicParams = true;
 
 // 30-day cache: pages are generated once and cached for 30 days.
-export const revalidate = 2592000;
+export const revalidate = 31536000; // 365 days
 
 // Load local name data as fallback
 function loadLocalNameData(religion, slug) {

@@ -9,7 +9,7 @@ import SitePage from '@/components/Layout/SitePage';
 import NativeBanner from '@/components/Ads/NativeBanner';
 
 // ISR with 90-day cache for blog index — keep content stable
-export const revalidate = 7776000; // 90 days
+export const revalidate = 31536000; // 365 days
 
 const blogPostsData = JSON.parse(
   readFileSync(join(process.cwd(), 'public', 'data', 'blog-posts.json'), 'utf8')

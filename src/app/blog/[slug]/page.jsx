@@ -13,7 +13,7 @@ import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 import NativeBanner from '@/components/Ads/NativeBanner';
 
 // ISR with 90-day cache for blog posts — keep content stable
-export const revalidate = 7776000; // 90 days
+export const revalidate = 31536000; // 365 days
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;

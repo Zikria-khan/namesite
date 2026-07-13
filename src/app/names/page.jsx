@@ -5,7 +5,7 @@ import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpe
 
 
 // ISR: 30-day cache
-export const revalidate = 2592000; // 30 days
+export const revalidate = 31536000; // 365 days
 
 const categories = [
   {

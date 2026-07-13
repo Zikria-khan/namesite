@@ -5,7 +5,7 @@ import namesData from '../../../../public/data/hindu-boy-names.json';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 
 // ISR: 30-day cache — static JSON data, minimal updates needed
-export const revalidate = 2592000; // 30 days
+export const revalidate = 31536000; // 365 days
 
 // ==========================================
 // METADATA - World Class SEO

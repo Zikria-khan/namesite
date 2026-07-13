@@ -4,7 +4,7 @@ import HomePageClient from '@/components/HomePage/Homepage';
 import { validateMetaDescription, validateMetaTitle } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
 
-export const revalidate = 2592000;
+export const revalidate = 31536000; // 365 days
 
 const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || getSiteUrl();
 const DOMAIN = (() => {

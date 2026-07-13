@@ -11,7 +11,7 @@ const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 const STATIC_CATEGORIES = ['modern', 'traditional', 'nature', 'religious', 'classical', 'unique'];
 
 // ISR with 60-day cache to minimize writes
-export const revalidate = 5184000; // 60 days
+export const revalidate = 31536000; // 365 days
 export const dynamicParams = true;
 
 // Pre-generate category pages at build time

@@ -6,7 +6,7 @@ import ClientComponent from './ClientComponent';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 
 // ISR: 30-day cache — search results are relatively static
-export const revalidate = 2592000; // 30 days
+export const revalidate = 31536000; // 365 days
 
 export async function generateMetadata({ params }) {
   const { term } = await params;

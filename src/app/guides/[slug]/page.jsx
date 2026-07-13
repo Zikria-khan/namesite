@@ -6,7 +6,7 @@ import blogPostsData from '../../../../public/data/blog-posts.json';
 import NativeBanner from '@/components/Ads/NativeBanner';
 
 // ISR: 30-day cache — static blog content
-export const revalidate = 2592000; // 30 days
+export const revalidate = 31536000; // 365 days
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }) {

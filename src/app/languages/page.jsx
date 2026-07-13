@@ -6,7 +6,7 @@ import { getSiteUrl } from '@/lib/seo/site';
 import SitePage from '@/components/Layout/SitePage';
 
 // ISR: 30-day cache — static content
-export const revalidate = 2592000; // 30 days
+export const revalidate = 31536000; // 365 days
 
 export const metadata = {
   title: validateMetaTitle('Baby Names by Language — Multilingual Name Guide | NameVerse'),

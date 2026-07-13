@@ -4,7 +4,7 @@ import { BookOpen, Heart, Star, ArrowRight, Sparkles, Award, CheckCircle, Users,
 import NativeBanner from '@/components/Ads/NativeBanner';
 
 // ISR: 30-day cache — static content
-export const revalidate = 2592000; // 30 days
+export const revalidate = 31536000; // 365 days
 
 export const metadata = {
   title: 'Expert Baby Naming Guide | How to Choose the Perfect Name | NameVerse',

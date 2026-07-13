@@ -20,7 +20,7 @@ const searchPageStructuredData = {
 };
 
 // ISR: 30-day cache
-export const revalidate = 2592000; // 30 days
+export const revalidate = 31536000; // 365 days
 
 export const metadata = {
   title: validateMetaTitle('Search Personal Names — Linguistic Origin Analysis | NameVerse'),
