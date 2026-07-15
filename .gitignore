@@ -30,3 +30,6 @@ Thumbs.db
 *.bak
 *.swp
 *.swo
+
+# Cloudflare / OpenNext generated config (regenerated on every build)
+wrangler.jsonc
