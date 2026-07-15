@@ -1,0 +1,61 @@
+{
+  "name": "NameVerse",
+  "short_name": "NameVerse",
+  "description": "Discover 60,000+ baby names with meanings, origins, and numerology across Islamic, Christian, and Hindu traditions",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen"],
+  "background_color": "#ffffff",
+  "theme_color": "#4F46E5",
+  "prefer_related_applications": false,
+  "categories": ["education", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "Search Names",
+      "short_name": "Search",
+      "description": "Search baby names by religion, gender, and meaning.",
+      "url": "/search",
+      "icons": [
+        {
+          "src": "/logo.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Browse Names",
+      "short_name": "Browse",
+      "description": "Browse baby names by religion and letter.",
+      "url": "/names",
+      "icons": [
+        {
+          "src": "/logo.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

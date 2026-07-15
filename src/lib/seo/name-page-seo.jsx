@@ -301,7 +301,7 @@ export async function generateNamePageMetadata(data, religion, slug) {
       type: 'article',
       locale: 'en_US',
       images: [{
-        url: `${siteUrl}/api/og?name=${encodeURIComponent(name)}&meaning=${encodeURIComponent(safeMeaning)}&religion=${normalizeReligion(religion)}`,
+        url: `${siteUrl}/opengraph-image`,
         width: 1200,
         height: 630,
         alt: `${name} name meaning, ${origin || 'origin'}, lucky number and pronunciation | ${SITE_NAME}`,
@@ -317,7 +317,7 @@ export async function generateNamePageMetadata(data, religion, slug) {
       card: 'summary_large_image',
       title,
       description,
-      images: [`${siteUrl}/api/og?name=${encodeURIComponent(name)}&meaning=${encodeURIComponent(safeMeaning)}&religion=${normalizeReligion(religion)}`],
+      images: [`${siteUrl}/opengraph-image`],
       creator: '@NameVerseOfficial',
       site: '@NameVerseOfficial',
     },

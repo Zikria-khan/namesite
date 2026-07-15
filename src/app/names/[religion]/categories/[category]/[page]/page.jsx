@@ -81,7 +81,7 @@ export async function generateMetadata({ params }) {
   const nextPageUrl = hasNext ? absoluteUrl(`/names/${religion}/categories/${category}/${page + 1}`) : null;
 
   const canonical = generateCanonicalUrl(`/names/${religion}/categories/${category}/${page}`);
-  const ogImage = `${getSiteUrl()}/api/og?section=categories&religion=${religion}&category=${encodeURIComponent(categoryLabel)}`;
+  const ogImage = `${getSiteUrl()}/opengraph-image`;
   const categoryName = categoryLabel === 'Name' ? '' : ` ${categoryLabel}`;
 
   const titleRaw = page === 1

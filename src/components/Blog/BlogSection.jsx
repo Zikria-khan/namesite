@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { BookOpen, ArrowRight } from 'lucide-react';
-import fs from 'fs';
-import path from 'path';
+import blogPostsData from '@/../public/data/blog-posts.json' with { type: 'json' };
 import BlogCard from './BlogCard';
 
 const RELIGION_MAP = {
@@ -16,14 +15,8 @@ const DEFAULT_CATEGORIES = [
 ];
 
 export default function BlogSection({ religion, currentPostId, title }) {
-  let allPosts = [];
-  try {
-    const filePath = path.join(process.cwd(), 'public', 'data', 'blog-posts.json');
-    const raw = fs.readFileSync(filePath, 'utf8');
-    allPosts = JSON.parse(raw);
-  } catch {
-    return null;
-  }
+  const allPosts = Array.isArray(blogPostsData) ? blogPostsData : [];
+  if (!allPosts.length) return null;
 
   const religionCategory = religion ? RELIGION_MAP[religion.toLowerCase()] : null;
   let relevantPosts = [];

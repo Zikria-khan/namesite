@@ -6,7 +6,7 @@ import { getSiteUrl } from '@/lib/seo/site';
 
 export default function BlogImageWithFallback({ src, alt, className, fill, sizes, priority, containerClassName, imageStyle, children }) {
   const [error, setError] = useState(false);
-  const fallbackSrc = `${getSiteUrl()}/api/og?title=${encodeURIComponent(alt || 'NameVerse Blog')}`;
+  const fallbackSrc = `${getSiteUrl()}/opengraph-image`;
 
   if (error) {
     return (

@@ -140,7 +140,7 @@ export async function generateMetadata({ params }) {
 
   // Generate dynamic count for more compelling title
   const countPhrase = page === 1 ? '50+' : 'Names';
-  const ogImage = `${getSiteUrl()}/api/og?section=letter&religion=${religion}&letter=${letter}`;
+  const ogImage = `${getSiteUrl()}/opengraph-image`;
 
   const titleRaw =
     page === 1

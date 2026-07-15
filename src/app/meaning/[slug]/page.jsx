@@ -1,5 +1,3 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import Link from 'next/link';
 import Script from 'next/script';
 import { notFound } from 'next/navigation';
@@ -7,16 +5,10 @@ import { ArrowRight, BookOpen, Globe, Sparkles, Library } from 'lucide-react';
 import SitePage from '@/components/Layout/SitePage';
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
-import { loadBlogPosts } from '@/lib/seo/sitemap-data.mjs';
-
-const meaningContentPath = path.join(process.cwd(), 'public', 'data', 'meaning-content.json');
+import { loadBlogPosts, loadMeaningContent } from '@/lib/seo/name-data.mjs';
 
 function readMeaningContent() {
-  try {
-    return JSON.parse(fs.readFileSync(meaningContentPath, 'utf8'));
-  } catch {
-    return [];
-  }
+  return loadMeaningContent();
 }
 
 function findMeaning(slug) {

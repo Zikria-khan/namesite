@@ -1,0 +1,209 @@
+[
+  {
+    "slug": "love",
+    "title": "Love",
+    "description": "Names signifying affection, care, and deep emotional connection—perfect for a child who will be cherished.",
+    "seo": {
+      "title": "Names That Mean Love — 200+ Loving Baby Names | NameVerse",
+      "description": "Discover 200+ beautiful baby names that mean love, from Islamic, Hindu, and Christian traditions. Find loving names for your cherished child."
+    },
+    "relatedMeanings": ["strength", "joy", "peace"],
+    "schema": {
+      "nameCount": 45,
+      "religions": [
+        { "religion": "islamic", "count": 15 },
+        { "religion": "hindu", "count": 15 },
+        { "religion": "christian", "count": 15 }
+      ]
+    },
+    "faq": [
+      {
+        "question": "What are the most popular names meaning love?",
+        "answer": "Amina, Priya, Esme, Carys, and Amadeo are among the most beloved names meaning love across traditions."
+      },
+      {
+        "question": "Can I choose a love name from a different culture?",
+        "answer": "Yes, many parents choose names from cultures other than their own. Understanding the meaning and cultural context ensures respectful usage."
+      }
+    ],
+    "names": [
+      { "name": "Amina", "slug": "amina", "religion": "islamic", "origin": "Arabic" },
+      { "name": "Priya", "slug": "priya", "religion": "hindu", "origin": "Sanskrit" },
+      { "name": "Agape", "slug": "agape", "religion": "christian", "origin": "Greek" }
+    ]
+  },
+  {
+    "slug": "strength",
+    "title": "Strength",
+    "description": "Powerful names representing courage, resilience, and inner fortitude for a strong life journey.",
+    "seo": {
+      "title": "Names That Mean Strength — 200+ Strong Baby Names | NameVerse",
+      "description": "Explore 200+ powerful baby names meaning strength, bravery, and courage from Islamic, Hindu, and Christian traditions."
+    },
+    "relatedMeanings": ["courage", "power", "love"],
+    "schema": {
+      "nameCount": 38,
+      "religions": [
+        { "religion": "islamic", "count": 12 },
+        { "religion": "hindu", "count": 13 },
+        { "religion": "christian", "count": 13 }
+      ]
+    },
+    "faq": [
+      {
+        "question": "What are the best names meaning strength?",
+        "answer": "Omar, Veer, Gabriel, Ethan, Azim, and Alexander are names representing strength across different traditions."
+      }
+    ],
+    "names": [
+      { "name": "Omar", "slug": "omar", "religion": "islamic", "origin": "Arabic" },
+      { "name": "Veer", "slug": "veer", "religion": "hindu", "origin": "Sanskrit" },
+      { "name": "Gabriel", "slug": "gabriel", "religion": "christian", "origin": "Hebrew" }
+    ]
+  },
+  {
+    "slug": "wisdom",
+    "title": "Wisdom",
+    "description": "Intelligent names representing knowledge, insight, and the pursuit of truth and understanding.",
+    "seo": {
+      "title": "Names That Mean Wisdom — 200+ Wise Baby Names | NameVerse",
+      "description": "Find 200+ baby names meaning wisdom, knowledge, and intelligence from Islamic, Hindu, and Christian naming traditions."
+    },
+    "relatedMeanings": ["knowledge", "intelligence", "learning"],
+    "schema": {
+      "nameCount": 32,
+      "religions": [
+        { "religion": "islamic", "count": 10 },
+        { "religion": "hindu", "count": 11 },
+        { "religion": "christian", "count": 11 }
+      ]
+    },
+    "faq": [
+      {
+        "question": "What are names meaning wisdom?",
+        "answer": "Sophia, Hakim, Vidya, Solomon, and Sage are names meaning wisdom across traditions."
+      }
+    ],
+    "names": [
+      { "name": "Sophia", "slug": "sophia", "religion": "christian", "origin": "Greek" },
+      { "name": "Hakim", "slug": "hakim", "religion": "islamic", "origin": "Arabic" },
+      { "name": "Vidya", "slug": "vidya", "religion": "hindu", "origin": "Sanskrit" }
+    ]
+  },
+  {
+    "slug": "peace",
+    "title": "Peace",
+    "description": "Serene names symbolizing harmony, tranquility, and the absence of conflict for a calm spirit.",
+    "seo": {
+      "title": "Names That Mean Peace — 150+ Peaceful Baby Names | NameVerse",
+      "description": "Discover 150+ serene baby names meaning peace, tranquility, and harmony from Islamic, Hindu, and Christian traditions."
+    },
+    "relatedMeanings": ["calm", "harmony", "serenity"],
+    "schema": {
+      "nameCount": 28,
+      "religions": [
+        { "religion": "islamic", "count": 9 },
+        { "religion": "hindu", "count": 10 },
+        { "religion": "christian", "count": 9 }
+      ]
+    },
+    "faq": [
+      {
+        "question": "What names mean peace in different traditions?",
+        "answer": "Salaam (Islamic), Shanti (Hindu), Solomon and Irene (Christian) all represent peace in their respective traditions."
+      }
+    ],
+    "names": [
+      { "name": "Salaam", "slug": "salaam", "religion": "islamic", "origin": "Arabic" },
+      { "name": "Shanti", "slug": "shanti", "religion": "hindu", "origin": "Sanskrit" },
+      { "name": "Solomon", "slug": "solomon", "religion": "christian", "origin": "Hebrew" }
+    ]
+  },
+  {
+    "slug": "joy",
+    "title": "Joy",
+    "description": "Happy names that celebrate life, laughter, and bold optimism.",
+    "seo": {
+      "title": "Names That Mean Joy — 200+ Joyful Baby Names | NameVerse",
+      "description": "Find 200+ joyful baby names meaning happiness, celebration, and delight from Islamic, Hindu, and Christian traditions."
+    },
+    "relatedMeanings": ["happiness", "celebration", "smile"],
+    "schema": {
+      "nameCount": 35,
+      "religions": [
+        { "religion": "islamic", "count": 12 },
+        { "religion": "hindu", "count": 12 },
+        { "religion": "christian", "count": 11 }
+      ]
+    },
+    "faq": [
+      {
+        "question": "What are joyful names for babies?",
+        "answer": "Felix, Asher, Anand, Farah, and Allegra are names meaning joy across different traditions."
+      }
+    ],
+    "names": [
+      { "name": "Felix", "slug": "felix", "religion": "christian", "origin": "Latin" },
+      { "name": "Anand", "slug": "anand", "religion": "hindu", "origin": "Sanskrit" },
+      { "name": "Farah", "slug": "farah", "religion": "islamic", "origin": "Arabic" }
+    ]
+  },
+  {
+    "slug": "hope",
+    "title": "Hope",
+    "description": "Optimistic names symbolizing faith in the future and positive expectations.",
+    "seo": {
+      "title": "Names That Mean Hope — 200+ Hopeful Baby Names | NameVerse",
+      "description": "Explore 200+ hopeful baby names meaning optimism, faith, and positive expectations from Islamic, Hindu, and Christian traditions."
+    },
+    "relatedMeanings": ["faith", "optimism", "future"],
+    "schema": {
+      "nameCount": 30,
+      "religions": [
+        { "religion": "islamic", "count": 10 },
+        { "religion": "hindu", "count": 10 },
+        { "religion": "christian", "count": 10 }
+      ]
+    },
+    "faq": [
+      {
+        "question": "What names represent hope?",
+        "answer": "Amal, Tikva, Esperanza, and Noor are names meaning hope across Arabic, Hebrew, and other traditions."
+      }
+    ],
+    "names": [
+      { "name": "Amal", "slug": "amal", "religion": "islamic", "origin": "Arabic" },
+      { "name": "Tikva", "slug": "tikva", "religion": "christian", "origin": "Hebrew" },
+      { "name": "Noor", "slug": "noor", "religion": "islamic", "origin": "Arabic" }
+    ]
+  },
+  {
+    "slug": "light",
+    "title": "Light",
+    "description": "Radiant names for children who brighten every room they enter.",
+    "seo": {
+      "title": "Names That Mean Light — 200+ Radiant Baby Names | NameVerse",
+      "description": "Discover 200+ radiant baby names meaning light, radiance, and brightness from Islamic, Hindu, and Christian traditions."
+    },
+    "relatedMeanings": ["radiance", "bright", "shine"],
+    "schema": {
+      "nameCount": 42,
+      "religions": [
+        { "religion": "islamic", "count": 14 },
+        { "religion": "hindu", "count": 14 },
+        { "religion": "christian", "count": 14 }
+      ]
+    },
+    "faq": [
+      {
+        "question": "What names mean light?",
+        "answer": "Nur, Noor, Lucia, Luna, Aurora, Ziya, and Diya all mean light across different traditions."
+      }
+    ],
+    "names": [
+      { "name": "Nur", "slug": "nur", "religion": "islamic", "origin": "Arabic" },
+      { "name": "Lucia", "slug": "lucia", "religion": "christian", "origin": "Latin" },
+      { "name": "Diya", "slug": "diya", "religion": "hindu", "origin": "Sanskrit" }
+    ]
+  }
+]

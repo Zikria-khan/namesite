@@ -1,0 +1,14 @@
+name = "nameverse"
+compatibility_date = "2026-07-14"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".open-next/assets"
+
+# Durable ISR / incremental cache.
+# NOTE: the built-in OpenNext KV cache adapter hardcodes the binding name
+# "NEXT_INC_CACHE_KV" (see node_modules/@opennextjs/cloudflare/.../kv-incremental-cache.js),
+# so the binding below MUST be named exactly that — not "NEXT_CACHE_WORKERS_KV".
+# Run `wrangler kv namespace create NEXT_INC_CACHE_KV`, then paste the returned
+# id over the placeholder below.
+[[kv_namespaces]]
+binding = "NEXT_INC_CACHE_KV"
+id = "<placeholder-will-fill-after-wrangler-kv-create>"

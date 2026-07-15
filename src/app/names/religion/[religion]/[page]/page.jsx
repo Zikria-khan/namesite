@@ -244,7 +244,7 @@ export async function generateMetadata({ params }) {
       type: 'website',
       siteName: 'NameVerse',
       images: [
-        { url: `${getSiteUrl()}/api/og?section=${encodeURIComponent(religion)}&page=${page}`, width: 1200, height: 630 }
+        { url: `${getSiteUrl()}/opengraph-image`, width: 1200, height: 630 }
       ]
     },
     alternates: {

@@ -4,7 +4,7 @@ import { Calendar, Clock, ChevronRight, BookOpen } from 'lucide-react';
 import SitePage from '@/components/Layout/SitePage';
 import { validateMetaDescription, validateMetaTitle } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
-import { loadBlogPosts } from '@/lib/seo/sitemap-data.mjs';
+import { loadBlogPosts } from '@/lib/seo/name-data.mjs';
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });

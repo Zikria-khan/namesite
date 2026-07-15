@@ -20,7 +20,11 @@ const nextConfig = {
   trailingSlash: false,
 
   // Image Optimization
+  // unoptimized: true is REQUIRED for Cloudflare Pages/Workers — the Next.js
+  // image optimizer does not run in the Workers runtime. Images are served
+  // as-is (remotePatterns below still gate allowed remote sources).
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -188,6 +192,14 @@ const nextConfig = {
     ];
   },
 
+  // IMPORTANT (Cloudflare / OpenNext):
+  // We target @opennextjs/cloudflare, whose generated Worker implements
+  // redirects()/rewrites()/headers() from next.config directly. Cloudflare
+  // Pages _redirects/_headers files are NOT consulted for app routes under
+  // OpenNext (the worker is a catch-all), so we deliberately keep these here
+  // instead of moving them to _redirects/_headers as the next-on-pages flow
+  // would require.
+
   // Optimize package imports
   experimental: {
     optimizePackageImports: [
@@ -198,7 +210,9 @@ const nextConfig = {
     ],
   },
 
-  turbopack: {},
+  // NOTE: Do NOT set output: 'export'. This project uses ISR + dynamic
+  // routes; OpenNext supports hybrid static + dynamic without a full static
+  // export. Leave `output` unset (defaults to undefined / server build).
 };
 
 export default nextConfig;

@@ -15,7 +15,7 @@ export const metadata = {
     siteName: 'NameVerse',
     images: [
       {
-        url: `${siteUrl}/api/og?section=names&page=1`,
+        url: `${siteUrl}/opengraph-image`,
         width: 1200,
         height: 630,
         alt: 'Baby Names with Meanings — Islamic, Hindu & Christian Names A–Z',
@@ -28,7 +28,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Baby Names with Meanings — 65,000+ Islamic, Hindu & Christian Names A–Z 2026',
     description: 'Discover 65,000+ baby names 2026 with authentic meanings, origins & lucky numbers. 18,000+ Islamic, 11,000+ Christian & 15,000+ Hindu names A–Z plus rare & unique names. ✓ Verified ✓ Trending.',
-    images: [`${siteUrl}/api/og?section=names&page=1`],
+    images: [`${siteUrl}/opengraph-image`],
   },
   keywords: 'baby names 2026, islamic baby names, christian baby names, hindu baby names, quranic names, biblical names, sanskrit names, gender neutral names, unique baby names, trending baby names 2026',
   robots: 'index, follow',

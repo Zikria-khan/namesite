@@ -14,7 +14,7 @@ export default function Head({ params }) {
   const prevHref = page > 1 ? generateCanonicalUrl(`/names/religion/${religion}/${page - 1}`, base) : null;
   const nextHref = page < totalPages ? generateCanonicalUrl(`/names/religion/${religion}/${page + 1}`, base) : null;
 
-  const ogImage = `${base}/api/og?section=${encodeURIComponent(religion)}&page=${page}`;
+  const ogImage = `${base}/opengraph-image`;
 
   return (
     <>

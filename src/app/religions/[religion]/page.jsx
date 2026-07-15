@@ -1,5 +1,3 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import Link from 'next/link';
 import Script from 'next/script';
 import { notFound } from 'next/navigation';
@@ -7,7 +5,7 @@ import { BookOpen, Globe, Sparkles, Library, Search } from 'lucide-react';
 import SitePage from '@/components/Layout/SitePage';
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
-import { loadAllNames, loadBlogPosts, loadDetailedNames } from '@/lib/seo/sitemap-data.mjs';
+import { loadAllNames, loadBlogPosts, loadDetailedNames, loadMeaningContent } from '@/lib/seo/name-data.mjs';
 
 const RELIGIONS = ['islamic', 'christian', 'hindu'];
 const RELIGION_LABELS = { islamic: 'Islamic', christian: 'Christian', hindu: 'Hindu' };
@@ -16,11 +14,7 @@ const STATIC_CATEGORIES = ['modern', 'traditional', 'nature', 'religious', 'clas
 const STATIC_ORIGINS = ['arabic', 'persian', 'turkish', 'indian', 'english', 'other'];
 
 function readMeaningContent() {
-  try {
-    return JSON.parse(fs.readFileSync(path.join(process.cwd(), 'public', 'data', 'meaning-content.json'), 'utf8'));
-  } catch {
-    return [];
-  }
+  return loadMeaningContent();
 }
 
 function normalizeReligion(value) {

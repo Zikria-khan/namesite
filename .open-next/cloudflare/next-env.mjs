@@ -1,0 +1,3 @@
+export const production = {"NEXT_PUBLIC_SITE_URL":"https://nameverse.vercel.app","NEXT_PUBLIC_API_BASE":"https://name-meaning-site-backend.vercel.app","NEXT_PUBLIC_RATE_LIMIT":"50","NEXT_PUBLIC_RATE_WINDOW_MS":"60000","NEXT_PUBLIC_BUILD_STATIC":"false","NEXT_PUBLIC_STATIC_NAMES_LIMIT":"8","NEXT_PUBLIC_STATIC_LANG_LIMIT":"0","NEXT_PUBLIC_SKIP_METADATA_FETCH":"true"};
+export const development = {"NEXT_PUBLIC_SITE_URL":"https://nameverse.vercel.app","NEXT_PUBLIC_API_BASE":"https://name-meaning-site-backend.vercel.app","NEXT_PUBLIC_RATE_LIMIT":"50","NEXT_PUBLIC_RATE_WINDOW_MS":"60000","NEXT_PUBLIC_BUILD_STATIC":"false","NEXT_PUBLIC_STATIC_NAMES_LIMIT":"8","NEXT_PUBLIC_STATIC_LANG_LIMIT":"0","NEXT_PUBLIC_SKIP_METADATA_FETCH":"true"};
+export const test = {};

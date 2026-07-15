@@ -28,7 +28,7 @@ export async function generateMetadata({ params }) {
     ? post.featuredImage.startsWith('http')
       ? post.featuredImage
       : `${getSiteUrl()}${post.featuredImage}`
-    : `${getSiteUrl()}/api/og?title=${encodeURIComponent(post.title)}`;
+    : `${getSiteUrl()}/opengraph-image`;
   const seoDescription = validateMetaDescription(
     `${post.excerpt} Read this expert guide to ${post.category.toLowerCase()} baby names, meaning, and naming trends for modern families.`
   );
@@ -175,7 +175,7 @@ export default async function BlogPostPage({ params }) {
     ? post.featuredImage.startsWith('http')
       ? post.featuredImage
       : `${getSiteUrl()}${post.featuredImage}`
-    : `${getSiteUrl()}/api/og?title=${encodeURIComponent(post.title)}`;
+    : `${getSiteUrl()}/opengraph-image`;
 
   const jsonLd = {
     "@context": "https://schema.org",

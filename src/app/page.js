@@ -1,8 +1,9 @@
-import fs from 'fs';
-import path from 'path';
 import HomePageClient from '@/components/HomePage/Homepage';
 import { validateMetaDescription, validateMetaTitle } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
+
+// Static import — works on both Vercel and Cloudflare Workers (no fs needed)
+import blogPosts from '@/../public/data/blog-posts.json' with { type: 'json' };
 
 export const revalidate = 31536000; // 365 days
 
@@ -19,18 +20,11 @@ const publishedDate = new Date().toISOString().split('T')[0];
 const homepageUrl = `${DOMAIN}/`;
 const ogImage = `${DOMAIN}/og-home.png`;
 
-const blogPostsPath = path.join(process.cwd(), 'public', 'data', 'blog-posts.json');
-let latestArticles = [];
-try {
-  const fileContents = fs.readFileSync(blogPostsPath, 'utf8');
-  const allPosts = JSON.parse(fileContents);
-  latestArticles = allPosts
-    .filter((post) => post.publishDate)
-    .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
-    .slice(0, 6);
-} catch {
-  latestArticles = [];
-}
+const allPosts = Array.isArray(blogPosts) ? blogPosts : [];
+const latestArticles = allPosts
+  .filter((post) => post.publishDate)
+  .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
+  .slice(0, 6);
 
 export const metadata = {
   title: validateMetaTitle('Baby Names, Meanings, Origins & Lucky Numbers | NameVerse'),

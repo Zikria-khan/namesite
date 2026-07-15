@@ -1,19 +1,16 @@
 import Link from 'next/link';
 import { BookOpen, Heart, Clock, ArrowRight, Calendar, Award, TrendingUp, User } from 'lucide-react';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import StructuredData from '@/components/SEO/StructuredData';
 import BlogImageWithFallback from '@/components/Blog/BlogImageWithFallback';
 import { getSiteUrl } from '@/lib/seo/site';
 import SitePage from '@/components/Layout/SitePage';
 import NativeBanner from '@/components/Ads/NativeBanner';
 
+// Static import — works on both Vercel and Cloudflare Workers (no fs needed)
+import blogPostsData from '@/../public/data/blog-posts.json' with { type: 'json' };
+
 // ISR with 90-day cache for blog index — keep content stable
 export const revalidate = 31536000; // 365 days
-
-const blogPostsData = JSON.parse(
-  readFileSync(join(process.cwd(), 'public', 'data', 'blog-posts.json'), 'utf8')
-);
 
 const blogFaq = [
   { question: 'How do I choose the perfect baby name?', answer: 'Choose a baby name by balancing meaning, cultural relevance, pronunciation, and family tradition. Our guides help you compare Islamic, Christian, Hindu, and global name choices with trusted origin notes.' },
@@ -49,13 +46,13 @@ export const metadata = {
     description: 'Expert guides and articles on choosing the perfect baby name. Learn about Islamic, Christian, and Hindu naming traditions, 2026 baby name trends, and expert naming tips.',
     type: 'website',
     url: `${getSiteUrl()}/blog`,
-    images: [`${getSiteUrl()}/api/og?section=blog&page=1`],
+    images: [`${getSiteUrl()}/opengraph-image`],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Baby Names Blog & Expert Guides | Naming Tips, Trends & Advice | NameVerse',
     description: 'Expert guides and articles on choosing the perfect baby name. Learn about Islamic, Christian, and Hindu naming traditions, 2026 baby name trends, and expert naming tips.',
-    images: [`${getSiteUrl()}/api/og?section=blog&page=1`],
+    images: [`${getSiteUrl()}/opengraph-image`],
   },
 };
 
@@ -153,7 +150,7 @@ export default function BlogPage() {
           
            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {featuredPosts.map((post) => {
-              const imageUrl = post.featuredImage ? (post.featuredImage.startsWith('http') ? post.featuredImage : `${getSiteUrl()}${post.featuredImage}`) : `${getSiteUrl()}/api/og?title=${encodeURIComponent(post.title)}`;
+              const imageUrl = post.featuredImage ? (post.featuredImage.startsWith('http') ? post.featuredImage : `${getSiteUrl()}${post.featuredImage}`) : `${getSiteUrl()}/opengraph-image`;
               return (
                 <article
                   key={post.id}
@@ -252,7 +249,7 @@ export default function BlogPage() {
           
            <div className="space-y-4">
             {recentPosts.map((post) => {
-              const imageUrl = post.featuredImage ? (post.featuredImage.startsWith('http') ? post.featuredImage : `${getSiteUrl()}${post.featuredImage}`) : `${getSiteUrl()}/api/og?title=${encodeURIComponent(post.title)}`;
+              const imageUrl = post.featuredImage ? (post.featuredImage.startsWith('http') ? post.featuredImage : `${getSiteUrl()}${post.featuredImage}`) : `${getSiteUrl()}/opengraph-image`;
               return (
                 <article
                   key={post.id}

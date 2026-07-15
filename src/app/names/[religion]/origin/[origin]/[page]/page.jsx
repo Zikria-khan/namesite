@@ -67,7 +67,7 @@ export async function generateMetadata({ params }) {
   const nextPageUrl = hasNext ? absoluteUrl(`/names/${religion}/origin/${origin}/${page + 1}`) : null;
 
   const canonical = generateCanonicalUrl(`/names/${religion}/origin/${origin}/${page}`);
-  const ogImage = `${getSiteUrl()}/api/og?section=origin&religion=${religion}&origin=${encodeURIComponent(originLabel)}`;
+  const ogImage = `${getSiteUrl()}/opengraph-image`;
 
   const titleRaw = page === 1
     ? `${originLabel} Origin ${religionLabel} Baby Names with Meanings & Lucky Numbers | NameVerse`

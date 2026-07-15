@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "next build",
+    "build": "npm run sitemap:build && next build",
     "start": "next start -H 0.0.0.0 -p 3000",
     "lint": "next lint",
+    "cf:build": "npm run sitemap:build && next build && npx opennextjs-cloudflare build",
+    "cf:dev": "npx wrangler pages dev .open-next/assets",
     "ci:validate-slugs": "node scripts/ci-validate-slugs.js",
     "seo:validate": "node src/lib/seo/validation-suite.mjs",
     "sitemap:build": "node scripts/build-sitemap.js",
@@ -34,7 +36,6 @@
     "react-dom": "^19.2.3",
     "react-hot-toast": "^2.4.1",
     "shadcn": "^2.10.0",
-    "sharp": "^0.34.4",
     "sitemap": "^9.0.0",
     "sonner": "^1.7.1",
     "swr": "^2.3.4",
@@ -44,11 +45,13 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@opennextjs/cloudflare": "^1.20.1",
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.4.5",
     "rimraf": "^6.1.3",
     "tailwindcss": "^4",
-    "tw-animate-css": "^1.3.6"
+    "tw-animate-css": "^1.3.6",
+    "wrangler": "^4.110.0"
   }
 }

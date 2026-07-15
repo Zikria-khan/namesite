@@ -16,13 +16,15 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '../../..');
+// Build-time only module. Executed by Node scripts (sitemap:build,
+// seo:validate) and MUST NOT be imported into the Next.js/Workers bundle.
+// Data reads are delegated to the Workers-safe name-data.mjs (static JSON
+// imports), so this file only touches fs for writing generated sitemap files.
+import { loadDetailedNames, loadMixedNames, loadBlogPosts } from './name-data.mjs';
+
+const rootDir = process.cwd();
 const publicDir = path.join(rootDir, 'public');
-const dataDir = path.join(publicDir, 'data');
 const today = new Date().toISOString().split('T')[0];
 const RELIGIONS = ['islamic', 'christian', 'hindu'];
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -31,6 +33,10 @@ const STATIC_ORIGINS = ['arabic', 'persian', 'turkish', 'indian', 'english', 'ot
 const MAX_SITEMAP_URLS = 45000;
 const MAX_COLLECTION_PAGES = 50; // Prevent thin pages beyond page 50
 const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || 'https://name-meaning-site-backend.vercel.app').replace(/\/+$/, '');
+
+// Data loaders are re-exported from the Workers-safe module.
+export { loadDetailedNames, loadMixedNames, loadBlogPosts };
+export const loadAllNames = loadMixedNames;
 
 // Reserved slugs that should never appear in sitemap
 const RESERVED_SLUGS = new Set([
@@ -49,14 +55,6 @@ const STATIC_ROUTES = [
   '/names-by-origin', '/unique-names', '/trending-names', '/advanced-search', '/my-names',
   '/guides/expert-naming-guide', '/viral-names', '/stories',
 ];
-
-function readJson(file, fallback) {
-  try {
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
-  } catch {
-    return fallback;
-  }
-}
 
 function writeJson(file, data) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -185,63 +183,6 @@ function normalizeName(item, religion) {
     lucky_number: item.lucky_number ?? item.luckyNumber,
     updated_at: item.updated_at || item.lastUpdated || item.last_modified,
   };
-}
-
-export function loadDetailedNames() {
-  const files = [
-    ['islamic', 'islamic-boy-names.json'],
-    ['islamic', 'islamic-girl-names.json'],
-    ['christian', 'christian-boy-names.json'],
-    ['christian', 'christian-girl-names.json'],
-    ['hindu', 'hindu-boy-names.json'],
-    ['hindu', 'hindu-girl-names.json'],
-  ];
-  const names = [];
-  const seen = new Set();
-  for (const [religion, file] of files) {
-    const raw = readJson(path.join(dataDir, file), []);
-    for (const item of raw) {
-      const normalized = normalizeName(item, religion);
-      if (!normalized) continue;
-      const key = `${normalized.religion}|${normalized.slug}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        names.push(normalized);
-      }
-    }
-  }
-  return names;
-}
-
-export function loadMixedNames() {
-  const files = [
-    ['islamic', 'islamic_names.json'],
-    ['christian', 'christians_names.json'],
-    ['hindu', 'hindu_names.json'],
-  ];
-  const names = [];
-  const seen = new Set();
-  for (const [religion, file] of files) {
-    const raw = readJson(path.join(publicDir, file), []);
-    for (const item of raw) {
-      const normalized = normalizeName(item, religion);
-      if (!normalized) continue;
-      const key = `${normalized.religion}|${normalized.slug}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        names.push(normalized);
-      }
-    }
-  }
-  return names;
-}
-
-export const loadAllNames = loadMixedNames;
-
-export function loadBlogPosts() {
-  return readJson(path.join(dataDir, 'blog-posts.json'), [])
-    .filter((post) => post.id && post.title)
-    .map((post) => ({ ...post, slug: post.id }));
 }
 
 function getEntry(pathname, type, lastmod = today, changefreq = 'weekly', priority = 0.7) {
@@ -423,9 +364,17 @@ export async function buildSitemapEntries() {
 
   // Name pages — validate every slug against the live backend dataset.
   // A slug only enters the sitemap if the backend actually has a record for it.
+  // If the backend is unreachable, fall back to an empty set so every local
+  // slug is still included (same behaviour as when the set is empty), keeping
+  // the build green instead of aborting on a transient network error.
   const backendSlugSets = {};
   for (const religion of RELIGIONS) {
-    backendSlugSets[religion] = await fetchBackendSlugs(religion);
+    try {
+      backendSlugSets[religion] = await fetchBackendSlugs(religion);
+    } catch (error) {
+      console.warn(`[sitemap] WARNING: could not fetch backend slugs for ${religion}: ${error.message}. Including all local slugs.`);
+      backendSlugSets[religion] = new Set();
+    }
   }
   let nameKept = 0;
   let nameDropped = 0;
@@ -532,6 +481,12 @@ function indexXml(locs) {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${locs.map((loc) => `\n  <sitemap>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n  </sitemap>`).join('')}\n</sitemapindex>\n`;
 }
 
+const XML_ENTITIES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' };
+
+function escapeXml(str) {
+  return String(str).replace(/[&<>"']/g, (char) => XML_ENTITIES[char] || char);
+}
+
 export async function writeSitemapFiles() {
   // Guard: fail the build if any STATIC_ROUTES entry lost its page file.
   validateStaticRoutes();
@@ -561,8 +516,40 @@ export async function writeSitemapFiles() {
     sitemapCount: sitemapLocs.length, 
     sitemaps: sitemapLocs 
   });
-  
+
+  // Blog sitemap (previously generated by /sitemap-blog.xml route at runtime).
+  await writeBlogSitemap();
+
   return { totalUrls: entries.length, sitemapCount: sitemapLocs.length, sitemaps: sitemapLocs };
+}
+
+const BLOG_SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://nameverse.vercel.app'
+).trim().replace(/\/+$/, '');
+
+export async function writeBlogSitemap() {
+  const posts = loadBlogPosts();
+  const urls = posts
+    .filter((post) => post && post.id)
+    .map((post) => {
+      const loc = `${BLOG_SITE_URL}/blog/${post.id}`;
+      const lastmod = post.lastUpdated || post.publishDate || today;
+      return `  <url>
+    <loc>${escapeXml(loc)}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+    })
+    .join('\n');
+
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>`;
+
+  writeJson(path.join(publicDir, 'sitemap-blog.xml'), sitemap);
+  return { file: 'sitemap-blog.xml', urls: posts.length };
 }
 
 export function parseSitemapUrls(xml) {
