@@ -31,6 +31,6 @@ Thumbs.db
 *.swp
 *.swo
 
-# Cloudflare / OpenNext generated config (regenerated on every build)
-wrangler.jsonc
+# Cloudflare / OpenNext generated config (wrangler.toml only; wrangler.jsonc
+# committed to repo so CI deploy has proper main/assets fields)
 wrangler.toml
