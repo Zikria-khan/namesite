@@ -33,3 +33,4 @@ Thumbs.db
 
 # Cloudflare / OpenNext generated config (regenerated on every build)
 wrangler.jsonc
+wrangler.toml
