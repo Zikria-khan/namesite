@@ -1,31 +1,42 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const handlerPath = path.join('.open-next', 'server-functions', 'default', 'handler.mjs');
-const content = fs.readFileSync(handlerPath, 'utf8');
-
-const replacements = [
-  [/C:\/code\/nameverse\/\.open-next\/server-functions\/default\/node_modules\/next\/dist\/compiled\/@vercel\/og\/resvg\.wasm\?module/g, './node_modules/next/dist/compiled/@vercel/og/resvg.wasm?module'],
-  [/C:\/code\/nameverse\/\.open-next\/server-functions\/default\/node_modules\/next\/dist\/compiled\/@vercel\/og\/yoga\.wasm\?module/g, './node_modules/next/dist/compiled/@vercel/og/yoga.wasm?module'],
-  [/C:\/code\/nameverse\/\.open-next\/server-functions\/default\/node_modules\/next\/dist\/compiled\/@vercel\/og\/Geist-Regular\.ttf\.bin/g, './node_modules/next/dist/compiled/@vercel/og/Geist-Regular.ttf.bin'],
-  [/C:\/code\/nameverse\/\.open-next\/server-functions\/default\/\.next\/server\/chunks\/ssr\/code\\nameverse\.open-nextserver-functionsdefault\\node_modules\\nextdistcompiled@vercelog\\resvg\.wasm/g, './node_modules/next/dist/compiled/@vercel/og/resvg.wasm'],
-  [/C:\/code\/nameverse\/\.open-next\/server-functions\/default\/\.next\/server\/chunks\/code\\nameverse\.open-nextserver-functionsdefault\\node_modules\\nextdistcompiled@vercelog\\resvg\.wasm/g, './node_modules/next/dist/compiled/@vercel/og/resvg.wasm'],
-  [/C:\/code\/nameverse\/\.open-next\/server-functions\/default\/\.next\/server\/chunks\/ssr\/code\\nameverse\.open-nextserver-functionsdefault\\node_modules\\nextdistcompiled@vercelogyoga\.wasm/g, './node_modules/next/dist/compiled/@vercel/og/yoga.wasm'],
-  [/C:\/code\/nameverse\/\.open-next\/server-functions\/default\/\.next\/server\/chunks\/code\\nameverse\.open-nextserver-functionsdefault\\node_modules\\nextdistcompiled@vercelogyoga\.wasm/g, './node_modules/next/dist/compiled/@vercel/og/yoga.wasm'],
+const ogDir = path.join('node_modules', 'next', 'dist', 'compiled', '@vercel', 'og');
+const targets = [
+  {
+    dest: path.join('.open-next', 'server-functions', 'default', '.next', 'server', 'chunks', 'ssr', 'code\\nameverse.open-nextserver-functionsdefault\\node_modules\\nextdistcompiled@vercelog\\resvg.wasm'),
+    src: path.join(ogDir, 'resvg.wasm'),
+  },
+  {
+    dest: path.join('.open-next', 'server-functions', 'default', '.next', 'server', 'chunks', 'code\\nameverse.open-nextserver-functionsdefault\\node_modules\\nextdistcompiled@vercelog\\resvg.wasm'),
+    src: path.join(ogDir, 'resvg.wasm'),
+  },
+  {
+    dest: path.join('.open-next', 'server-functions', 'default', '.next', 'server', 'chunks', 'ssr', 'code\\nameverse.open-nextserver-functionsdefault\\node_modules\\nextdistcompiled@vercelogyoga.wasm'),
+    src: path.join(ogDir, 'yoga.wasm'),
+  },
+  {
+    dest: path.join('.open-next', 'server-functions', 'default', '.next', 'server', 'chunks', 'code\\nameverse.open-nextserver-functionsdefault\\node_modules\\nextdistcompiled@vercelogyoga.wasm'),
+    src: path.join(ogDir, 'yoga.wasm'),
+  },
+  {
+    dest: path.join('.open-next', 'server-functions', 'default', 'node_modules', 'next', 'dist', 'compiled', '@vercel', 'og', 'Geist-Regular.ttf.bin'),
+    src: path.join(ogDir, 'Geist-Regular.ttf'),
+  },
 ];
 
-let patched = false;
-for (const [from, to] of replacements) {
-  const next = content.replace(from, to);
-  if (next !== content) {
-    patched = true;
+let copied = false;
+for (const target of targets) {
+  if (fs.existsSync(target.dest)) {
+    continue;
   }
-  content = next;
+  fs.mkdirSync(path.dirname(target.dest), { recursive: true });
+  fs.copyFileSync(target.src, target.dest);
+  copied = true;
 }
 
-if (patched) {
-  fs.writeFileSync(handlerPath, content);
-  console.log('Patched Windows-specific OG paths in .open-next/server-functions/default/handler.mjs');
+if (copied) {
+  console.log('Copied OG WASM/font assets to mangled Windows paths in .open-next');
 } else {
-  console.log('No OG path patches needed');
+  console.log('OG assets already present at mangled paths');
 }
