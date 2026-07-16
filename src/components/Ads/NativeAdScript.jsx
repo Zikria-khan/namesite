@@ -12,7 +12,9 @@ import { useEffect } from 'react';
  * Scripts:
  *   - Native ads invoke.js (renders inside any container-* divs)
  *   - Social bar
- *   - Popunder
+ *
+ * NOTE: The popunder script was intentionally removed. Popunder ads open
+ * unwanted pop-up windows on user interaction and were causing a poor UX.
  */
 const REVOLTHEM_SCRIPTS = [
   {
@@ -22,10 +24,6 @@ const REVOLTHEM_SCRIPTS = [
   {
     id: 'revolthem-social-bar',
     src: 'https://revolthem.com/1b/54/37/1b543736c10a38ea4ca3f6f7bc8a7a9b.js',
-  },
-  {
-    id: 'revolthem-popunder',
-    src: 'https://revolthem.com/15/fc/e7/15fce756a2be02e450ad8ee3543b0575.js',
   },
 ];
 

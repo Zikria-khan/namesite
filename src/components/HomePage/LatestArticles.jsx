@@ -5,6 +5,13 @@ import { Clock, User, Calendar, BookOpen } from 'lucide-react';
 import Image from 'next/image';
 
 const LatestArticles = ({ articles }) => {
+  // Base site URL used to absolutize relative image paths.
+  // Must be defined at component scope — it is referenced both in the JSX
+  // below and in generateArticleStructuredData. (Previously it was only
+  // declared inside that helper, so the JSX reference threw a ReferenceError
+  // and crashed the homepage on direct load.)
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://nameverse.vercel.app';
+
   // Category color mapping
   const categoryColors = {
     'Islamic Names': {
@@ -91,7 +98,6 @@ const LatestArticles = ({ articles }) => {
   const generateArticleStructuredData = (article, position) => {
     const colors = categoryColors[article.category] || defaultColors;
     const date = article.publishDate || article.lastUpdated || new Date().toISOString();
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://nameverse.vercel.app';
     const articleUrl = `${siteUrl}/blog/${article.id}`;
     
     const item = {
