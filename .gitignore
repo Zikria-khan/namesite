@@ -34,3 +34,6 @@ Thumbs.db
 # Cloudflare / OpenNext generated config (wrangler.toml only; wrangler.jsonc
 # committed to repo so CI deploy has proper main/assets fields)
 wrangler.toml
+
+# OpenNext build artifacts — must not be committed or cached
+.open-next/
