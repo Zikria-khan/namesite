@@ -10,5 +10,12 @@
   },
   "observability": {
     "enabled": true
+  },
+  "alias": {
+    "C:/code/nameverse/.open-next/server-functions/default/.next/server/chunks/ssr/code\\nameverse.open-nextserver-functionsdefault\\node_modules\\nextdistcompiled@vercelog\\resvg.wasm": "./node_modules/next/dist/compiled/@vercel/og/resvg.wasm",
+    "C:/code/nameverse/.open-next/server-functions/default/.next/server/chunks/code\\nameverse.open-nextserver-functionsdefault\\node_modules\\nextdistcompiled@vercelog\\resvg.wasm": "./node_modules/next/dist/compiled/@vercel/og/resvg.wasm",
+    "C:/code/nameverse/.open-next/server-functions/default/.next/server/chunks/ssr/code\\nameverse.open-nextserver-functionsdefault\\node_modules\\nextdistcompiled@vercelogyoga.wasm": "./node_modules/next/dist/compiled/@vercel/og/yoga.wasm",
+    "C:/code/nameverse/.open-next/server-functions/default/.next/server/chunks/code\\nameverse.open-nextserver-functionsdefault\\node_modules\\nextdistcompiled@vercelogyoga.wasm": "./node_modules/next/dist/compiled/@vercel/og/yoga.wasm",
+    "C:/code/nameverse/.open-next/server-functions/default/node_modules/next/dist/compiled/@vercel/og/Geist-Regular.ttf.bin": "./node_modules/next/dist/compiled/@vercel/og/Geist-Regular.ttf.bin"
   }
 }
