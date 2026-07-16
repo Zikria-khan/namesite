@@ -9,7 +9,7 @@
     "lint": "next lint",
     "cf:build": "npm run sitemap:build && next build && npx opennextjs-cloudflare build",
     "cf:dev": "npx wrangler pages dev .open-next/assets",
-    "deploy": "wrangler pages deploy .open-next/assets --project-name namesite",
+    "deploy": "wrangler deploy",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "ci:validate-slugs": "node scripts/ci-validate-slugs.js",
     "seo:validate": "node src/lib/seo/validation-suite.mjs",
