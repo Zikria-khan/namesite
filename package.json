@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "npm run sitemap:build && next build",
+    "build": "npm run sitemap:build && next build && npx opennextjs-cloudflare build",
     "start": "next start -H 0.0.0.0 -p 3000",
     "lint": "next lint",
     "cf:build": "npm run sitemap:build && next build && npx opennextjs-cloudflare build",
