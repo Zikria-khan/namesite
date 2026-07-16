@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "npm run sitemap:build && next build && npx opennextjs-cloudflare build",
+    "build": "npm run sitemap:build && next build",
     "start": "next start -H 0.0.0.0 -p 3000",
     "lint": "next lint",
-    "cf:build": "npm run sitemap:build && next build && npx opennextjs-cloudflare build",
+    "cf:build": "npm run sitemap:build && npx opennextjs-cloudflare build",
     "cf:dev": "npx wrangler pages dev .open-next/assets",
     "deploy": "wrangler deploy",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
