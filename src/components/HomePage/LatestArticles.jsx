@@ -195,7 +195,7 @@ const LatestArticles = ({ articles }) => {
                     {article.featuredImage ? (
                       <div className="relative h-48 overflow-hidden bg-gray-100">
                         <Image
-                          src={article.featuredImage.startsWith('http') ? article.featuredImage : `${siteUrl}${article.featuredImage}`}
+                          src={article.featuredImage}
                           alt={article.title}
                           fill
                           className="object-cover transition-transform duration-300 group-hover:scale-105"

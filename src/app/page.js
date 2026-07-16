@@ -1,4 +1,5 @@
 import HomePageClient from '@/components/HomePage/Homepage';
+import ErrorBoundary from '@/components/ErrorBoundary/ErrorBoundary';
 import { validateMetaDescription, validateMetaTitle } from '@/lib/seo/meta-helpers';
 import { getSiteUrl } from '@/lib/seo/site';
 
@@ -263,7 +264,9 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageStructuredData) }}
       />
-      <HomePageClient latestArticles={latestArticles} />
+      <ErrorBoundary>
+        <HomePageClient latestArticles={latestArticles} />
+      </ErrorBoundary>
     </>
   );
 }

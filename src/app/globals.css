@@ -18,8 +18,12 @@
   --nv-error: #EF4444;
 }
 
+/* Dark palette shared by the OS preference AND the explicit navbar toggle.
+   The navbar toggle sets `.dark` on <html>; previously only the media query
+   was defined, so the toggle changed nothing. Keeping both in sync means the
+   toggle works and the default respects the OS. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light) {
     --nv-canvas: #0F172A;
     --nv-canvas-2: #1E293B;
     --nv-ink: #F8FAFC;
@@ -35,6 +39,23 @@
     --nv-warning: #FBBF24;
     --nv-error: #F87171;
   }
+}
+
+:root.dark {
+  --nv-canvas: #0F172A;
+  --nv-canvas-2: #1E293B;
+  --nv-ink: #F8FAFC;
+  --nv-muted: #CBD5E1;
+  --nv-card: rgba(15, 23, 42, 0.84);
+  --nv-card-strong: rgba(15, 23, 42, 0.96);
+  --nv-border: rgba(148, 163, 184, 0.22);
+  --nv-shadow: rgba(0, 0, 0, 0.42);
+  --nv-accent: #38BDF8;
+  --nv-accent-2: #3B82F6;
+  --nv-accent-3: #60A5FA;
+  --nv-success: #34D399;
+  --nv-warning: #FBBF24;
+  --nv-error: #F87171;
 }
 
 .nv-display {
@@ -246,5 +267,162 @@ body {
 @media (prefers-color-scheme: dark) {
   .adsbygoogle {
     background-color: transparent;
+  }
+}
+
+/* ==========================================================================
+   2026 redesign primitives — button hierarchy, section tones, motion,
+   per-tradition accents, hero mesh. Token-based so dark mode stays consistent.
+   ========================================================================== */
+
+/* --- Button hierarchy --------------------------------------------------- */
+.nv-btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold transition-all duration-200;
+  will-change: transform;
+}
+.nv-btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+/* Primary — solid ink, lifts on hover */
+.nv-btn-primary {
+  background: var(--nv-ink);
+  color: var(--nv-canvas);
+  box-shadow: 0 10px 24px -14px var(--nv-shadow);
+}
+.nv-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px -16px color-mix(in oklab, var(--nv-accent-2) 55%, var(--nv-shadow));
+}
+
+/* Secondary — glass/outline */
+.nv-btn-secondary {
+  background: var(--nv-card);
+  color: var(--nv-ink);
+  border: 1px solid var(--nv-border);
+  backdrop-filter: blur(12px);
+}
+.nv-btn-secondary:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--nv-accent-2) 45%, var(--nv-border));
+}
+
+/* Tertiary — text + arrow, no border */
+.nv-btn-tertiary {
+  @apply inline-flex items-center gap-1.5 text-sm font-bold;
+  color: var(--nv-accent-2);
+  transition: gap 0.2s ease, color 0.2s ease;
+}
+.nv-btn-tertiary:hover {
+  gap: 0.6rem;
+  color: var(--nv-ink);
+}
+
+/* --- Section tone treatments (visual rhythm) ---------------------------- */
+.nv-tone-light {
+  background: transparent;
+}
+.nv-tone-tint {
+  background:
+    radial-gradient(1200px 480px at 8% -10%, color-mix(in oklab, var(--nv-accent-2) 12%, transparent), transparent 60%),
+    radial-gradient(1000px 420px at 100% 0%, color-mix(in oklab, var(--nv-accent) 12%, transparent), transparent 58%),
+    color-mix(in oklab, var(--nv-canvas-2) 70%, var(--nv-canvas));
+}
+.nv-tone-ink {
+  background:
+    radial-gradient(900px 460px at 20% 0%, color-mix(in oklab, var(--nv-accent-2) 30%, transparent), transparent 60%),
+    var(--nv-ink);
+  color: var(--nv-canvas);
+}
+
+/* --- Per-tradition accents (reuse the accent family, no clashing hues) --- */
+.nv-trad-islamic {
+  --trad: var(--nv-accent);           /* sky */
+  --trad-soft: color-mix(in oklab, var(--nv-accent) 14%, transparent);
+}
+.nv-trad-hindu {
+  --trad: var(--nv-warning);          /* amber */
+  --trad-soft: color-mix(in oklab, var(--nv-warning) 16%, transparent);
+}
+.nv-trad-christian {
+  --trad: var(--nv-accent-2);         /* indigo/blue */
+  --trad-soft: color-mix(in oklab, var(--nv-accent-2) 14%, transparent);
+}
+
+/* --- Reveal-on-scroll --------------------------------------------------- */
+.nv-reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.nv-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Hero animated mesh ------------------------------------------------- */
+@keyframes nv-mesh-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(2%, -2%, 0) scale(1.06); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+.nv-hero-mesh {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(42% 42% at 18% 22%, color-mix(in oklab, var(--nv-accent-2) 34%, transparent) 0%, transparent 60%),
+    radial-gradient(38% 38% at 82% 16%, color-mix(in oklab, var(--nv-accent) 30%, transparent) 0%, transparent 58%),
+    radial-gradient(44% 44% at 70% 82%, color-mix(in oklab, var(--nv-accent-3) 26%, transparent) 0%, transparent 60%),
+    radial-gradient(40% 40% at 24% 88%, color-mix(in oklab, var(--nv-warning) 16%, transparent) 0%, transparent 58%);
+  filter: blur(46px) saturate(120%);
+  animation: nv-mesh-drift 18s ease-in-out infinite;
+  opacity: 0.9;
+}
+
+/* --- Rotating name ticker ---------------------------------------------- */
+@keyframes nv-ticker-in {
+  from { opacity: 0; transform: translateY(0.5em); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.nv-ticker-word {
+  display: inline-block;
+  animation: nv-ticker-in 0.5s ease;
+  color: var(--nv-accent-2);
+}
+
+/* --- Navbar scroll state ------------------------------------------------ */
+.nv-navbar {
+  transition: height 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+/* --- Mobile drawer transition ------------------------------------------ */
+@keyframes nv-drawer-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.nv-drawer-panel {
+  animation: nv-drawer-in 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes nv-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.nv-overlay {
+  animation: nv-overlay-in 0.2s ease;
+}
+
+/* Honor reduced motion for the new animations too */
+@media (prefers-reduced-motion: reduce) {
+  .nv-hero-mesh,
+  .nv-ticker-word,
+  .nv-drawer-panel,
+  .nv-overlay { animation: none !important; }
+  .nv-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
