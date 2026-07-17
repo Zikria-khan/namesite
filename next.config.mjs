@@ -141,7 +141,7 @@ const nextConfig = {
       },
       // Sitemaps — 1 day edge cache, 1 hour browser cache
       {
-        source: '/sitemap:path*',
+        source: '/sitemap/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400, stale-if-error=604800' },
           { key: 'CDN-Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=86400, stale-if-error=604800' },

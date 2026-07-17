@@ -257,8 +257,6 @@ console.log('\n=== 3. PURGE TARGET URL CORRECTNESS ===');
 //   /[religion]/boy-names  /[religion]/girl-names
 // There is NO /names/[religion]/1 route.
 test('Queue purges NON-EXISTENT route /names/[religion]/1 (phantom URL)', async () => {
-  const calls = mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
-  if (process.env.DEBUG) console.log('AFTER MOCKFETCH:', global.fetch.toString().slice(0, 50));
   const q = new PurgeQueueImpl({ flushIntervalMs: 100000, logger: console });
   await q.enqueue({ type: 'slug', religion: 'islamic', slug: 'abdullah', id: 'p1' });
   const calls = mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
@@ -283,9 +281,9 @@ test('Queue NEVER purges the real listing route /names/religion/islamic/1 for a 
 test('Queue never purges pagination pages beyond page 1 (pages 2..N stay stale)', async () => {
   const q = new PurgeQueueImpl({ flushIntervalMs: 100000, logger: console });
   await q.enqueue({ type: 'religion', religion: 'islamic', id: 'p3' });
-  mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
+  const calls = mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
   await q.flush();
-  const allUrls = capturedCalls.flatMap((c) => c.files);
+  const allUrls = calls.flatMap((c) => c.files);
   const onlyPage1 = allUrls.every((u) => !/\/\d+$/.test(u) || /\/1$/.test(u));
   assert.ok(onlyPage1, 'only page 1 is purged; pages 2..N of every listing remain cached → stale content');
   await q.shutdown();
@@ -294,9 +292,9 @@ test('Queue never purges pagination pages beyond page 1 (pages 2..N stay stale)'
 test('Gender listing purge uses /[religion]/boy-names but root also has /names/[religion]/1 which 404s', async () => {
   const q = new PurgeQueueImpl({ flushIntervalMs: 100000, logger: console });
   await q.enqueue({ type: 'slug', religion: 'islamic', slug: 'abdullah', id: 'p4' });
-  mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
+  const calls = mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
   await q.flush();
-  const allUrls = capturedCalls.flatMap((c) => c.files);
+  const allUrls = calls.flatMap((c) => c.files);
   const hasGender = allUrls.some((u) => /\/islamic\/boy-names$/.test(u));
   const hasPhantom = allUrls.some((u) => /\/names\/islamic\/1$/.test(u));
   assert.ok(hasGender, 'gender listing targeted');
@@ -307,22 +305,22 @@ test('Gender listing purge uses /[religion]/boy-names but root also has /names/[
 // purgeByPrefix just sends ONE url = siteUrl + prefix. Cloudflare purge_cache
 // "files" expects exact URLs, NOT prefixes. So prefix purge is a no-op.
 test('purgeByPrefix sends a single literal URL, NOT a prefix match (Cloudflare files=exact URLs)', async () => {
-  mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
+  const calls = mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
   const client = new CloudflarePurgeClient({ cloudflareToken: 't', cloudflareZoneId: 'z', siteUrl: 'https://x.com' });
   await client.purgeByPrefix('/names/islamic');
-  assert.equal(capturedCalls.length, 1);
-  assert.equal(capturedCalls[0].files[0], 'https://x.com/names/islamic', 'single literal URL, not all under prefix');
-  assert.ok(!capturedCalls[0].purge_everything, 'does not use prefix purge API');
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].files[0], 'https://x.com/names/islamic', 'single literal URL, not all under prefix');
+  assert.ok(!calls[0].purge_everything, 'does not use prefix purge API');
 });
 
 test("Route purge type 'religion' calls purgeByPrefix → purges only ONE literal URL, not all listing pages", async () => {
-  mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
+  const calls = mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
   const client = new CloudflarePurgeClient({ cloudflareToken: 't', cloudflareZoneId: 'z', siteUrl: 'https://x.com' });
   await client.purgeByPrefix('/names/islamic');
   // Only the literal URL https://x.com/names/islamic is purged.
   // The actual listing routes (/names/religion/islamic/1, /islamic/boy-names,
   // letter pages) are NOT purged. This is a silent failure.
-  assert.equal(capturedCalls[0].files.length, 1);
+  assert.equal(calls[0].files.length, 1);
 });
 
 // ---------------------------------------------------------------------------
@@ -450,9 +448,8 @@ test('isValidSlug rejects uppercase (slugs must be lowercased upstream)', () => 
 });
 
 test('Queue slug event lowercases only via buildNamePageUrl? (charAt(0) uppercased for letter page)', async () => {
-  const calls = mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
-  const q = new PurgeQueueImpl({ flushIntervalMs: 100000, logger: console });
   await q.enqueue({ type: 'slug', religion: 'islamic', slug: 'abdullah', id: 'e1' });
+  const calls = mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
   await q.flush();
   const allUrls = calls.flatMap((c) => c.files);
   const letter = allUrls.find((u) => /\/letter\/A\/1$/.test(u));
@@ -463,9 +460,9 @@ test('Queue slug event lowercases only via buildNamePageUrl? (charAt(0) uppercas
 test('Religion change (islamic→christian) for same slug is not handled — old URL never purged', async () => {
   // If a name moves religion, the old /names/islamic/abdullah page still exists
   // (dynamicParams=true) and is cached 365d. Purge only targets the NEW religion.
-  const calls = mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
   const q = new PurgeQueueImpl({ flushIntervalMs: 100000, logger: console });
   await q.enqueue({ type: 'slug', religion: 'christian', slug: 'abdullah', id: 'e2' });
+  const calls = mockFetch(() => ({ ok: true, json: async () => ({ success: true, errors: [] }) }));
   await q.flush();
   const allUrls = calls.flatMap((c) => c.files);
   const oldStillThere = allUrls.some((u) => /\/names\/islamic\/abdullah$/.test(u));
