@@ -19,7 +19,15 @@
     "clear-all-cache": "rimraf .next node_modules/.cache",
     "dev:clean": "npm run clear-all-cache && next dev",
     "rebuild": "npm run clear-all-cache && next build",
-    "reset": "npm run clear-all-cache && npm run dev"
+    "reset": "npm run clear-all-cache && npm run dev",
+    "cache:warm": "node scripts/warm-cache.js",
+    "cache:warm:dry": "node scripts/warm-cache.js --dry-run",
+    "cache:warm:islamic": "node scripts/warm-cache.js --religion islamic",
+    "cache:warm:christian": "node scripts/warm-cache.js --religion christian",
+    "cache:warm:hindu": "node scripts/warm-cache.js --religion hindu",
+    "cache:purge": "curl -X POST https://nameverse.vercel.app/api/cache/purge -H \"Content-Type: application/json\" -H \"x-purge-secret: $PURGE_WEBHOOK_SECRET\" -d '{\"type\":\"zone\",\"confirm\":true}'",
+    "cache:purge:religion": "curl -X POST https://nameverse.vercel.app/api/cache/purge -H \"Content-Type: application/json\" -H \"x-purge-secret: $PURGE_WEBHOOK_SECRET\" -d '{\"type\":\"religion\",\"religion\":\"$RELIGION\"}'",
+    "deploy:full": "npm run cf:build && wrangler deploy && node scripts/warm-cache.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

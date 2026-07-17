@@ -10,5 +10,10 @@
   },
   "observability": {
     "enabled": true
+  },
+  "vars": {
+    "CLOUDFLARE_API_TOKEN": "",
+    "CLOUDFLARE_ZONE_ID": "",
+    "PURGE_WEBHOOK_SECRET": ""
   }
 }

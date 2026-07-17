@@ -96,10 +96,78 @@ const nextConfig = {
           { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
         ],
       },
-      // Main pages with comprehensive CSP
+      // Name detail pages (e.g., /names/islamic/abdullah)
+      // Enterprise edge cache: 365 days at edge, 1 day in browser
       {
-        source: '/:path*',
+        source: '/names/:religion/:slug',
         headers: [
+          { key: 'Cache-Control', value: 'public, max-age=86400, s-maxage=31536000, stale-while-revalidate=31536000, stale-if-error=31536000' },
+          { key: 'CDN-Cache-Control', value: 'public, max-age=31536000, stale-while-revalidate=31536000, stale-if-error=31536000' },
+          { key: 'Cloudflare-CDN-Cache-Control', value: 'public, max-age=31536000, stale-while-revalidate=31536000, stale-if-error=31536000' },
+        ],
+      },
+      // Listing pages (religion, letter, origin, category, gender)
+      // 30 day edge cache, 1 hour browser cache
+      {
+        source: '/names/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
+          { key: 'CDN-Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
+        ],
+      },
+      // Blog pages — 30 day edge cache
+      {
+        source: '/blog/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
+          { key: 'CDN-Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
+        ],
+      },
+      // Guide pages — 30 day edge cache
+      {
+        source: '/guides/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
+          { key: 'CDN-Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
+        ],
+      },
+      // Search results — 1 hour edge cache, no browser cache
+      {
+        source: '/search/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=3600, stale-while-revalidate=3600, stale-if-error=86400' },
+          { key: 'CDN-Cache-Control', value: 'public, max-age=3600, stale-while-revalidate=3600, stale-if-error=86400' },
+        ],
+      },
+      // Sitemaps — 1 day edge cache, 1 hour browser cache
+      {
+        source: '/sitemap:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400, stale-if-error=604800' },
+          { key: 'CDN-Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=86400, stale-if-error=604800' },
+        ],
+      },
+      {
+        source: '/sitemap.xml',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400, stale-if-error=604800' },
+          { key: 'CDN-Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=86400, stale-if-error=604800' },
+        ],
+      },
+      // Homepage — 30 day edge cache
+      {
+        source: '/',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
+          { key: 'CDN-Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
+        ],
+      },
+      // All other pages — enterprise cache with comprehensive security headers
+      {
+        source: '/:path((?!api|_next|images|dstar).*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
+          { key: 'CDN-Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },

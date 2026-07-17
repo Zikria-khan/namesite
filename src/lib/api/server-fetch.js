@@ -18,7 +18,12 @@
  */
 
 const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || 'https://name-meaning-site-backend.vercel.app').replace(/\/+$/, '');
-const ISR_TTL = 31536000; // 365 days
+const ISR_TTL = 3600; // 1 hour — short enough that stale data doesn't persist after purge
+// NOTE: 365-day edge cache is set in next.config.mjs headers.
+// The fetch Data Cache (in-memory per Worker isolate) uses 1 hour so that
+// after a Cloudflare purge, the next request fetches fresh data within 1 hour.
+// This is the correct architecture: edge cache absorbs 99%+ traffic,
+// while the Data Cache TTL is short enough for timely updates.
 
 // Reuse the canonical slug builder so similar-name strings are normalized the
 // exact same way the rest of the app links to them.
@@ -358,7 +363,10 @@ export async function serverFetchTrendingNames(options = {}) {
 export async function serverFetchRelatedNames(religion, slug) {
   if (!religion || !slug) return { data: [], count: 0, success: true, error: false };
 
-  const result = await safeFetch(`${API_BASE}/api/names/religion/islamic/1/related`);
+  const normalizedReligion = normalizeReligion(religion);
+  const safeSlug = encodeURIComponent(String(slug).trim().toLowerCase());
+
+  const result = await safeFetch(`${API_BASE}/api/names/${normalizedReligion}/${safeSlug}/related`);
 
   if (result.error || result.notFound) {
     return { data: [], count: 0, success: true, error: result.error };
@@ -383,7 +391,10 @@ export async function serverFetchRelatedNames(religion, slug) {
 export async function serverFetchSimilarNames(religion, slug) {
   if (!religion || !slug) return { data: [], count: 0, success: true, error: false };
 
-  const result = await safeFetch(`${API_BASE}/api/names/religion/islamic/1/similar`);
+  const normalizedReligion = normalizeReligion(religion);
+  const safeSlug = encodeURIComponent(String(slug).trim().toLowerCase());
+
+  const result = await safeFetch(`${API_BASE}/api/names/${normalizedReligion}/${safeSlug}/similar`);
 
   if (result.error || result.notFound) {
     return { data: [], count: 0, success: true, error: result.error };
