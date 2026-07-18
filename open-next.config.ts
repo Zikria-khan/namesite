@@ -1,15 +1,15 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
+import r2IncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/r2-incremental-cache";
+import { withRegionalCache } from "@opennextjs/cloudflare/overrides/incremental-cache/regional-cache";
+import doQueue from "@opennextjs/cloudflare/overrides/queue/do-queue";
 
-// KV incremental cache disabled (Option B).
-// The default in-memory cache is used instead, so no KV namespace binding is
-// required. Routes with `revalidate: 31536000` will serve static content with
-// no edge revalidation — acceptable because ISR at the edge isn't needed yet.
-const config = defineCloudflareConfig({});
+const config = defineCloudflareConfig({
+  incrementalCache: withRegionalCache(r2IncrementalCache, {
+    mode: "long-lived",
+  }),
+  queue: doQueue,
+});
 
-// Only run the Next.js build here. The sitemap step is handled by the
-// `cf:build` npm script that invokes opennextjs-cloudflare. Without this,
-// OpenNext defaults to `npm run build`; if `build` also called
-// `opennextjs-cloudflare build` it would recurse into an infinite build loop.
 config.buildCommand = "next build";
 
 export default config;

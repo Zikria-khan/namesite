@@ -19,8 +19,8 @@ const searchPageStructuredData = {
   }
 };
 
-// ISR: 30-day cache
-export const revalidate = 31536000; // 365 days
+// 30-day cache for search results — single source of truth: src/lib/cache/cache-config.js SEARCH_TTL_SECONDS = 2592000
+export const revalidate = 2592000;
 
 export const metadata = {
   title: validateMetaTitle('Search Personal Names — Linguistic Origin Analysis | NameVerse'),

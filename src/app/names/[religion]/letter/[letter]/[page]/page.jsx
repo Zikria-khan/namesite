@@ -11,8 +11,8 @@ const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz#'.split('');
 const NAMES_PER_PAGE = 50;
 
-// ISR with 60-day cache to minimize writes
-export const revalidate = 31536000; // 365 days
+// 30-day cache — single source of truth: src/lib/cache/cache-config.js DEFAULT_CACHE_TTL_SECONDS
+export const revalidate = 2592000;
 export const dynamicParams = true;
 
 // Pre-generate common letter/religion combinations at build time

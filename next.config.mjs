@@ -1,4 +1,10 @@
+import { generateCacheHeaders, apiCacheHeaders, staticAssetCacheHeaders, sitemapCacheHeaders, searchCacheHeaders, CACHE_TTL_BY_TYPE } from './src/lib/cache/cache-headers.js';
+
 const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || 'https://name-meaning-site-backend.vercel.app').replace(/\/+$/, '');
+
+function toHeaderArray(obj) {
+  return Object.entries(obj).map(([key, value]) => ({ key, value }));
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -84,7 +90,7 @@ const nextConfig = {
       {
         source: '/api/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'no-store, max-age=0, must-revalidate' },
+          { key: 'Cache-Control', value: apiCacheHeaders() },
           { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
         ],
       },
@@ -92,7 +98,7 @@ const nextConfig = {
       {
         source: '/api/og/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'no-store, max-age=0, must-revalidate' },
+          { key: 'Cache-Control', value: apiCacheHeaders() },
           { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
         ],
       },
@@ -100,74 +106,48 @@ const nextConfig = {
       // Enterprise edge cache: 365 days at edge, 1 day in browser
       {
         source: '/names/:religion/:slug',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=86400, s-maxage=31536000, stale-while-revalidate=31536000, stale-if-error=31536000' },
-          { key: 'CDN-Cache-Control', value: 'public, max-age=31536000, stale-while-revalidate=31536000, stale-if-error=31536000' },
-          { key: 'Cloudflare-CDN-Cache-Control', value: 'public, max-age=31536000, stale-while-revalidate=31536000, stale-if-error=31536000' },
-        ],
+        headers: toHeaderArray(generateCacheHeaders(CACHE_TTL_BY_TYPE.nameDetail)),
       },
       // Listing pages (religion, letter, origin, category, gender)
       // 30 day edge cache, 1 hour browser cache
       {
         source: '/names/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
-          { key: 'CDN-Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
-        ],
+        headers: toHeaderArray(generateCacheHeaders(CACHE_TTL_BY_TYPE.listingPages)),
       },
       // Blog pages — 30 day edge cache
       {
         source: '/blog/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
-          { key: 'CDN-Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
-        ],
+        headers: toHeaderArray(generateCacheHeaders(CACHE_TTL_BY_TYPE.listingPages)),
       },
       // Guide pages — 30 day edge cache
       {
         source: '/guides/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
-          { key: 'CDN-Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
-        ],
+        headers: toHeaderArray(generateCacheHeaders(CACHE_TTL_BY_TYPE.listingPages)),
       },
       // Search results — 1 hour edge cache, no browser cache
       {
         source: '/search/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=3600, stale-while-revalidate=3600, stale-if-error=86400' },
-          { key: 'CDN-Cache-Control', value: 'public, max-age=3600, stale-while-revalidate=3600, stale-if-error=86400' },
-        ],
+        headers: toHeaderArray(generateCacheHeaders(CACHE_TTL_BY_TYPE.searchResults)),
       },
       // Sitemaps — 1 day edge cache, 1 hour browser cache
       {
         source: '/sitemap/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400, stale-if-error=604800' },
-          { key: 'CDN-Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=86400, stale-if-error=604800' },
-        ],
+        headers: toHeaderArray(generateCacheHeaders(CACHE_TTL_BY_TYPE.sitemaps)),
       },
       {
         source: '/sitemap.xml',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400, stale-if-error=604800' },
-          { key: 'CDN-Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=86400, stale-if-error=604800' },
-        ],
+        headers: toHeaderArray(generateCacheHeaders(CACHE_TTL_BY_TYPE.sitemaps)),
       },
       // Homepage — 30 day edge cache
       {
         source: '/',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=3600, s-maxage=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
-          { key: 'CDN-Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
-        ],
+        headers: toHeaderArray(generateCacheHeaders(CACHE_TTL_BY_TYPE.listingPages)),
       },
       // All other pages — enterprise cache with comprehensive security headers
       {
         source: '/:path((?!api|_next|images|dstar).*)',
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
-          { key: 'CDN-Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=2592000, stale-if-error=2592000' },
+          ...toHeaderArray(generateCacheHeaders(CACHE_TTL_BY_TYPE.listingPages)),
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
@@ -178,10 +158,10 @@ const nextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: https://quge5.com https://revolthem.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://adservice.google.com https://www.googletagmanager.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "img-src 'self' data: https: https://quge5.com https://revolthem.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
-              "connect-src 'self' https: data: blob: https://quge5.com https://revolthem.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
+              "img-src 'self' data: https: https://quge5.com https://revolthem.com https://pagead2.googlesyndication.com https://tpc.googlesyndication.com",
+              "connect-src 'self' https: data: blob: https://quge5.com https://revolthem.com https://pagead2.googlesyndication.com",
               "font-src 'self' data: https://fonts.gstatic.com",
-              "frame-src 'self' https: data: https://quge5.com https://revolthem.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
+              "frame-src 'self' https: data: https://quge5.com https://revolthem.com https://pagead2.googlesyndication.com https://tpc.googlesyndication.com",
               "worker-src 'self' blob:",
               "frame-ancestors 'self'",
               "object-src 'none'",
@@ -205,19 +185,19 @@ const nextConfig = {
       {
         source: '/images/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'Cache-Control', value: staticAssetCacheHeaders() },
         ],
       },
       {
         source: '/_next/static/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'Cache-Control', value: staticAssetCacheHeaders() },
         ],
       },
       {
         source: '/_next/image/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'Cache-Control', value: staticAssetCacheHeaders() },
         ],
       },
       // Manifest.json - public, no auth required

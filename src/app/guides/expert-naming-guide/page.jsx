@@ -3,8 +3,8 @@ import { getSiteUrl } from '@/lib/seo/site';
 import { BookOpen, Heart, Star, ArrowRight, Sparkles, Award, CheckCircle, Users, Globe } from 'lucide-react';
 import NativeBanner from '@/components/Ads/NativeBanner';
 
-// ISR: 30-day cache — static content
-export const revalidate = 31536000; // 365 days
+// 30-day cache — single source of truth: src/lib/cache/cache-config.js DEFAULT_CACHE_TTL_SECONDS
+export const revalidate = 2592000;
 
 export const metadata = {
   title: 'Expert Baby Naming Guide | How to Choose the Perfect Name | NameVerse',

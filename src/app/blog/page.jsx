@@ -9,8 +9,8 @@ import NativeBanner from '@/components/Ads/NativeBanner';
 // Static import — works on both Vercel and Cloudflare Workers (no fs needed)
 import blogPostsData from '@/../public/data/blog-posts.json' with { type: 'json' };
 
-// ISR with 90-day cache for blog index — keep content stable
-export const revalidate = 31536000; // 365 days
+// 30-day cache — single source of truth: src/lib/cache/cache-config.js DEFAULT_CACHE_TTL_SECONDS
+export const revalidate = 2592000;
 
 const blogFaq = [
   { question: 'How do I choose the perfect baby name?', answer: 'Choose a baby name by balancing meaning, cultural relevance, pronunciation, and family tradition. Our guides help you compare Islamic, Christian, Hindu, and global name choices with trusted origin notes.' },

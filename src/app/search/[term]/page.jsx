@@ -5,8 +5,8 @@ import { NOINDEX_ROBOTS } from '@/lib/seo/topical-authority-architecture';
 import ClientComponent from './ClientComponent';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 
-// ISR: 30-day cache — search results are relatively static
-export const revalidate = 31536000; // 365 days
+// 30-day cache for search results — single source of truth: src/lib/cache/cache-config.js SEARCH_TTL_SECONDS = 2592000
+export const revalidate = 2592000;
 
 export async function generateMetadata({ params }) {
   const { term } = await params;

@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "namesite-scheduled",
+  "main": "src/worker/scheduled-revalidate.js",
+  "compatibility_date": "2026-07-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "services": [
+    { "binding": "WORKER_SELF_REFERENCE", "service": "namesite" }
+  ],
+  "vars": {
+    "NEXT_PUBLIC_SITE_URL": "",
+    "REVALIDATE_WEBHOOK_SECRET": ""
+  },
+  "triggers": {
+    "crons": ["*/10 * * * *"]
+  }
+}

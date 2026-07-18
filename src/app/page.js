@@ -6,7 +6,8 @@ import { getSiteUrl } from '@/lib/seo/site';
 // Static import — works on both Vercel and Cloudflare Workers (no fs needed)
 import blogPosts from '@/../public/data/blog-posts.json' with { type: 'json' };
 
-export const revalidate = 31536000; // 365 days
+// 30-day cache — single source of truth: src/lib/cache/cache-config.js DEFAULT_CACHE_TTL_SECONDS
+export const revalidate = 2592000;
 
 const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || getSiteUrl();
 const DOMAIN = (() => {

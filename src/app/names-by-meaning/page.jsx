@@ -6,8 +6,8 @@ import { getSiteUrl } from '@/lib/seo/site';
 import SitePage from '@/components/Layout/SitePage';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 
-// ISR: 30-day cache — static content
-export const revalidate = 31536000; // 365 days
+// 30-day cache — single source of truth: src/lib/cache/cache-config.js DEFAULT_CACHE_TTL_SECONDS
+export const revalidate = 2592000;
 
 export const metadata = {
   title: validateMetaTitle('Powerful Baby Names by Meaning: Love, Strength, Wisdom, Peace & More | NameVerse'),

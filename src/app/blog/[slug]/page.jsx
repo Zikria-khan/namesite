@@ -12,8 +12,8 @@ import SitePage from '@/components/Layout/SitePage';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 import NativeBanner from '@/components/Ads/NativeBanner';
 
-// ISR with 90-day cache for blog posts — keep content stable
-export const revalidate = 31536000; // 365 days
+// 30-day cache — single source of truth: src/lib/cache/cache-config.js DEFAULT_CACHE_TTL_SECONDS
+export const revalidate = 2592000;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;

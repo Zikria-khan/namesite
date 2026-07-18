@@ -46,6 +46,34 @@ const MIXED_FILES = {
   hindu: hinduNames,
 };
 
+const NAME_INDEX = new Map();
+for (const religion of RELIGIONS) {
+  for (const raw of DETAILED_FILES[religion]) {
+    for (const item of raw) {
+      const itemName = typeof item === 'string' ? item : item.name;
+      const slug = createSlug(itemName);
+      if (!slug) continue;
+      const key = `${religion}|${slug}`;
+      if (!NAME_INDEX.has(key)) NAME_INDEX.set(key, { item, religion });
+    }
+  }
+}
+
+const LIST_INDEX = {};
+for (const religion of RELIGIONS) {
+  LIST_INDEX[religion] = [];
+  const seen = new Set();
+  for (const file of DETAILED_FILES[religion] || []) {
+    for (const item of file) {
+      if (!item.name) continue;
+      const slug = createSlug(item.name);
+      if (!slug || seen.has(slug)) continue;
+      seen.add(slug);
+      LIST_INDEX[religion].push({ name: item.name, slug });
+    }
+  }
+}
+
 function cleanText(value = '') {
   return String(value || '').replace(/\s+/g, ' ').trim();
 }
@@ -166,42 +194,31 @@ export function findLocalName(religion, slug) {
   if (!slug) return null;
   const target = createSlug(slug);
   if (!target) return null;
-  for (const religionKey of RELIGIONS) {
-    for (const raw of DETAILED_FILES[religionKey]) {
-      for (const item of raw) {
-        const itemName = typeof item === 'string' ? item : item.name;
-        if (createSlug(itemName) === target) {
-          const cleanedName = String(itemName || '').trim().replace(/^\n+/, '');
-          return {
-            ...(typeof item === 'string' ? {} : item),
-            name: cleanedName,
-            religion: normalizeReligion(religion) || religionKey,
-            lucky_number: typeof item === 'string' ? undefined : item.luckyNumber,
-            short_meaning: typeof item === 'string' ? '' : item.meaning,
-          };
-        }
-      }
-    }
-  }
-  return null;
+  const entry = NAME_INDEX.get(`${normalizeReligion(religion) || 'islamic'}|${target}`);
+  if (!entry) return null;
+  const item = entry.item;
+  const itemName = typeof item === 'string' ? item : item.name;
+  const cleanedName = String(itemName || '').trim().replace(/^\n+/, '');
+  return {
+    ...(typeof item === 'string' ? {} : item),
+    name: cleanedName,
+    religion: normalizeReligion(religion) || entry.religion,
+    lucky_number: typeof item === 'string' ? undefined : item.luckyNumber,
+    short_meaning: typeof item === 'string' ? '' : item.meaning,
+  };
 }
 
 /**
  * Local fallback list of names for a religion (used when trending fetch fails).
  */
 export function loadLocalNameList(religion, limit = 8, excludeSlug = '') {
-  const seen = new Set();
   const names = [];
   const target = createSlug(excludeSlug);
-  for (const file of DETAILED_FILES[normalizeReligion(religion) || 'islamic'] || []) {
-    for (const item of file) {
-      if (!item.name) continue;
-      const slug = createSlug(item.name);
-      if (!slug || slug === target || seen.has(slug)) continue;
-      seen.add(slug);
-      names.push({ name: item.name, slug });
-      if (names.length >= limit) return names;
-    }
+  const list = LIST_INDEX[normalizeReligion(religion) || 'islamic'] || [];
+  for (const item of list) {
+    if (item.slug === target) continue;
+    names.push({ name: item.name, slug: item.slug });
+    if (names.length >= limit) return names;
   }
   return names;
 }

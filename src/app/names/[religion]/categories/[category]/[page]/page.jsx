@@ -10,8 +10,8 @@ import BlogSection from '@/components/Blog/BlogSection';
 const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 const STATIC_CATEGORIES = ['modern', 'traditional', 'nature', 'religious', 'classical', 'unique'];
 
-// ISR with 60-day cache to minimize writes
-export const revalidate = 31536000; // 365 days
+// 30-day cache — single source of truth: src/lib/cache/cache-config.js DEFAULT_CACHE_TTL_SECONDS
+export const revalidate = 2592000;
 export const dynamicParams = true;
 
 // Pre-generate category pages at build time

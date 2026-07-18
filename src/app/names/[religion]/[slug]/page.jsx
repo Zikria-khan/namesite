@@ -12,8 +12,8 @@ const VALID_RELIGIONS = ['islamic', 'christian', 'hindu'];
 // Allow dynamic slugs beyond generateStaticParams()
 export const dynamicParams = true;
 
-// 30-day cache: pages are generated once and cached for 30 days.
-export const revalidate = 31536000; // 365 days
+// 30-day cache — single source of truth: src/lib/cache/cache-config.js DEFAULT_CACHE_TTL_SECONDS
+export const revalidate = 2592000;
 
 // Local name data fallback — sourced from the bundled (Workers-safe) data module.
 function loadLocalNameData(religion, slug) {

@@ -19,6 +19,8 @@
 
 import { CACHE_TTL_BY_TYPE, DEFAULT_CACHE_CONFIG } from './purge-types.js';
 
+export { CACHE_TTL_BY_TYPE, DEFAULT_CACHE_CONFIG } from './purge-types.js';
+
 /**
  * Generate Cache-Control header value for HTML pages.
  * These are the most important headers — they control edge caching of

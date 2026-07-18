@@ -2,8 +2,8 @@ import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpe
 import { getSiteUrl } from '@/lib/seo/site';
 import SitePage from '@/components/Layout/SitePage';
 
-// ISR: 30-day cache — static content
-export const revalidate = 31536000; // 365 days
+// 30-day cache — single source of truth: src/lib/cache/cache-config.js DEFAULT_CACHE_TTL_SECONDS
+export const revalidate = 2592000;
 
 export const metadata = {
   title: validateMetaTitle('Privacy Policy | NameVerse — Protecting Your Personal Information'),

@@ -11,9 +11,26 @@
   "observability": {
     "enabled": true
   },
+  "services": [
+    { "binding": "WORKER_SELF_REFERENCE", "service": "namesite" }
+  ],
+  "r2_buckets": [
+    { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "namesite-inc-cache" }
+  ],
+  "durable_objects": {
+    "bindings": [
+      { "name": "NEXT_CACHE_DO_QUEUE", "class_name": "DOQueueHandler" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["DOQueueHandler"] }
+  ],
   "vars": {
+    "NEXT_PUBLIC_SITE_URL": "",
+    "NEXT_PUBLIC_API_BASE": "",
     "CLOUDFLARE_API_TOKEN": "",
     "CLOUDFLARE_ZONE_ID": "",
-    "PURGE_WEBHOOK_SECRET": ""
+    "PURGE_WEBHOOK_SECRET": "",
+    "REVALIDATE_WEBHOOK_SECRET": ""
   }
 }

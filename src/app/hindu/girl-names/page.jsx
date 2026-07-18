@@ -4,8 +4,8 @@ import { Heart, Star, BookOpen, Sparkles, Flower2 } from 'lucide-react';
 import namesData from '../../../../public/data/hindu-girl-names.json';
 import { createSafeSlug } from '@/lib/utils/createSafeSlug';
 
-// ISR: 30-day cache — static JSON data, minimal updates needed
-export const revalidate = 31536000; // 365 days
+// 30-day cache — single source of truth: src/lib/cache/cache-config.js DEFAULT_CACHE_TTL_SECONDS
+export const revalidate = 2592000;
 
 // ==========================================
 // METADATA - World Class SEO

@@ -4,8 +4,8 @@ import { getSiteUrl } from '@/lib/seo/site'
 import { validateMetaTitle, validateMetaDescription } from '@/lib/seo/meta-helpers'
 
 
-// ISR: 30-day cache
-export const revalidate = 31536000; // 365 days
+// 30-day cache — single source of truth: src/lib/cache/cache-config.js DEFAULT_CACHE_TTL_SECONDS
+export const revalidate = 2592000;
 
 const categories = [
   {
