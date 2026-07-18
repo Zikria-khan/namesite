@@ -274,50 +274,7 @@ async function fetchBackendSlugs(religion) {
   if (backendSlugCache.has(religion)) return backendSlugCache.get(religion);
 
   const slugs = new Set();
-  const collect = (arr) => {
-    for (const item of (arr || [])) {
-      const s = item && item.slug;
-      if (s) slugs.add(String(s).toLowerCase());
-    }
-  };
-
-  async function fetchLetter(letter) {
-    const first = await fetchJsonRetry(`${API_BASE}/api/v1/names/${religion}?alphabet=${letter}&page=1&limit=100&sort=asc`);
-    collect(first.data);
-    const pagination = first.pagination || {};
-    let totalPages = Number(pagination.totalPages || pagination.pages || 0);
-    if (!totalPages || !isFinite(totalPages)) totalPages = 0;
-    totalPages = Math.min(totalPages, 500);
-    // Fetch the remaining pages of this letter in parallel (capped) so a letter
-    // with many pages doesn't serialize one slow request at a time.
-    const PAGE_CONCURRENCY = 10;
-    const pageNums = [];
-    for (let page = 2; page <= totalPages; page += 1) pageNums.push(page);
-    for (let i = 0; i < pageNums.length; i += PAGE_CONCURRENCY) {
-      const batch = pageNums.slice(i, i + PAGE_CONCURRENCY);
-      await Promise.all(batch.map(async (page) => {
-        try {
-          const data = await fetchJsonRetry(`${API_BASE}/api/v1/names/${religion}?alphabet=${letter}&page=${page}&limit=100&sort=asc`);
-          collect(data.data);
-        } catch {
-          // skip unreachable page; continue with the rest of the letter
-        }
-      }));
-    }
-    console.log(`[sitemap]   ${religion}/${letter}: ${slugs.size} slugs so far`);
-  }
-
-  const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
-  const CONCURRENCY = 3;
-  for (let i = 0; i < letters.length; i += CONCURRENCY) {
-    const batch = letters.slice(i, i + CONCURRENCY);
-    await Promise.all(batch.map((letter) => fetchLetter(letter).catch((error) => {
-      console.warn(`[sitemap] WARNING: could not fetch backend slugs for ${religion}/${letter}: ${error.message}`);
-    })));
-    await sleep(75);
-  }
-
-  console.log(`[sitemap] Fetched ${slugs.size} valid backend slugs for ${religion}`);
+  console.log(`[sitemap] Skipping backend validation for ${religion} (using local data only)`);
   backendSlugCache.set(religion, slugs);
   return slugs;
 }

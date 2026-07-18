@@ -37,7 +37,7 @@ export async function generateStaticParams() {
   // Cap static generation per religion to stay well within Cloudflare Pages
   // per-deployment file limits. Remaining slugs render on-demand via ISR.
   const limited = {};
-  const perReligionLimit = 28;
+  const perReligionLimit = 5;
   for (const entry of deduped) {
     if (!limited[entry.religion]) limited[entry.religion] = [];
     if (limited[entry.religion].length < perReligionLimit) {
